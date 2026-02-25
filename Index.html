@@ -239,7 +239,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -264,15 +264,14 @@ let state = { freq:'daily', specificDays:[], intervalDays:1, isOk:false, lastCon
 window.signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-    await signInWithRedirect(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch(e) { alert('שגיאה בכניסה: ' + e.message); }
 };
 window.doSignOut = async () => {
   if (confirm('להתנתק?')) await signOut(auth);
 };
 
-async function handleUser(user) {
+onAuthStateChanged(auth, async user => {
   document.getElementById('loading').style.display = 'none';
   if (user) {
     currentUser = user;
@@ -290,18 +289,6 @@ async function handleUser(user) {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
   }
-}
-
-// Handle redirect result FIRST, then listen for auth state
-getRedirectResult(auth).then(result => {
-  if (result?.user) {
-    handleUser(result.user);
-  } else {
-    onAuthStateChanged(auth, handleUser);
-  }
-}).catch(e => {
-  console.error('Redirect error:', e);
-  onAuthStateChanged(auth, handleUser);
 });
 
 async function initUser() {
