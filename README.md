@@ -1,5 +1,6 @@
 # anibeseder
 <!DOCTYPE html>
+
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -239,7 +240,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithredirect, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -262,7 +263,7 @@ let currentUser = null;
 let state = { freq:'daily', specificDays:[], intervalDays:1, isOk:false, lastConfirmed:null, followers:[] };
 
 window.signInWithGoogle = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  try { await signInWithredirect(auth, new GoogleAuthProvider()); }
   catch(e) { alert('שגיאה בכניסה, נסה שוב'); }
 };
 window.doSignOut = async () => {
@@ -427,7 +428,7 @@ function updateMainUI() {
 
 function updateChips() {
   document.getElementById('contactsChip').textContent = `👥 ${state.followers.length} עוקבים`;
-  const labels = {daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל ${state.intervalDays} ימים`};
+  const labels = {daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל j{state.intervalDays} ימים`};
   document.getElementById('freqChip').textContent = '🔄 '+(labels[state.freq]||'כל יום');
 }
 
@@ -441,5 +442,6 @@ window.showScreen = name => {
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
+
 </body>
 </html>
