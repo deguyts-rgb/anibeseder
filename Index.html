@@ -239,7 +239,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -256,13 +256,14 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
+getRedirectResult(auth).catch(()=>{});
 const db = getFirestore(fbApp);
 
 let currentUser = null;
 let state = { freq:'daily', specificDays:[], intervalDays:1, isOk:false, lastConfirmed:null, followers:[] };
 
 window.signInWithGoogle = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  try { await signInWithRedirect(auth, new GoogleAuthProvider()); }
   catch(e) { alert('שגיאה בכניסה, נסה שוב'); }
 };
 window.doSignOut = async () => {
