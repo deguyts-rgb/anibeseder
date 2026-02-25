@@ -262,20 +262,17 @@ let currentUser = null;
 let state = { freq:'daily', specificDays:[], intervalDays:1, isOk:false, lastConfirmed:null, followers:[] };
 
 window.signInWithGoogle = async () => {
-  try { await signInWithRedirect(auth, new GoogleAuthProvider()); }
-  catch(e) { alert('שגיאה בכניסה, נסה שוב'); }
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await signInWithRedirect(auth, provider);
+  } catch(e) { alert('שגיאה בכניסה: ' + e.message); }
 };
 window.doSignOut = async () => {
   if (confirm('להתנתק?')) await signOut(auth);
 };
 
-onAuthStateChanged(auth, async user => {
-  // First check if we're returning from a redirect
-  try {
-    const result = await getRedirectResult(auth);
-    if (result?.user) user = result.user;
-  } catch(e) {}
-  
+async function handleUser(user) {
   document.getElementById('loading').style.display = 'none';
   if (user) {
     currentUser = user;
@@ -293,6 +290,18 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
   }
+}
+
+// Handle redirect result FIRST, then listen for auth state
+getRedirectResult(auth).then(result => {
+  if (result?.user) {
+    handleUser(result.user);
+  } else {
+    onAuthStateChanged(auth, handleUser);
+  }
+}).catch(e => {
+  console.error('Redirect error:', e);
+  onAuthStateChanged(auth, handleUser);
 });
 
 async function initUser() {
