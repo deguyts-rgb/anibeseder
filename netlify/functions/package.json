@@ -1,7 +1,8 @@
 {
-“name”: “ani-beseder-functions”,
-“version”: “1.0.0”,
-“dependencies”: {
-“firebase-admin”: “^12.0.0”
-}
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
 }
