@@ -1,7 +1,7 @@
 [build]
-functions = “netlify/functions”
+  functions = "netlify/functions"
 
 [[headers]]
-for = “/*”
-[headers.values]
-Service-Worker-Allowed = “/”
+  for = "/*"
+  [headers.values]
+    Service-Worker-Allowed = "/"
