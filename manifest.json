@@ -1,7 +1,7 @@
 {
-“name”: “אני בסדר”,
-“short_name”: “אני בסדר”,
-“description”: “עדכן את האנשים החשובים לך שאתה בסדר – בלחיצת כפתור אחת”,
+“name”: “Ani Beseder”,
+“short_name”: “Ani Beseder”,
+“description”: “Update your loved ones that you are OK with one button press”,
 “start_url”: “/”,
 “scope”: “/”,
 “display”: “standalone”,
