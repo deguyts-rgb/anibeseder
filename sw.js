@@ -1,42 +1,50 @@
-// אני בסדר - Service Worker with FCM Push Support
-const CACHE_NAME = ‘ani-beseder-v4’;
-const ASSETS = [’/’, ‘/index.html’, ‘/manifest.json’];
+// Ani Beseder Service Worker v4
+var CACHE_NAME = ‘ani-beseder-v4’;
+var ASSETS = [’/’, ‘/index.html’, ‘/manifest.json’];
 
-// Install
-self.addEventListener(‘install’, e => {
+self.addEventListener(‘install’, function(e) {
 e.waitUntil(
-caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+caches.open(CACHE_NAME).then(function(cache) {
+return cache.addAll(ASSETS);
+}).then(function() {
+return self.skipWaiting();
+})
 );
 });
 
-// Activate
-self.addEventListener(‘activate’, e => {
+self.addEventListener(‘activate’, function(e) {
 e.waitUntil(
-caches.keys().then(keys =>
-Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-).then(() => self.clients.claim())
+caches.keys().then(function(keys) {
+return Promise.all(
+keys.filter(function(k) { return k !== CACHE_NAME; })
+.map(function(k) { return caches.delete(k); })
+);
+}).then(function() {
+return self.clients.claim();
+})
 );
 });
 
-// Fetch - network first, cache fallback
-self.addEventListener(‘fetch’, e => {
+self.addEventListener(‘fetch’, function(e) {
 if (e.request.method !== ‘GET’) return;
 e.respondWith(
-fetch(e.request).catch(() => caches.match(e.request))
+fetch(e.request).catch(function() {
+return caches.match(e.request);
+})
 );
 });
 
-// Push notifications from FCM
-self.addEventListener(‘push’, e => {
+self.addEventListener(‘push’, function(e) {
 if (!e.data) return;
-let data;
-try { data = e.data.json(); } catch { data = { notification: { title: ‘אני בסדר’, body: e.data.text() } }; }
-
-const { title, body, icon = ‘/icon-192.png’ } = data.notification || {};
+var data;
+try { data = e.data.json(); } catch(err) { data = { notification: { title: ‘Ani Beseder’, body: e.data.text() } }; }
+var notif = data.notification || {};
+var title = notif.title || ‘Ani Beseder’;
+var body = notif.body || ‘’;
 e.waitUntil(
-self.registration.showNotification(title || ‘אני בסדר’, {
-body: body || ‘’,
-icon,
+self.registration.showNotification(title, {
+body: body,
+icon: ‘/icon-192.png’,
 badge: ‘/icon-192.png’,
 dir: ‘rtl’,
 lang: ‘he’,
@@ -46,14 +54,13 @@ data: { url: ‘https://anibeseder.netlify.app’ }
 );
 });
 
-// Notification click - open app
-self.addEventListener(‘notificationclick’, e => {
+self.addEventListener(‘notificationclick’, function(e) {
 e.notification.close();
-const url = e.notification.data?.url || ‘https://anibeseder.netlify.app’;
+var url = (e.notification.data && e.notification.data.url) || ‘https://anibeseder.netlify.app’;
 e.waitUntil(
-clients.matchAll({ type: ‘window’, includeUncontrolled: true }).then(list => {
-for (const c of list) {
-if (c.url.includes(‘anibeseder’) && ‘focus’ in c) return c.focus();
+clients.matchAll({ type: ‘window’, includeUncontrolled: true }).then(function(list) {
+for (var i = 0; i < list.length; i++) {
+if (list[i].url.includes(‘anibeseder’) && ‘focus’ in list[i]) return list[i].focus();
 }
 return clients.openWindow(url);
 })
