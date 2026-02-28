@@ -1,7 +1,7 @@
 {
 “name”: “Ani Beseder”,
 “short_name”: “Ani Beseder”,
-“description”: “Update your loved ones that you are OK with one button press”,
+“description”: “Update your loved ones that you are OK”,
 “start_url”: “/”,
 “scope”: “/”,
 “display”: “standalone”,
@@ -10,7 +10,10 @@
 “theme_color”: “#0f1923”,
 “lang”: “he”,
 “dir”: “rtl”,
-“categories”: [“health”, “social”],
+“categories”: [
+“health”,
+“social”
+],
 “icons”: [
 {
 “src”: “/icon-192.png”,
