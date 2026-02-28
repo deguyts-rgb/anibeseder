@@ -1,5 +1,5 @@
 // Ani Beseder Service Worker v4
-var CACHE_NAME = ‘ani-beseder-v4’;
+var CACHE_NAME = ‘ani-beseder-v5’;
 var ASSETS = [’/’, ‘/index.html’, ‘/manifest.json’];
 
 self.addEventListener(‘install’, function(e) {
