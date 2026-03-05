@@ -41,7 +41,7 @@
     #screen-main{align-items:center;justify-content:center;padding:12px 24px}
     .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px}
     /* Elapsed time + freq row */
-    .time-freq-row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
+    .time-freq-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
     .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:right;min-height:22px}
     /* Exact date/time below - small, non-bold */
     .last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
@@ -175,10 +175,10 @@
     @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:32px}.btn-text{font-size:18px}}
     /* MOOD PICKER */
     .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
-    .mood-btn{position:absolute;bottom:-10px;left:-10px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
+    .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
     .mood-btn:active{transform:scale(0.88)}
     .mood-btn.visible{display:flex}
-    .mood-panel{position:absolute;bottom:-10px;left:-10px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
+    .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
     .mood-panel.show{display:grid}
     .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
     .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
@@ -288,42 +288,37 @@
     <!-- Status text -->
     <p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
 
-```
-<!-- [1] שורה: זמן שחלף (ימין) + כפתור תדירות (שמאל) [שינוי 5] -->
-<div class="time-freq-row">
-  <span class="chip" onclick="showScreen('settings')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
-  <p class="last-time-above" id="lastTimeAbove"></p>
-</div>
+  <!-- שורה: זמן שחלף (ימין) + כפתור תדירות (שמאל) -->
 
-<!-- [1] תאריך ושעה מדויקים מתחת, קטן ולא מודגש [שינוי 1] -->
-<p class="last-date-below" id="lastDateBelow"></p>
+  <div class="time-freq-row">
+    <p class="last-time-above" id="lastTimeAbove"></p>
+    <span class="chip" onclick="showScreen('settings')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
+  </div>
+  <!-- תאריך ושעה מדויקים מתחת, קטן ולא מודגש -->
+  <p class="last-date-below" id="lastDateBelow"></p>
 
-<div class="btn-wrapper">
-<button class="big-btn" id="bigBtn" onclick="handleOkPress()">
-  <span class="btn-emoji" id="btnEmoji">👋</span>
-  <span class="btn-text" id="btnText">אני<br>בסדר</span>
-  <span class="btn-marks" id="btnMarks"></span>
-</button>
-<!-- כפתור בחירת מצב רוח – מופיע רק כשהמצב ירוק -->
-<button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)" title="איזה בסדר אתה?">😊</button>
-<!-- חלונית בחירת אימוג׳י 3×3 -->
-<div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
-  <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
-</div>
-</div>
-<div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
+  <div class="btn-wrapper">
+  <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
+    <span class="btn-emoji" id="btnEmoji">👋</span>
+    <span class="btn-text" id="btnText">אני<br>בסדר</span>
+    <span class="btn-marks" id="btnMarks"></span>
+  </button>
+  <!-- כפתור בחירת מצב רוח – מופיע רק כשהמצב ירוק -->
+  <button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)" title="איזה בסדר אתה?">😊</button>
+  <!-- חלונית בחירת אימוג׳י 3×3 -->
+  <div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
+    <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
+  </div>
+  </div>
+  <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
 
-<!-- sub-info: ירוק + עוקבים + הערה (בלי "אתם בסדר") [שינויים 2, 3, 4] -->
-<div class="sub-info">
-  <!-- [2] כפתור ירקרק "הוסף עוקבים" מעל כפתור העוקבים -->
-  <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
-  <!-- כפתור עוקבים -->
-  <span class="chip" onclick="showScreen('followers')" id="followersChip">👥 0 עוקבים</span>
-  <!-- [3] הערה מתחת לכפתור העוקבים -->
-  <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
-  <!-- [4] כפתור "אתם בסדר?()" הוסר -->
-</div>
-```
+  <!-- sub-info: ירוק + עוקבים + הערה -->
+
+  <div class="sub-info">
+    <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
+    <span class="chip" onclick="showScreen('followers')" id="followersChip">👥 0 עוקבים</span>
+    <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
+  </div>
 
   </div>
 
@@ -331,7 +326,7 @@
 
   <div class="screen" id="screen-watching">
     <div class="section-title">
-      <span id="watchingTitle">👁️ אתם בסדר? (0)</span>
+      <span id="watchingTitle">👁️ נעקבים (0)</span>
       <button class="refresh-btn-small" onclick="refreshCurrentTab('watching')">🔄 בדוק דיווחים מעודכנים</button>
     </div>
     <p style="font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;margin-top:-8px;line-height:1.6">מצב הדיווח של האנשים שאתה עוקב אחריהם:</p>
@@ -406,8 +401,8 @@
 
   <div class="nav" id="mainNav">
     <div class="nav-item active" id="nav-main" onclick="showScreen('main')"><span class="nav-icon">🏠</span>בית</div>
-    <div class="nav-item" id="nav-watching" onclick="showScreen('watching')"><span class="nav-icon">👁️</span>אתם בסדר?</div>
-    <div class="nav-item" id="nav-followers" onclick="showScreen('followers')"><span class="nav-icon">👥</span>עוקבים</div>
+    <div class="nav-item" id="nav-watching" onclick="showScreen('watching')"><span class="nav-icon">👁️</span><span id="navWatchingLabel">נעקבים</span></div>
+    <div class="nav-item" id="nav-followers" onclick="showScreen('followers')"><span class="nav-icon">👥</span><span id="navFollowersLabel">עוקבים</span></div>
     <div class="nav-item" id="nav-settings" onclick="showScreen('settings')"><span class="nav-icon">⚙️</span>הגדרות</div>
   </div>
 </div>
@@ -563,6 +558,8 @@ window.selectMood = (idx) => {
   if (currentUser) {
     localStorage.setItem('moodEmoji_' + currentUser.uid, mood.emoji);
     localStorage.setItem('moodLevel_' + currentUser.uid, String(mood.level));
+    // שמירה גם ב-Firestore כדי שנעקבים יראו את האימוג׳י
+    setDoc(doc(db,'status',currentUser.uid),{moodEmoji:mood.emoji},{merge:true}).catch(()=>{});
   }
   document.getElementById('moodPanel').classList.remove('show');
   document.getElementById('moodBtn').textContent = mood.emoji;
@@ -779,14 +776,14 @@ async function loadWatching() {
   statusListeners.forEach(u=>u());
   statusListeners = [];
   watchingStatuses = {};
-  document.getElementById('watchingTitle').textContent = `👁️ אתם בסדר? (${state.watching.length})`;
+  document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${state.watching.length})`;
   if (!state.watching.length) { renderWatchingList([]); updateChips(); return; }
   state.watching.forEach(w => {
     watchingStatuses[w.followingUid] = null;
     const unsub = onSnapshot(doc(db,'status',w.followingUid), snap => {
       if (snap.exists()) {
         const d = snap.data();
-        watchingStatuses[w.followingUid] = {isOk:d.isOk, timestamp:d.timestamp?.toDate(), name:d.name};
+        watchingStatuses[w.followingUid] = {isOk:d.isOk, timestamp:d.timestamp?.toDate(), name:d.name, moodEmoji:d.moodEmoji||null};
         const ts = d.timestamp?.toDate();
         if (ts && (Date.now()-ts)/60000 < 2 && Notification.permission === 'granted') {
           new Notification(`${d.name} בסדר! 🤝`,{body:`${d.name} עדכן עכשיו שהכל בסדר`,icon:'/icon-192.png'});
@@ -825,7 +822,7 @@ function renderWatchingList(watching) { renderWatchingWithStatuses(watching, {})
 
 function renderWatchingWithStatuses(watching, statuses) {
   const el = document.getElementById('watchingList');
-  document.getElementById('watchingTitle').textContent = `👁️ אתם בסדר? (${watching.length})`;
+  document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${watching.length})`;
   if (!watching.length) {
     document.getElementById('watchingBarWrap').style.display = 'none';
     el.innerHTML = '<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.</p>';
@@ -843,7 +840,8 @@ function renderWatchingWithStatuses(watching, statuses) {
     if (s) {
       const hrs = s.timestamp ? (now - s.timestamp.getTime()) / 3600000 : 999;
       if (s.isOk && hrs < 24) {
-        circleClass = 'sc-green'; circleText = '✓';
+        circleClass = 'sc-green';
+        circleText = s.moodEmoji || '✓';
         timeText = 'עדכון: ' + formatDateTime(s.timestamp);
         timeColor = '#4cde80';
       } else if (hrs >= 24) {
@@ -872,7 +870,7 @@ function renderWatchingWithStatuses(watching, statuses) {
           <div class="person-name">${w.followingName||'משתמש'}</div>
           <div class="person-time" style="color:${timeColor}">${timeText}</div>
         </div>
-        <div class="status-circle ${circleClass}" style="white-space:pre-line;text-align:center;line-height:1.2">${circleText}</div>
+        <div class="status-circle ${circleClass}" style="white-space:pre-line;text-align:center;line-height:1;font-size:${(s?.moodEmoji && circleClass==='sc-green') ? '22px' : '11px'}">${circleText}</div>
         <button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>
         <button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר מעקב</span></button>
       </div>
@@ -1039,7 +1037,7 @@ window.confirmUnfollow = (uid, name) => {
     delete watchingStatuses[uid];
     renderWatchingWithStatuses(state.watching, watchingStatuses);
     renderFollowers(); updateChips();
-    document.getElementById('watchingTitle').textContent = `👁️ אתם בסדר? (${state.watching.length})`;
+    document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${state.watching.length})`;
   };
   document.getElementById('confirmModal').classList.add('show');
 };
@@ -1298,10 +1296,14 @@ function updateMainUI(){
 
 function updateChips(){
   document.getElementById('followersChip').textContent=`👥 ${state.followers.length} עוקבים`;
-  // watchingChip removed from home screen - update title only
-  document.getElementById('watchingTitle').textContent=`👁️ אתם בסדר? (${state.watching.length})`;
+  document.getElementById('watchingTitle').textContent=`👁️ נעקבים (${state.watching.length})`;
   const labels={daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל ${state.intervalDays} ימים`};
   document.getElementById('freqChip').textContent='🔄 '+(labels[state.freq]||'כל יום');
+  // עדכון לשוניות ניווט עם מספרים
+  const navW = document.getElementById('navWatchingLabel');
+  const navF = document.getElementById('navFollowersLabel');
+  if (navW) navW.textContent = state.watching.length > 0 ? `${state.watching.length} נעקבים` : 'נעקבים';
+  if (navF) navF.textContent = state.followers.length > 0 ? `${state.followers.length} עוקבים` : 'עוקבים';
 }
 
 // ── LOGO CLICK → HOME + REFRESH ──────────────────────────────
