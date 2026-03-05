@@ -704,6 +704,18 @@ function formatDateTime(date) {
   return `${timeStr} ${dateStr}`;
 }
 
+function formatRelativeTime(date) {
+  if (!date) return '';
+  const diffMs = Date.now() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.round(diffMs / 3600000);
+  const diffDays = Math.round(diffMs / 86400000);
+  if (diffMins < 1) return 'דיווחת לפני פחות מדקה';
+  if (diffMins < 60) return `דיווחת לפני ${diffMins} דקות`;
+  if (diffHours < 24) return `דיווחת לפני כ-${diffHours} שעות`;
+  return `דיווחת לפני כ-${diffDays} ימים`;
+}
+
 // ── WATCHING ─────────────────────────────────────────────────
 async function loadWatching() {
   const q = query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
@@ -1175,7 +1187,7 @@ function updateMainUI(){
   state.isOk = ok;
 
   if (state.lastConfirmed) {
-    lt.textContent = `דיווח אחרון: ${formatDateTime(state.lastConfirmed)}`;
+    lt.textContent = formatRelativeTime(state.lastConfirmed);
   } else {
     lt.textContent = '';
   }
@@ -1291,10 +1303,16 @@ window.doInstall=async()=>{
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
+// ── RELATIVE TIME TICKER ─────────────────────────────────────
+setInterval(() => {
+  const lt = document.getElementById('lastTimeAbove');
+  if (lt && state.lastConfirmed) lt.textContent = formatRelativeTime(state.lastConfirmed);
+}, 60000);
+
 // ── SERVICE WORKER (v6 – triggers auto-update for existing users) ──
 if('serviceWorker'in navigator){
   const swCode = `
-var CACHE_NAME='ani-beseder-v6';
+var CACHE_NAME='ani-beseder-v7';
 self.addEventListener('install',function(e){
   e.waitUntil(self.skipWaiting());
 });
