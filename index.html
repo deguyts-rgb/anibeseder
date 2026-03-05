@@ -25,7 +25,7 @@
     .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
     /* APP */
     #app{display:none;flex-direction:column;align-items:center;width:100%;min-height:100vh}
-    /* HEADER - logo 50% larger */
+    /* HEADER */
     .header{width:100%;max-width:480px;padding:12px 16px 0;display:flex;align-items:center;justify-content:space-between}
     .header-logo{height:66px;cursor:pointer;transition:transform 0.15s}
     .header-logo:active{transform:scale(0.94)}
@@ -39,9 +39,12 @@
     .screen.active{display:flex}
     /* MAIN */
     #screen-main{align-items:center;justify-content:center;padding:12px 24px}
-    .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:6px;text-align:center;min-height:20px}
-    /* Last report time ABOVE button - 50% larger font (was 12px → 18px) */
-    .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:center;min-height:24px;margin-bottom:14px}
+    .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px}
+    /* Elapsed time + freq row */
+    .time-freq-row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
+    .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:right;min-height:22px}
+    /* Exact date/time below - small, non-bold */
+    .last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
     .big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none}
     .big-btn.ok{background:radial-gradient(circle at 40% 35%,#4cde80,#1a9e50);box-shadow:0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)}
     .big-btn.late{background:radial-gradient(circle at 40% 35%,#ff8c42,#c04a00);box-shadow:0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)}
@@ -51,8 +54,14 @@
     .btn-marks{font-size:14px;font-weight:800;letter-spacing:1px;margin-top:4px}
     .sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
     .sent-badge.show{opacity:1;transform:translateY(0)}
-    .sub-info{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    /* Home sub-info: vertical stack */
+    .sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
     .chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
+    /* Add followers button */
+    .add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
+    .add-followers-btn:active{transform:scale(0.97)}
+    /* Followers note */
+    .followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
     /* FOLLOW BANNER */
     .follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
     .follow-banner.show{display:block}
@@ -82,7 +91,7 @@
     .person-time.ok{color:#4cde80}
     .person-time.late{color:#ff6666}
     .person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
-    /* STATUS CIRCLES - kept for watching tab only */
+    /* STATUS CIRCLES */
     .status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
     .sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
     .sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
@@ -154,18 +163,27 @@
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
     .notif-bar.show{display:block}
     .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
-    /* NAV - 50% taller, font 30% larger, content at top, active highlight */
+    /* NAV */
     .nav{width:100%;max-width:480px;display:flex;border-top:1px solid rgba(126,207,255,0.1);background:rgba(15,25,35,0.97);position:sticky;bottom:0;z-index:10;min-height:78px}
     .nav-item{flex:1;padding:12px 4px 4px;text-align:center;font-size:14px;color:rgba(200,230,255,0.35);cursor:pointer;border-top:2px solid transparent;transition:all 0.2s;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:transparent;user-select:none}
     .nav-item.active{color:#7ecfff;border-top-color:#7ecfff;font-weight:700;background:rgba(126,207,255,0.08)}
     .nav-icon{font-size:20px;display:block;margin-bottom:3px}
     /* INSTALL BANNERS */
     .install-banner{display:none;position:fixed;bottom:86px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    /* IOS install bottom sheet */
     #iosInstallBanner{display:none;position:fixed;bottom:86px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    /* Subtitle under section title */
     .section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
     @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:32px}.btn-text{font-size:18px}}
+    /* MOOD PICKER */
+    .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
+    .mood-btn{position:absolute;bottom:-10px;left:-10px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
+    .mood-btn:active{transform:scale(0.88)}
+    .mood-btn.visible{display:flex}
+    .mood-panel{position:absolute;bottom:-10px;left:-10px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
+    .mood-panel.show{display:grid}
+    .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
+    .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
+    .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
+    .mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
   </style>
 </head>
 <body>
@@ -217,7 +235,7 @@
       <p>בשימוש באפליקציה המשתמש מצהיר כי הבין את כל האמור לעיל ומוותר על כל זכות תביעה, תלונה, דרישה או הליך משפטי כלשהו – בישראל או בכל מדינה אחרת – כנגד מפתחי האפליקציה, מפיציה, מארחיה ובעליה.</p>
       <h4>🔒 פרטיות</h4>
       <p>נשמרים: שם, כתובת אימייל ומועד הדיווח האחרון. אין מעקב מיקום. אין שיתוף מידע עם צדדים שלישיים. אין פרסום.</p>
-      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 5.1 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 6.1 | שימוש אישי בלבד | כל הזכויות שמורות</p>
     </div>
   </div>
 </div>
@@ -250,7 +268,6 @@
 
 <div id="app">
   <div class="header">
-    <!-- Logo 50% larger + clickable → home -->
     <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="goHomeRefresh()"/>
     <div class="header-right">
       <button class="policy-btn" onclick="openPolicyModal()">📋 מדיניות</button>
@@ -263,31 +280,54 @@
     <div style="font-weight:700;color:#4cde80;margin-bottom:5px" id="followBannerTitle"></div>
     <div style="font-size:12px;color:rgba(200,230,255,0.65)" id="followBannerText"></div>
   </div>
-  <!-- Follow request banners (pending requests TO me) -->
   <div id="followRequestsContainer" style="width:100%;max-width:480px;padding:0 0 4px"></div>
 
   <!-- MAIN / HOME -->
 
   <div class="screen active" id="screen-main">
-    <!-- Status text: who knows / doesn't know -->
+    <!-- Status text -->
     <p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
-    <!-- Last report time ABOVE the button (was below) - font 50% bigger -->
-    <p class="last-time-above" id="lastTimeAbove"></p>
-    <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
-      <span class="btn-emoji" id="btnEmoji">👋</span>
-      <span class="btn-text" id="btnText">אני<br>בסדר</span>
-      <span class="btn-marks" id="btnMarks"></span>
-    </button>
-    <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
-    <div class="sub-info">
-      <span class="chip" onclick="showScreen('followers')" id="followersChip">👥 0 עוקבים</span>
-      <!-- Eye icon added to watching chip -->
-      <span class="chip" onclick="showScreen('watching')" id="watchingChip">👁️ אתם בסדר? (0)</span>
-      <span class="chip" onclick="showScreen('settings')" id="freqChip">🔄 כל יום</span>
-    </div>
+
+```
+<!-- [1] שורה: זמן שחלף (ימין) + כפתור תדירות (שמאל) [שינוי 5] -->
+<div class="time-freq-row">
+  <span class="chip" onclick="showScreen('settings')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
+  <p class="last-time-above" id="lastTimeAbove"></p>
+</div>
+
+<!-- [1] תאריך ושעה מדויקים מתחת, קטן ולא מודגש [שינוי 1] -->
+<p class="last-date-below" id="lastDateBelow"></p>
+
+<div class="btn-wrapper">
+<button class="big-btn" id="bigBtn" onclick="handleOkPress()">
+  <span class="btn-emoji" id="btnEmoji">👋</span>
+  <span class="btn-text" id="btnText">אני<br>בסדר</span>
+  <span class="btn-marks" id="btnMarks"></span>
+</button>
+<!-- כפתור בחירת מצב רוח – מופיע רק כשהמצב ירוק -->
+<button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)" title="איזה בסדר אתה?">😊</button>
+<!-- חלונית בחירת אימוג׳י 3×3 -->
+<div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
+  <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
+</div>
+</div>
+<div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
+
+<!-- sub-info: ירוק + עוקבים + הערה (בלי "אתם בסדר") [שינויים 2, 3, 4] -->
+<div class="sub-info">
+  <!-- [2] כפתור ירקרק "הוסף עוקבים" מעל כפתור העוקבים -->
+  <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
+  <!-- כפתור עוקבים -->
+  <span class="chip" onclick="showScreen('followers')" id="followersChip">👥 0 עוקבים</span>
+  <!-- [3] הערה מתחת לכפתור העוקבים -->
+  <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
+  <!-- [4] כפתור "אתם בסדר?()" הוסר -->
+</div>
+```
+
   </div>
 
-  <!-- WATCHING (swapped – now before followers in tab order) -->
+  <!-- WATCHING -->
 
   <div class="screen" id="screen-watching">
     <div class="section-title">
@@ -295,7 +335,6 @@
       <button class="refresh-btn-small" onclick="refreshCurrentTab('watching')">🔄 בדוק דיווחים מעודכנים</button>
     </div>
     <p style="font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;margin-top:-8px;line-height:1.6">מצב הדיווח של האנשים שאתה עוקב אחריהם:</p>
-    <!-- Battery bar -->
     <div class="battery-wrap" id="watchingBarWrap" style="display:none">
       <div class="battery-label" id="watchingBarLabel"></div>
       <div class="battery-bar-outer">
@@ -313,7 +352,6 @@
       <span id="followersTitle">👥 עוקבים שלי (0)</span>
       <button class="refresh-btn-small" onclick="refreshCurrentTab('followers')">🔄 בדוק דיווחים מעודכנים</button>
     </div>
-    <!-- Subtitle (change 4.4) -->
     <p class="section-subtitle">מי מעודכן שאני בסדר:</p>
     <div class="share-box">
       <p style="font-weight:700;color:#4cde80;margin-bottom:5px;font-size:14px">📲 הלינק האישי שלך</p>
@@ -321,7 +359,6 @@
       <div class="share-link" id="myShareLink">טוען...</div>
       <button class="share-btn" onclick="doShare()">📤 שתף עכשיו</button>
     </div>
-    <!-- Legend removed (change 4.2) -->
     <div id="followersList"><p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p></div>
   </div>
 
@@ -329,51 +366,43 @@
 
   <div class="screen" id="screen-settings">
     <p class="section-title">⚙️ הגדרות</p>
-
-```
-<!-- Notifications toggle button (change 5.2) -->
-<button id="notifToggleBtn" class="settings-action-btn notif-off-btn" onclick="toggleNotifications()">🔔 הפעל התראות</button>
-<!-- Add to home screen (change 5.3) -->
-<button id="addHomeBtn" class="settings-action-btn addhome-btn" onclick="addToHomeScreen()" style="display:none">📲 הוסף אפליקציה למסך הבית</button>
-
-<p class="settings-section-title">🔄 תדירות דיווח</p>
-<!-- Hint text (change 5.1) -->
-<p class="freq-hint" style="margin-bottom:8px">הדיווח מתאפס בחצות לפי תדירות הדיווח</p>
-<div class="freq-option active" id="freq-daily" onclick="setFreq('daily')">כל יום</div>
-<div class="freq-option" id="freq-odd" onclick="setFreq('odd')">כל יום אי-זוגי (א׳,ג׳,ה׳,ש׳)</div>
-<div class="freq-option" id="freq-even" onclick="setFreq('even')">כל יום זוגי (ב׳,ד׳,ו׳)</div>
-<div class="freq-option" id="freq-specific" onclick="setFreq('specific')">ימים ספציפיים</div>
-<div class="freq-option" id="freq-interval" onclick="setFreq('interval')">מרווח זמן קבוע</div>
-<div class="card" id="specificDaysCard" style="display:none;margin-top:8px">
-  <p class="card-hint">בחר ימים:</p>
-  <div class="day-grid">
-    <div class="day-cell" id="day-0" onclick="toggleDay(0)">א׳</div>
-    <div class="day-cell" id="day-1" onclick="toggleDay(1)">ב׳</div>
-    <div class="day-cell" id="day-2" onclick="toggleDay(2)">ג׳</div>
-    <div class="day-cell" id="day-3" onclick="toggleDay(3)">ד׳</div>
-    <div class="day-cell" id="day-4" onclick="toggleDay(4)">ה׳</div>
-    <div class="day-cell" id="day-5" onclick="toggleDay(5)">ו׳</div>
-    <div class="day-cell" id="day-6" onclick="toggleDay(6)">ש׳</div>
-  </div>
-</div>
-<div class="card" id="intervalCard" style="display:none;margin-top:8px">
-  <p class="card-hint">כל כמה ימים?</p>
-  <div class="interval-grid">
-    <div class="interval-cell active" id="int-1" onclick="setIntervalDays(1)">1</div>
-    <div class="interval-cell" id="int-2" onclick="setIntervalDays(2)">2</div>
-    <div class="interval-cell" id="int-3" onclick="setIntervalDays(3)">3</div>
-    <div class="interval-cell" id="int-4" onclick="setIntervalDays(4)">4</div>
-  </div>
-</div>
-<p class="settings-section-title" style="margin-top:16px">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
-<div class="card" id="personalAlertsCard"></div>
-<p class="settings-section-title">⚠️ התראות לעוקבים אם לא דיווחתי <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
-<div class="card" id="followerAlertsCard"></div>
-```
-
+    <button id="notifToggleBtn" class="settings-action-btn notif-off-btn" onclick="toggleNotifications()">🔔 הפעל התראות</button>
+    <button id="addHomeBtn" class="settings-action-btn addhome-btn" onclick="addToHomeScreen()" style="display:none">📲 הוסף אפליקציה למסך הבית</button>
+    <p class="settings-section-title">🔄 תדירות דיווח</p>
+    <p class="freq-hint" style="margin-bottom:8px">הדיווח מתאפס בחצות לפי תדירות הדיווח</p>
+    <div class="freq-option active" id="freq-daily" onclick="setFreq('daily')">כל יום</div>
+    <div class="freq-option" id="freq-odd" onclick="setFreq('odd')">כל יום אי-זוגי (א׳,ג׳,ה׳,ש׳)</div>
+    <div class="freq-option" id="freq-even" onclick="setFreq('even')">כל יום זוגי (ב׳,ד׳,ו׳)</div>
+    <div class="freq-option" id="freq-specific" onclick="setFreq('specific')">ימים ספציפיים</div>
+    <div class="freq-option" id="freq-interval" onclick="setFreq('interval')">מרווח זמן קבוע</div>
+    <div class="card" id="specificDaysCard" style="display:none;margin-top:8px">
+      <p class="card-hint">בחר ימים:</p>
+      <div class="day-grid">
+        <div class="day-cell" id="day-0" onclick="toggleDay(0)">א׳</div>
+        <div class="day-cell" id="day-1" onclick="toggleDay(1)">ב׳</div>
+        <div class="day-cell" id="day-2" onclick="toggleDay(2)">ג׳</div>
+        <div class="day-cell" id="day-3" onclick="toggleDay(3)">ד׳</div>
+        <div class="day-cell" id="day-4" onclick="toggleDay(4)">ה׳</div>
+        <div class="day-cell" id="day-5" onclick="toggleDay(5)">ו׳</div>
+        <div class="day-cell" id="day-6" onclick="toggleDay(6)">ש׳</div>
+      </div>
+    </div>
+    <div class="card" id="intervalCard" style="display:none;margin-top:8px">
+      <p class="card-hint">כל כמה ימים?</p>
+      <div class="interval-grid">
+        <div class="interval-cell active" id="int-1" onclick="setIntervalDays(1)">1</div>
+        <div class="interval-cell" id="int-2" onclick="setIntervalDays(2)">2</div>
+        <div class="interval-cell" id="int-3" onclick="setIntervalDays(3)">3</div>
+        <div class="interval-cell" id="int-4" onclick="setIntervalDays(4)">4</div>
+      </div>
+    </div>
+    <p class="settings-section-title" style="margin-top:16px">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
+    <div class="card" id="personalAlertsCard"></div>
+    <p class="settings-section-title">⚠️ התראות לעוקבים אם לא דיווחתי <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
+    <div class="card" id="followerAlertsCard"></div>
   </div>
 
-  <!-- NAV: watching before followers (swapped) -->
+  <!-- NAV -->
 
   <div class="nav" id="mainNav">
     <div class="nav-item active" id="nav-main" onclick="showScreen('main')"><span class="nav-icon">🏠</span>בית</div>
@@ -405,7 +434,6 @@ const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 
-// ── TAB ORDER for swipe ───────────────────────────────────────
 const TAB_ORDER = ['main','watching','followers','settings'];
 
 // ── MIDNIGHT RESET LOGIC ─────────────────────────────────────
@@ -416,30 +444,17 @@ function getMidnightMs(daysAgo = 0) {
   return d.getTime();
 }
 
-// Returns true if lastConfirmed is within the current reporting window
 function isWithinReportingPeriod() {
   if (!state.lastConfirmed) return false;
   const lc = state.lastConfirmed.getTime();
   const freq = state.freq;
-
-  if (freq === 'daily') {
-    return lc >= getMidnightMs(0);
-  }
+  if (freq === 'daily') return lc >= getMidnightMs(0);
   if (freq === 'interval') {
     const n = state.intervalDays || 1;
-    // Must have reported within last n days (since midnight n-1 days ago)
     return lc >= getMidnightMs(n - 1);
   }
-  if (freq === 'odd') {
-    // Odd days: Sun(0), Tue(2), Thu(4), Sat(6)
-    const oddDays = [0, 2, 4, 6];
-    return lc >= getLastRequiredDayMidnight(oddDays);
-  }
-  if (freq === 'even') {
-    // Even days: Mon(1), Wed(3), Fri(5)
-    const evenDays = [1, 3, 5];
-    return lc >= getLastRequiredDayMidnight(evenDays);
-  }
+  if (freq === 'odd') return lc >= getLastRequiredDayMidnight([0, 2, 4, 6]);
+  if (freq === 'even') return lc >= getLastRequiredDayMidnight([1, 3, 5]);
   if (freq === 'specific') {
     const days = state.specificDays || [];
     if (!days.length) return lc >= getMidnightMs(0);
@@ -452,9 +467,7 @@ function getLastRequiredDayMidnight(allowedDays) {
   const today = new Date().getDay();
   for (let back = 0; back <= 7; back++) {
     const checkDay = (today - back + 7) % 7;
-    if (allowedDays.includes(checkDay)) {
-      return getMidnightMs(back);
-    }
+    if (allowedDays.includes(checkDay)) return getMidnightMs(back);
   }
   return getMidnightMs(0);
 }
@@ -504,10 +517,61 @@ let state = {
   freq:'daily', specificDays:[], intervalDays:1,
   isOk:false, lastConfirmed:null, okCount:0,
   followers:[], watching:[],
-  mutualUids: new Set()
+  mutualUids: new Set(),
+  moodEmoji: null, moodLevel: 2
 };
 let statusListeners = [];
 let watchingStatuses = {};
+
+// ── MOOD PICKER ───────────────────────────────────────────────
+const MOOD_OPTIONS = [
+  {emoji:'🤩', label:'מדהים',  level:1},
+  {emoji:'😄', label:'שמח',    level:1},
+  {emoji:'🥳', label:'חוגג',   level:1},
+  {emoji:'😊', label:'טוב',    level:2},
+  {emoji:'😌', label:'רגוע',   level:2},
+  {emoji:'🥰', label:'אוהב',   level:2},
+  {emoji:'🙂', label:'בסדר',   level:3},
+  {emoji:'😅', label:'עסוק',   level:3},
+  {emoji:'😐', label:'ניטרלי', level:3},
+];
+const MOOD_COLORS = {
+  1: {bg:'radial-gradient(circle at 40% 35%,#6ef0a0,#18c05a)', glow:'0 0 72px rgba(40,240,120,0.6),0 8px 32px rgba(0,0,0,0.4)'},
+  2: {bg:'radial-gradient(circle at 40% 35%,#4cde80,#1a9e50)', glow:'0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)'},
+  3: {bg:'radial-gradient(circle at 40% 35%,#3db870,#137040)', glow:'0 0 48px rgba(30,155,80,0.35),0 8px 32px rgba(0,0,0,0.4)'},
+};
+
+function renderMoodPanel() {
+  const panel = document.getElementById('moodPanel');
+  panel.innerHTML = '<div class="mood-panel-title">איזה בסדר אתה? 😊</div>' +
+    MOOD_OPTIONS.map((m,i) =>
+      `<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span><span class="mood-cell-label">${m.label}</span></div>`
+    ).join('');
+}
+
+window.toggleMoodPanel = (e) => {
+  e.stopPropagation();
+  const panel = document.getElementById('moodPanel');
+  if (!panel.querySelector('.mood-cell')) renderMoodPanel();
+  panel.classList.toggle('show');
+};
+
+window.selectMood = (idx) => {
+  const mood = MOOD_OPTIONS[idx];
+  state.moodEmoji = mood.emoji;
+  state.moodLevel = mood.level;
+  if (currentUser) {
+    localStorage.setItem('moodEmoji_' + currentUser.uid, mood.emoji);
+    localStorage.setItem('moodLevel_' + currentUser.uid, String(mood.level));
+  }
+  document.getElementById('moodPanel').classList.remove('show');
+  document.getElementById('moodBtn').textContent = mood.emoji;
+  updateMainUI();
+};
+
+document.addEventListener('click', () => {
+  document.getElementById('moodPanel')?.classList.remove('show');
+});
 
 // Alert settings
 const defaultPersonalAlerts = [
@@ -590,7 +654,6 @@ onAuthStateChanged(auth, async user => {
     renderAlerts();
     checkInstallPrompt();
     if (Notification.permission === 'granted') registerFCMToken();
-    // Restore active tab after refresh
     const savedTab = sessionStorage.getItem('activeTab');
     if (savedTab) { sessionStorage.removeItem('activeTab'); showScreen(savedTab); }
   } else {
@@ -618,7 +681,6 @@ async function initUser() {
   } else {
     await setDoc(ref,{name:currentUser.displayName,email:currentUser.email,freq:'daily',specificDays:[],intervalDays:1,okCount:0,createdAt:serverTimestamp()});
   }
-  // localStorage backup
   const stored = localStorage.getItem('lastConfirmed_'+currentUser.uid);
   if (stored) {
     const t = new Date(stored);
@@ -632,6 +694,12 @@ async function initUser() {
   }
   await loadFollowers();
   syncFreqUI();
+  // טעינת אימוג׳י מצב רוח שמור (רק אם עדיין בסדר)
+  if (state.isOk) {
+    const savedEmoji = localStorage.getItem('moodEmoji_' + currentUser.uid);
+    const savedLevel = localStorage.getItem('moodLevel_' + currentUser.uid);
+    if (savedEmoji) { state.moodEmoji = savedEmoji; state.moodLevel = parseInt(savedLevel)||2; }
+  }
   updateMainUI();
 }
 
@@ -654,17 +722,6 @@ async function buildMutualSet() {
   state.mutualUids = iFollow;
 }
 
-function getFollowerStatus(followerUid) {
-  const readKey = `read_${currentUser.uid}_${followerUid}`;
-  const readAt = localStorage.getItem(readKey);
-  const lastOkTime = state.lastConfirmed;
-  if (!state.isOk || !lastOkTime) return 'red';
-  if (!isWithinReportingPeriod()) return 'red';
-  if (readAt && new Date(readAt) > lastOkTime) return 'green';
-  if (state.isOk) return 'yellow';
-  return 'unknown';
-}
-
 function renderFollowers() {
   const el = document.getElementById('followersList');
   document.getElementById('followersTitle').textContent = `👥 עוקבים שלי (${state.followers.length})`;
@@ -674,10 +731,7 @@ function renderFollowers() {
   }
   const userIsOk = state.isOk && isWithinReportingPeriod();
   el.innerHTML = state.followers.map(f => {
-    // Color status text: green if ok, red if late (change 4.3) - No circle (change 4.1)
-    const timeText = state.lastConfirmed
-      ? `${formatDateTime(state.lastConfirmed)}`
-      : '';
+    const timeText = state.lastConfirmed ? `${formatDateTime(state.lastConfirmed)}` : '';
     const timeClass = userIsOk ? 'ok' : 'late';
     const isMutual = state.mutualUids.has(f.followerUid);
     const badgeHtml = isMutual
@@ -763,7 +817,6 @@ function sortWatchingEntries(watching, statuses) {
     const okB = isPersonOk(b.followingUid);
     if (!okA && okB) return -1;
     if (okA && !okB) return 1;
-    // Same status: most hours overdue first (= oldest report first)
     return getHrs(b.followingUid) - getHrs(a.followingUid);
   });
 }
@@ -779,15 +832,10 @@ function renderWatchingWithStatuses(watching, statuses) {
     updateChips();
     return;
   }
-  // Update battery bar (change 3.1)
   updateBatteryBar(watching, statuses);
-
   const followerUids = new Set(state.followers.map(f => f.followerUid));
   const now = Date.now();
-
-  // Sort list (change 3.4)
   const sorted = sortWatchingEntries(watching, statuses);
-
   el.innerHTML = sorted.map(w => {
     const s = statuses[w.followingUid];
     let circleClass = 'sc-unknown', circleText = '?', timeText = 'טרם עדכן';
@@ -797,22 +845,20 @@ function renderWatchingWithStatuses(watching, statuses) {
       if (s.isOk && hrs < 24) {
         circleClass = 'sc-green'; circleText = '✓';
         timeText = 'עדכון: ' + formatDateTime(s.timestamp);
-        timeColor = '#4cde80'; // green (change 3.3)
+        timeColor = '#4cde80';
       } else if (hrs >= 24) {
         circleClass = 'sc-late'; circleText = 'לא\nבסדר';
         timeText = 'לא עדכן מ-24+ שעות';
-        timeColor = '#ff6666'; // red (change 3.3)
+        timeColor = '#ff6666';
       } else {
         timeColor = '#ff6666';
       }
     }
     const isMutual = followerUids.has(w.followingUid);
-    // Change 3.2: "עוקב אחריו" → "בקש מעקב אחריך"
     let badgeHtml;
     if (isMutual) {
       badgeHtml = `<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`;
     } else {
-      // Check if follow request already sent
       const reqSent = localStorage.getItem('followReqSent_' + currentUser.uid + '_' + w.followingUid);
       if (reqSent) {
         badgeHtml = `<span class="follow-badge fb-request-sent">ממתין לאישור מעקב ⏳</span>`;
@@ -870,7 +916,7 @@ function updateBatteryBar(watching, statuses) {
   barRed.textContent = notOkPct > 8 ? notOkPct + '%' : '';
 }
 
-// ── FOLLOW REQUEST (change 3.2) ───────────────────────────────
+// ── FOLLOW REQUEST ────────────────────────────────────────────
 window.requestFollowBack = async (uid, name) => {
   const reqId = `${currentUser.uid}_${uid}`;
   await setDoc(doc(db, 'followRequests', reqId), {
@@ -882,7 +928,6 @@ window.requestFollowBack = async (uid, name) => {
     createdAt: serverTimestamp()
   });
   localStorage.setItem('followReqSent_' + currentUser.uid + '_' + uid, '1');
-  // Send push to target person
   try {
     await fetch('/.netlify/functions/send-push', {
       method: 'POST',
@@ -1101,7 +1146,6 @@ function updateNotifToggleBtn() {
 window.toggleNotifications = async () => {
   if (!('Notification' in window)) { alert('המכשיר שלך אינו תומך בהתראות'); return; }
   if (Notification.permission === 'granted') {
-    // Can't programmatically revoke; guide user
     alert('כדי לבטל התראות, עבור להגדרות הדפדפן/מכשיר שלך וחסום התראות עבור האתר הזה.');
   } else {
     const p = await Notification.requestPermission();
@@ -1124,7 +1168,7 @@ window.askNotifications = async()=>{
   updateNotifToggleBtn();
 };
 
-// ── ADD TO HOME SCREEN (change 5.3) ──────────────────────────
+// ── ADD TO HOME SCREEN ────────────────────────────────────────
 let deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -1138,7 +1182,6 @@ function updateAddHomeBtn() {
     btn.style.display = 'none'; return;
   }
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isChrome = /chrome/i.test(navigator.userAgent) && !/edge|opr/i.test(navigator.userAgent);
   const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
   if (deferredInstallPrompt) {
     btn.style.display = 'block';
@@ -1183,18 +1226,33 @@ function updateMainUI(){
   const btnMarks=document.getElementById('btnMarks');
   const st=document.getElementById('statusText');
   const lt=document.getElementById('lastTimeAbove');
+  const ld=document.getElementById('lastDateBelow');
+  const moodBtn=document.getElementById('moodBtn');
   const ok = isWithinReportingPeriod();
   state.isOk = ok;
 
+  // [1] Relative time (above) + exact date/time (below, small)
   if (state.lastConfirmed) {
     lt.textContent = formatRelativeTime(state.lastConfirmed);
+    ld.textContent = formatDateTime(state.lastConfirmed);
   } else {
     lt.textContent = '';
+    ld.textContent = '';
   }
 
   if (ok) {
     btn.classList.add('ok'); btn.classList.remove('late');
-    btnEmoji.textContent = '';
+    // החל צבע ואימוג׳י לפי מצב רוח שנבחר
+    if (state.moodEmoji && state.moodLevel) {
+      const mc = MOOD_COLORS[state.moodLevel] || MOOD_COLORS[2];
+      btn.style.background = mc.bg;
+      btn.style.boxShadow = mc.glow;
+      btnEmoji.textContent = state.moodEmoji;
+    } else {
+      btn.style.background = '';
+      btn.style.boxShadow = '';
+      btnEmoji.textContent = '';
+    }
     btnText.innerHTML = 'אני<br>בסדר';
     const vCount = Math.min(state.okCount, 6);
     btnMarks.textContent = '✓'.repeat(vCount);
@@ -1206,8 +1264,11 @@ function updateMainUI(){
       st.textContent = '✅ העוקבים שלך קיבלו דיווח';
       btn.style.cursor = 'pointer';
     }
+    moodBtn.classList.add('visible');
+    moodBtn.textContent = state.moodEmoji || '😊';
   } else if (state.lastConfirmed) {
     btn.classList.remove('ok'); btn.classList.add('late');
+    btn.style.background = ''; btn.style.boxShadow = '';
     btnEmoji.textContent = '';
     btnText.innerHTML = 'לא<br>בסדר';
     btnMarks.textContent = '✕';
@@ -1218,8 +1279,11 @@ function updateMainUI(){
       : '⚠️ לא דיווחת בזמן! לחץ לעדכן';
     btn.style.cursor = 'pointer';
     state.okCount = 0;
+    moodBtn.classList.remove('visible');
+    state.moodEmoji = null; state.moodLevel = 2;
   } else {
     btn.classList.remove('ok','late');
+    btn.style.background = ''; btn.style.boxShadow = '';
     btnEmoji.textContent = '👋';
     btnText.innerHTML = 'אני<br>בסדר';
     btnMarks.textContent = '';
@@ -1227,13 +1291,15 @@ function updateMainUI(){
       ? `${state.followers.length} העוקבים שלך לא יודעים אם את/ה בסדר!`
       : 'לחץ לעדכן שהכל בסדר';
     btn.style.cursor = 'pointer';
+    moodBtn.classList.remove('visible');
   }
   updateChips();
 }
 
 function updateChips(){
   document.getElementById('followersChip').textContent=`👥 ${state.followers.length} עוקבים`;
-  document.getElementById('watchingChip').textContent=`👁️ אתם בסדר? (${state.watching.length})`;
+  // watchingChip removed from home screen - update title only
+  document.getElementById('watchingTitle').textContent=`👁️ אתם בסדר? (${state.watching.length})`;
   const labels={daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל ${state.intervalDays} ימים`};
   document.getElementById('freqChip').textContent='🔄 '+(labels[state.freq]||'כל יום');
 }
@@ -1259,7 +1325,7 @@ window.refreshCurrentTab = (tabName) => {
   location.reload();
 };
 
-// ── SWIPE NAVIGATION (change 1.3) ────────────────────────────
+// ── SWIPE NAVIGATION ─────────────────────────────────────────
 (function(){
   let startX = 0, startY = 0;
   const appEl = document.getElementById('app');
@@ -1271,13 +1337,12 @@ window.refreshCurrentTab = (tabName) => {
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      // Find current tab index
       const current = document.querySelector('.nav-item.active');
       if (!current) return;
       const currentId = current.id.replace('nav-','');
       const idx = TAB_ORDER.indexOf(currentId);
-      if (dx < 0 && idx < TAB_ORDER.length - 1) showScreen(TAB_ORDER[idx+1]); // swipe left = next
-      if (dx > 0 && idx > 0) showScreen(TAB_ORDER[idx-1]); // swipe right = prev
+      if (dx < 0 && idx < TAB_ORDER.length - 1) showScreen(TAB_ORDER[idx+1]);
+      if (dx > 0 && idx > 0) showScreen(TAB_ORDER[idx-1]);
     }
   }, {passive:true});
 })();
@@ -1309,10 +1374,10 @@ setInterval(() => {
   if (lt && state.lastConfirmed) lt.textContent = formatRelativeTime(state.lastConfirmed);
 }, 60000);
 
-// ── SERVICE WORKER (v6 – triggers auto-update for existing users) ──
+// ── SERVICE WORKER (v8 – triggers auto-update) ────────────────
 if('serviceWorker'in navigator){
   const swCode = `
-var CACHE_NAME='ani-beseder-v7';
+var CACHE_NAME='ani-beseder-v8';
 self.addEventListener('install',function(e){
   e.waitUntil(self.skipWaiting());
 });
@@ -1352,10 +1417,8 @@ self.addEventListener('notificationclick',function(e){
   var blob = new Blob([swCode], {type:'text/javascript'});
   var swUrl = URL.createObjectURL(blob);
   navigator.serviceWorker.register(swUrl, {scope:'/'}).catch(function(){});
-  // Listen for SW_UPDATED message → reload to get new version
   navigator.serviceWorker.addEventListener('message', function(e){
     if(e.data && e.data.type === 'SW_UPDATED'){
-      const tab = sessionStorage.getItem('activeTab');
       location.reload();
     }
   });
