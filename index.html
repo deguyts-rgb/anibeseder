@@ -24,16 +24,17 @@
     .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
     #app{display:none;flex-direction:column;align-items:center;width:100%}
     #header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-    .header{width:100%;max-width:480px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
-    .header-logo{height:87px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
+    .header{width:100%;max-width:480px;margin:0 auto;padding:2px 16px;display:flex;align-items:center;justify-content:space-between}
+    .header-logo{height:65px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
     .header-logo:active{transform:scale(0.94)}
     .avatar{width:36px;height:36px;border-radius:50%;background:rgba(126,207,255,0.15);border:2px solid rgba(126,207,255,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:transform 0.15s}
     .avatar:active{transform:scale(0.88)}
     .avatar img{width:100%;height:100%;object-fit:cover}
-    .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:5px 10px 6px;display:flex;align-items:center;justify-content:space-around;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
+    .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 10px 3px;display:flex;align-items:center;justify-content:space-around;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
     .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:8px;font-family:inherit;display:flex;align-items:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
-    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:12px 20px 40px}
+    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:22px 20px 40px}
+    .last-time-above{font-size:16px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;min-height:20px;margin-bottom:4px;width:100%}
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
     .notif-bar.show{display:block}
     .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
@@ -46,7 +47,9 @@
     .follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
     .follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
     .status-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;width:100%;flex-wrap:wrap;min-height:22px}
-    .status-text-inline{font-size:13px;color:rgba(200,230,255,0.6);text-align:center;line-height:1.5}
+    .status-text-inline{font-size:13px;color:#4cde80;text-align:center;line-height:1.5;font-weight:600;transition:color 0.3s}
+    .status-text-inline.dim{color:rgba(200,230,255,0.5);font-weight:400}
+    .status-text-inline.err{color:#ff6666;font-weight:700}
     .add-friends-inline-btn{background:rgba(40,200,100,0.12);border:1px solid rgba(40,200,100,0.3);border-radius:10px;color:#4cde80;font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit;white-space:nowrap;display:none;align-items:center;gap:3px;font-weight:600}
     .add-friends-plus{font-weight:900;color:#fff;font-size:13px}
     .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
@@ -84,20 +87,26 @@
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
     .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-    .wcard{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:14px;margin-bottom:10px;padding:12px 14px;width:100%}
-    .wcard-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-    .wcard-identity{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;width:58px}
-    .wcard-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;flex-shrink:0}
+    .wcard{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:14px;margin-bottom:10px;width:100%;display:flex;align-items:stretch;overflow:hidden;min-height:110px}
+    .wcard-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0;width:72px;padding:10px 6px;background:rgba(0,0,0,0.12);border-left:1px solid rgba(126,207,255,0.1)}
+    .wcard-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0}
     .wc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
     .wc-red{background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite}
     .wc-unknown{background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35)}
-    .wcard-iname{font-size:11px;font-weight:600;color:rgba(200,230,255,0.65);text-align:center;word-break:break-word;line-height:1.2;max-width:58px}
-    .wcard-status-wrap{flex:1;padding-top:3px;min-width:0}
-    .wcard-status{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.5;word-break:break-word}
-    .wcard-status.dim{font-size:12px;color:rgba(200,230,255,0.32);font-weight:400}
-    .wcard-status.err{font-size:13px;color:#ff8888;font-weight:600}
-    .wcard-bottom{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-    .wcard-time{font-size:10px;color:rgba(200,230,255,0.36);margin-inline-start:auto}
+    .wcard-iname{font-size:10px;font-weight:600;color:rgba(200,230,255,0.6);text-align:center;word-break:break-word;line-height:1.2;max-width:66px}
+    .wcard-status-wrap{flex:1;display:flex;align-items:center;padding:10px 10px;min-width:0}
+    .wcard-status{font-size:18px;font-weight:700;color:#e8f4f8;line-height:1.5;word-break:break-word}
+    .wcard-status.dim{font-size:13px;color:rgba(200,230,255,0.3);font-weight:400}
+    .wcard-status.err{font-size:14px;color:#ff8888;font-weight:600}
+    .wcard-actions{display:flex;flex-direction:column;align-items:stretch;gap:5px;flex-shrink:0;width:54px;padding:8px 6px;justify-content:space-between;border-right:1px solid rgba(126,207,255,0.1)}
+    .wcard-action-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:8px;padding:5px 3px;cursor:pointer;font-size:14px;flex:1;text-align:center}
+    .wcard-badge-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:8px;padding:4px 2px;flex:1;text-align:center;font-size:9px;font-weight:600;line-height:1.2}
+    .wcard-badge-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
+    .wcard-badge-req{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
+    .wcard-badge-pending{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);color:rgba(255,220,130,0.75)}
+    .wcard-nudge{background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);color:rgba(255,220,130,0.7)}
+    .wcard-trash{background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);color:rgba(255,120,120,0.6)}
+    .wcard-time{font-size:9px;color:rgba(200,230,255,0.3);text-align:center;margin-top:2px;line-height:1.2}
     .follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
     .fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
     .fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
@@ -341,13 +350,15 @@
 
   <div id="main-content">
     <div class="status-row">
-      <span class="status-text-inline" id="statusText">לחץ לעדכן שהכל בסדר</span>
+      <span class="status-text-inline dim" id="statusText">לחץ לעדכן שהכל בסדר</span>
       <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
         <span class="add-friends-plus">+</span>הוסף חברים
       </button>
     </div>
 
 ```
+<p class="last-time-above" id="lastTimeAbove"></p>
+
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
@@ -671,6 +682,7 @@ function renderFollowers(){
   }).join('');
 }
 function formatDateTime(d){if(!d)return'';return d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function formatRelativeTime(d){if(!d)return'';const ms=Date.now()-d.getTime(),m=Math.floor(ms/60000),h=Math.round(ms/3600000),dy=Math.round(ms/86400000);if(m<1)return'דיווחת לפני פחות מדקה';if(m<60)return`דיווחת לפני ${m} דקות`;if(h<24)return`דיווחת לפני כ-${h} שעות`;return`דיווחת לפני כ-${dy} ימים`;}
 function formatRelativeTimeOther(d){if(!d)return'';const ms=Date.now()-d.getTime(),m=Math.floor(ms/60000),h=Math.round(ms/3600000),dy=Math.round(ms/86400000);if(m<1)return'לפני פחות מדקה';if(m<60)return`לפני ${m} דק׳`;if(h<24)return`לפני ${h} שע׳`;return`לפני ${dy} ימים`;}
 
 async function loadWatching(){
@@ -732,7 +744,21 @@ function renderWatchingWithStatuses(watching,statuses){
     const isMutual=fUids.has(w.followingUid);
     const reqSent=localStorage.getItem('followReqSent_'+currentUser.uid+'_'+w.followingUid);
     const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים הדדי</span>`:reqSent?`<span class="follow-badge fb-request-sent">ממתין לאישור ⏳</span>`:`<span class="follow-badge fb-request-me" onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">בקש מעקב ＋</span>`;
-    return `<div class="wcard" id="wrow-${w.followingUid}"><div class="wcard-top"><div class="wcard-identity"><div class="wcard-circle ${circleClass}">${circleContent}</div><div class="wcard-iname">${w.followingName||'משתמש'}</div></div><div class="wcard-status-wrap">${statusHTML}</div></div><div class="wcard-bottom"><button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר</span></button>${badge}<button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>${timeStr?`<span class="wcard-time">${timeStr}</span>`:''}</div></div>`;
+    return `<div class="wcard" id="wrow-${w.followingUid}">
+      <div class="wcard-identity">
+        <div class="wcard-circle ${circleClass}">${circleContent}</div>
+        <div class="wcard-iname">${w.followingName||'משתמש'}</div>
+      </div>
+      <div class="wcard-status-wrap">${statusHTML}</div>
+      <div class="wcard-actions">
+        <div class="wcard-action-btn wcard-badge-cell ${isMutual?'wcard-badge-mutual':reqSent?'wcard-badge-pending':'wcard-badge-req'}"
+          ${!isMutual&&!reqSent?`onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')"`:''}
+        >${isMutual?'🤝<br>הדדי':reqSent?'⏳<br>ממתין':'➕<br>בקש'}</div>
+        <button class="wcard-action-btn wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span style="font-size:8px;color:rgba(255,220,130,0.6)">נדנד</span></button>
+        <button class="wcard-action-btn wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span style="font-size:8px;color:rgba(255,120,120,0.5)">הסר</span></button>
+        ${timeStr?`<div class="wcard-time">${timeStr}</div>`:''}
+      </div>
+    </div>`;
   }).join('');
   updateChips();
 }
@@ -847,6 +873,7 @@ function updateMainUI(){
   const btnEmoji=document.getElementById('btnEmoji');
   const btnCustom=document.getElementById('btnCustomText');
   const st=document.getElementById('statusText');
+  const ltEl=document.getElementById('lastTimeAbove');
   const moodBtn=document.getElementById('moodBtn');
   const signBtn=document.getElementById('signBtn');
   const addFriendsBtn=document.getElementById('addFriendsInlineBtn');
@@ -855,6 +882,8 @@ function updateMainUI(){
   const cnt=state.watching.length;
   const titleEl=document.getElementById('friendsSectionTitle');
   if(titleEl) titleEl.textContent=`${cnt} החברים שלך בסדר?`;
+  // Relative time above button
+  if(ltEl) ltEl.textContent=state.lastConfirmed?formatRelativeTime(state.lastConfirmed):'';
 
   if(ok){
     const sign=state.sign, emoji=state.moodEmoji||'', quoteSign=sign==='"';
@@ -865,10 +894,15 @@ function updateMainUI(){
     if(state.customText){ btnCustom.textContent=state.customText; btnCustom.style.display='block'; }
     else { btnCustom.style.display='none'; }
     applyTimerGradient();
-    // Build status line
-    const signPart=sign?(quoteSign?' ״':sign):'';
+    // Status text – green, with correct quote placement
+    st.className='status-text-inline';
     if(state.okCount>=100){ st.textContent='✅ עדכנת 100 פעמים!'; btn.style.cursor='not-allowed'; }
-    else { st.textContent=`${cnt} החברים שלך יודעים שאתה בסדר${signPart}${emoji?' '+emoji:''}`; }
+    else {
+      let statusStr;
+      if(quoteSign) statusStr=`${cnt} החברים שלך יודעים ש״אתה בסדר״${emoji?' '+emoji:''}`;
+      else statusStr=`${cnt} החברים שלך יודעים שאתה בסדר${sign||''}${emoji?' '+emoji:''}`;
+      st.textContent=statusStr;
+    }
     if(addFriendsBtn) addFriendsBtn.style.display='flex';
     moodBtn.classList.add('visible'); moodBtn.textContent=emoji||'😊';
     signBtn.classList.add('visible');
@@ -877,7 +911,8 @@ function updateMainUI(){
     btn.style.boxShadow='0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
     btnEmoji.textContent=''; btnText.innerHTML='לא<br>בסדר'; btnCustom.style.display='none';
     const fcnt=state.followers.length;
-    st.textContent=fcnt>0?`${fcnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
+    st.className='status-text-inline err';
+    st.textContent=fcnt>0?`✕ ${fcnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
     btn.style.cursor='pointer'; state.okCount=0;
     if(addFriendsBtn) addFriendsBtn.style.display='none';
     moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
@@ -886,7 +921,8 @@ function updateMainUI(){
     btn.style.background='radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a)';
     btn.style.boxShadow='0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
     btnEmoji.textContent='👋'; btnText.innerHTML='אני<br>בסדר'; btnCustom.style.display='none';
-    st.textContent=state.followers.length>0?`${state.followers.length} החברים שלך לא יודעים אם את/ה בסדר!`:'לחץ לעדכן שהכל בסדר';
+    st.className='status-text-inline dim';
+    st.textContent='לחץ לעדכן שהכל בסדר';
     btn.style.cursor='pointer';
     if(addFriendsBtn) addFriendsBtn.style.display='none';
     moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
@@ -910,6 +946,8 @@ window.dismissInstall=()=>{document.getElementById('installBanner').style.displa
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
 setInterval(()=>{
+  const ltEl=document.getElementById('lastTimeAbove');
+  if(ltEl&&state.lastConfirmed) ltEl.textContent=formatRelativeTime(state.lastConfirmed);
   const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
   if(wasOk&&!state.isOk) updateMainUI();
   else if(state.isOk) applyTimerGradient();
@@ -917,7 +955,7 @@ setInterval(()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v11';
+var CACHE_NAME='ani-beseder-v12';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
