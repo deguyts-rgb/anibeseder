@@ -16,120 +16,97 @@
     #loading{position:fixed;inset:0;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999}
     .spinner{width:48px;height:48px;border:3px solid rgba(126,207,255,0.2);border-top-color:#7ecfff;border-radius:50%;animation:spin 0.8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    /* LOGIN */
     #login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;width:100%;max-width:480px}
     .login-logo-img{width:180px;margin-bottom:20px}
     .login-sub{font-size:16px;color:rgba(200,230,255,0.55);margin-bottom:48px;text-align:center;line-height:1.7}
     .google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:16px;padding:15px 28px;font-size:16px;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);font-family:inherit;transition:transform 0.15s}
     .google-btn:active{transform:scale(0.97)}
     .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
-    /* APP */
     #app{display:none;flex-direction:column;align-items:center;width:100%}
-    /* STICKY HEADER */
     #header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-    .header{width:100%;max-width:480px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px}
-    .header-logo{height:58px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
+    .header{width:100%;max-width:480px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .header-logo{height:87px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
     .header-logo:active{transform:scale(0.94)}
-    .header-right{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
-    .avatar{width:26px;height:26px;border-radius:50%;background:rgba(126,207,255,0.15);border:1px solid rgba(126,207,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;overflow:hidden;flex-shrink:0}
+    .avatar{width:36px;height:36px;border-radius:50%;background:rgba(126,207,255,0.15);border:2px solid rgba(126,207,255,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:transform 0.15s}
+    .avatar:active{transform:scale(0.88)}
     .avatar img{width:100%;height:100%;object-fit:cover}
-    .logout-btn{background:none;border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:rgba(200,230,255,0.45);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
-    .policy-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.25);border-radius:8px;color:rgba(255,220,130,0.7);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
-    .header-icon-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:8px;color:rgba(200,230,255,0.7);font-size:16px;padding:4px 8px;cursor:pointer;font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
-    .header-icon-btn:active{background:rgba(126,207,255,0.2)}
-    /* MAIN CONTENT */
+    .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:5px 10px 6px;display:flex;align-items:center;justify-content:space-around;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
+    .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:8px;font-family:inherit;display:flex;align-items:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent}
+    .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
     #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:12px 20px 40px}
-    /* NOTIF BAR */
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
     .notif-bar.show{display:block}
     .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
-    /* FOLLOW BANNER */
     .follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
     .follow-banner.show{display:block}
-    /* FOLLOW REQUEST */
     .follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
     .follow-req-banner.show{display:flex}
     .follow-req-title{font-size:13px;font-weight:700;color:#7ecfff}
     .follow-req-btns{display:flex;gap:8px}
     .follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
     .follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
-    /* STATUS TEXT & TIME */
-    .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px;width:100%}
-    .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:center;min-height:22px;margin-bottom:2px;width:100%}
-    .last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
-    /* BIG BUTTON */
+    .status-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;width:100%;flex-wrap:wrap;min-height:22px}
+    .status-text-inline{font-size:13px;color:rgba(200,230,255,0.6);text-align:center;line-height:1.5}
+    .add-friends-inline-btn{background:rgba(40,200,100,0.12);border:1px solid rgba(40,200,100,0.3);border-radius:10px;color:#4cde80;font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit;white-space:nowrap;display:none;align-items:center;gap:3px;font-weight:600}
+    .add-friends-plus{font-weight:900;color:#fff;font-size:13px}
     .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
     .big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:box-shadow 0.5s ease,transform 0.15s ease;display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none;overflow:hidden}
     .big-btn.pulse{transform:scale(0.93)}
     .btn-emoji{font-size:38px;line-height:1;margin-bottom:4px}
-    .btn-main-row{display:flex;align-items:center;justify-content:center;gap:5px}
-    .btn-sign{font-size:46px;font-weight:900;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,0.4);display:none}
-    .btn-sign.show{display:block}
+    .btn-main-row{display:flex;align-items:center;justify-content:center}
     .btn-text{font-size:20px;font-weight:800;text-align:center;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
-    /* SENT BADGE */
+    .btn-sign-inline{font-size:1.2em;font-weight:900}
+    .btn-custom-text{font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);text-align:center;max-width:150px;line-height:1.2;margin-top:3px;display:none}
     .sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
     .sent-badge.show{opacity:1;transform:translateY(0)}
-    /* SUB INFO */
-    .sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-    .chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
-    .add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
-    .add-followers-btn:active{transform:scale(0.97)}
-    .followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
-    /* SMALL FLOATING BUTTONS */
     .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
     .mood-btn:active{transform:scale(0.88)}
     .mood-btn.visible{display:flex}
     .sign-btn{position:absolute;bottom:-14px;left:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:#e8f4f8;font-family:inherit}
     .sign-btn:active{transform:scale(0.88)}
     .sign-btn.visible{display:flex}
-    /* MOOD PANEL */
     .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
     .mood-panel.show{display:grid}
     .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
     .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
     .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
     .mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
-    /* SIGN PANEL */
-    .sign-panel{position:absolute;bottom:-14px;left:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:14px 16px;z-index:100;display:none;flex-direction:column;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:200px}
+    .sign-panel{position:absolute;bottom:-14px;left:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:14px 16px;z-index:100;display:none;flex-direction:column;gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:248px}
     .sign-panel.show{display:flex}
     .sign-panel-title{text-align:center;font-size:12px;color:rgba(200,230,255,0.5);font-weight:600}
     .sign-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .sign-cell{height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);color:#e8f4f8;transition:all 0.14s;user-select:none;font-family:inherit}
+    .sign-cell{height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);color:#e8f4f8;transition:all 0.14s;user-select:none;font-family:inherit}
     .sign-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
     .sign-cell.selected{background:rgba(126,207,255,0.18);border-color:#7ecfff;color:#7ecfff}
-    /* FRIENDS SECTION */
+    .sign-text-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#e8f4f8;padding:8px 10px;font-size:13px;font-family:inherit;text-align:center;outline:none;direction:rtl;-webkit-appearance:none}
+    .sign-text-input::placeholder{color:rgba(200,230,255,0.28);font-size:11px}
+    .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
     .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-    .friends-section-count{font-size:11px;color:rgba(200,230,255,0.3)}
-    /* PERSON ROWS */
-    .person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px;width:100%}
-    .person-row-top{display:flex;align-items:center;gap:8px}
-    .person-info{flex:1;min-width:0}
-    .person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
-    .person-time{font-size:10px;margin-top:2px}
-    .person-time.ok{color:#4cde80}
-    .person-time.late{color:#ff6666}
-    .person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
-    /* STATUS CIRCLES */
-    .status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
-    .sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
-    .sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
-    .sc-late{width:40px;height:40px;background:rgba(220,40,40,0.25);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;font-size:9px}
-    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
-    /* BADGES */
+    .wcard{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:14px;margin-bottom:10px;padding:12px 14px;width:100%}
+    .wcard-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+    .wcard-identity{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;width:58px}
+    .wcard-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;flex-shrink:0}
+    .wc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
+    .wc-red{background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite}
+    .wc-unknown{background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35)}
+    .wcard-iname{font-size:11px;font-weight:600;color:rgba(200,230,255,0.65);text-align:center;word-break:break-word;line-height:1.2;max-width:58px}
+    .wcard-status-wrap{flex:1;padding-top:3px;min-width:0}
+    .wcard-status{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.5;word-break:break-word}
+    .wcard-status.dim{font-size:12px;color:rgba(200,230,255,0.32);font-weight:400}
+    .wcard-status.err{font-size:13px;color:#ff8888;font-weight:600}
+    .wcard-bottom{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .wcard-time{font-size:10px;color:rgba(200,230,255,0.36);margin-inline-start:auto}
     .follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
     .fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
     .fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
     .fb-request-sent{background:rgba(255,200,50,0.12);border:1px solid rgba(255,200,50,0.35);color:rgba(255,220,130,0.8)}
     .fb-request-me{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
-    /* ACTION BUTTONS */
     .trash-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,120,120,0.6);font-size:14px;flex-shrink:0}
     .trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
     .nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
     .nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
-    /* PANELS */
     .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
     .panel-overlay.show{display:flex}
     .panel-box{background:#111e2b;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18)}
@@ -137,7 +114,17 @@
     .panel-title{font-size:17px;font-weight:800;color:#7ecfff}
     .panel-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
     .panel-content{overflow-y:auto;padding:16px 20px 32px;flex:1}
-    /* SETTINGS */
+    .profile-circle{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,rgba(40,200,100,0.35),rgba(20,150,70,0.25));border:3px solid #4cde80;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#4cde80;overflow:hidden;margin:0 auto 10px}
+    .profile-stat-box{display:flex;gap:12px;justify-content:center;margin-bottom:20px}
+    .profile-stat{cursor:pointer;text-align:center;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:10px 28px;transition:background 0.15s;-webkit-tap-highlight-color:transparent}
+    .profile-stat:active{background:rgba(126,207,255,0.2)}
+    .profile-stat-num{font-size:24px;font-weight:900;color:#7ecfff}
+    .profile-stat-label{font-size:11px;color:rgba(200,230,255,0.45);margin-top:2px}
+    .profile-label{font-size:12px;color:rgba(200,230,255,0.5);display:block;margin-bottom:4px;margin-top:14px}
+    .profile-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(126,207,255,0.2);border-radius:10px;color:#e8f4f8;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;-webkit-appearance:none;direction:rtl}
+    .profile-input:focus{border-color:rgba(126,207,255,0.5)}
+    .profile-save-btn{width:100%;background:linear-gradient(135deg,#1a6fa0,#0d4f7a);border:none;border-radius:12px;color:#fff;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:18px}
+    .profile-logout-btn{width:100%;background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.25);border-radius:12px;color:#ff8888;padding:10px;font-size:14px;cursor:pointer;font-family:inherit;margin-top:8px}
     .settings-section-title{font-size:15px;font-weight:700;color:#7ecfff;margin:14px 0 8px}
     .card{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:16px;padding:14px 18px;margin-bottom:12px}
     .settings-action-btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
@@ -151,12 +138,19 @@
     .alert-row.orange-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
     .alert-status-on{font-size:11px;color:#4cde80;white-space:nowrap}
     .alert-status-off{font-size:11px;color:#ff6666;white-space:nowrap}
-    /* FOLLOWERS PANEL */
     .section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
     .share-box{background:rgba(40,200,100,0.07);border:1px solid rgba(40,200,100,0.2);border-radius:16px;padding:16px;margin-bottom:12px}
     .share-link{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;font-size:11px;color:#7ecfff;word-break:break-all;margin:8px 0;font-family:monospace;line-height:1.5;border:1px solid rgba(126,207,255,0.15)}
     .share-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:12px;color:#fff;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
-    /* CONFIRM MODAL */
+    .person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px;width:100%}
+    .person-row-top{display:flex;align-items:center;gap:8px}
+    .person-info{flex:1;min-width:0}
+    .person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
+    .person-time{font-size:10px;margin-top:2px}
+    .person-time.ok{color:#4cde80}
+    .person-time.late{color:#ff6666}
+    .person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
     .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
     .confirm-overlay.show{display:flex}
     .confirm-box{background:#1a2a3a;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(126,207,255,0.2);text-align:center}
@@ -165,7 +159,6 @@
     .confirm-btns{display:flex;gap:10px}
     .confirm-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(200,230,255,0.6);padding:11px;font-size:14px;cursor:pointer;font-family:inherit}
     .confirm-ok{flex:1;background:linear-gradient(135deg,#c01515,#8a0f0f);border:none;border-radius:12px;color:#fff;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-    /* POLICY MODAL */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:150;display:none;align-items:flex-end;justify-content:center}
     .modal-overlay.show{display:flex}
     .modal-box{background:#1a2a3a;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(126,207,255,0.2)}
@@ -174,10 +167,10 @@
     .policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
     .policy-text p{margin-bottom:10px}
     .policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
-    /* INSTALL */
     .install-banner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
     #iosInstallBanner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:30px}.btn-text{font-size:17px}.btn-sign{font-size:38px}}
+    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
+    @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:30px}.btn-text{font-size:17px}}
   </style>
 </head>
 <body>
@@ -197,8 +190,6 @@
   <p class="login-policy">בכניסה אתה מסכים למדיניות הפרטיות.<br>האפליקציה אינה תחליף לשירותי חירום.<br>חירום: מד"א 101 | משטרה 100</p>
 </div>
 
-<!-- CONFIRM MODAL -->
-
 <div class="confirm-overlay" id="confirmModal">
   <div class="confirm-box">
     <div class="confirm-title" id="confirmTitle"></div>
@@ -209,8 +200,6 @@
     </div>
   </div>
 </div>
-
-<!-- POLICY MODAL -->
 
 <div class="modal-overlay" id="policyModal" onclick="closePolicyModal(event)">
   <div class="modal-box">
@@ -229,7 +218,42 @@
       <p>בשימוש באפליקציה המשתמש מצהיר כי הבין את כל האמור לעיל ומוותר על כל זכות תביעה, תלונה, דרישה או הליך משפטי כלשהו – בישראל או בכל מדינה אחרת – כנגד מפתחי האפליקציה, מפיציה, מארחיה ובעליה.</p>
       <h4>🔒 פרטיות</h4>
       <p>נשמרים: שם, כתובת אימייל ומועד הדיווח האחרון. אין מעקב מיקום. אין שיתוף מידע עם צדדים שלישיים. אין פרסום.</p>
-      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 10.0 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 11.0 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PANEL -->
+
+<div class="panel-overlay" id="profilePanel" onclick="handlePanelOverlayClick(event,'profilePanel')">
+  <div class="panel-box">
+    <div class="panel-header">
+      <span class="panel-title">👤 הפרופיל שלי</span>
+      <button class="panel-close" onclick="closePanel('profilePanel')">סגור ✕</button>
+    </div>
+    <div class="panel-content">
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px">
+        <div id="profileAvatarCircle" class="profile-circle">?</div>
+        <div id="profileFullName" style="font-size:17px;font-weight:800;color:#e8f4f8;text-align:center;line-height:1.3"></div>
+      </div>
+      <div class="profile-stat-box">
+        <div class="profile-stat" onclick="openPanel('followersPanel');closePanel('profilePanel')">
+          <div id="profileFollowerCount" class="profile-stat-num">0</div>
+          <div class="profile-stat-label">עוקבים</div>
+        </div>
+        <div class="profile-stat" onclick="scrollToWatchingList()">
+          <div id="profileWatchingCount" class="profile-stat-num">0</div>
+          <div class="profile-stat-label">נעקבים</div>
+        </div>
+      </div>
+      <label class="profile-label">שם פרטי</label>
+      <input type="text" id="profileFirstName" class="profile-input" placeholder="שם פרטי"/>
+      <label class="profile-label">שם משפחה</label>
+      <input type="text" id="profileLastName" class="profile-input" placeholder="שם משפחה"/>
+      <label class="profile-label">אימייל</label>
+      <div id="profileEmail" style="background:rgba(255,255,255,0.03);border:1px solid rgba(126,207,255,0.1);border-radius:10px;color:rgba(200,230,255,0.45);padding:10px 12px;font-size:13px;margin-top:4px;direction:ltr;text-align:right;word-break:break-all"></div>
+      <button class="profile-save-btn" onclick="saveProfileName()">💾 שמור שינויים</button>
+      <button class="profile-logout-btn" onclick="doSignOut()">🚪 יציאה מהאפליקציה</button>
     </div>
   </div>
 </div>
@@ -274,8 +298,6 @@
   </div>
 </div>
 
-<!-- INSTALL BANNERS -->
-
 <div class="install-banner" id="installBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
@@ -300,13 +322,13 @@
   <div id="header-wrapper">
     <div class="header">
       <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="location.reload()"/>
-      <div class="header-right">
-        <button class="header-icon-btn" onclick="location.reload()" title="רענן">🔄</button>
-        <button class="header-icon-btn" onclick="openPanel('settingsPanel')" title="הגדרות">⚙️</button>
-        <button class="policy-btn" onclick="openPolicyModal()">📋</button>
-        <div class="avatar" id="userAvatar">👤</div>
-        <button class="logout-btn" onclick="doSignOut()">יציאה</button>
-      </div>
+      <div class="avatar" id="userAvatar" onclick="openProfilePanel()">👤</div>
+    </div>
+    <div class="submenu-bar">
+      <button class="submenu-btn" onclick="openPolicyModal()">📋 מדיניות</button>
+      <button class="submenu-btn" onclick="openPanel('settingsPanel')">⚙️ הגדרות</button>
+      <button class="submenu-btn" onclick="location.reload()">🔄 רענון</button>
+      <button class="submenu-btn" onclick="doShare()"><span style="font-weight:900;color:#fff;font-size:14px">+</span>&nbsp;הוסף חברים</button>
     </div>
   </div>
 
@@ -318,49 +340,49 @@
   <div id="followRequestsContainer" style="width:100%;max-width:480px;padding:0 0 4px"></div>
 
   <div id="main-content">
-    <p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
-    <p class="last-time-above" id="lastTimeAbove"></p>
-    <p class="last-date-below" id="lastDateBelow"></p>
+    <div class="status-row">
+      <span class="status-text-inline" id="statusText">לחץ לעדכן שהכל בסדר</span>
+      <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
+        <span class="add-friends-plus">+</span>הוסף חברים
+      </button>
+    </div>
 
 ```
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
     <div class="btn-main-row">
-      <span class="btn-sign" id="btnSign"></span>
       <span class="btn-text" id="btnText">אני<br>בסדר</span>
     </div>
+    <span class="btn-custom-text" id="btnCustomText"></span>
   </button>
-  <!-- MOOD (bottom-right) -->
   <button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)">😊</button>
   <div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
     <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
   </div>
-  <!-- SIGN (bottom-left) -->
   <button class="sign-btn" id="signBtn" onclick="toggleSignPanel(event)">?</button>
   <div class="sign-panel" id="signPanel" onclick="event.stopPropagation()">
     <div class="sign-panel-title">הוסף סימן לדיווח</div>
     <div class="sign-options">
-      <div class="sign-cell" id="sc-!" onclick="selectSign('!')">!</div>
-      <div class="sign-cell" id="sc-?" onclick="selectSign('?')">?</div>
-      <div class="sign-cell" id="sc-." onclick="selectSign('.')">.</div>
-      <div class="sign-cell" id="sc-…" onclick="selectSign('…')">…</div>
+      <div class="sign-cell" data-sign="!" onclick="selectSignByEl(this)">!</div>
+      <div class="sign-cell" data-sign="?" onclick="selectSignByEl(this)">?</div>
+      <div class="sign-cell" data-sign="." onclick="selectSignByEl(this)">.</div>
+      <div class="sign-cell" data-sign="…" onclick="selectSignByEl(this)">…</div>
+      <div class="sign-cell" data-sign='"' onclick="selectSignByEl(this)">״</div>
+      <div class="sign-cell" data-sign="₪" onclick="selectSignByEl(this)">₪</div>
+      <div class="sign-cell" data-sign="+" onclick="selectSignByEl(this)">+</div>
+      <div class="sign-cell" data-sign="-" onclick="selectSignByEl(this)">-</div>
     </div>
+    <input type="text" id="signCustomInput" class="sign-text-input" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomText(this)"/>
+    <button class="sign-clear-btn" onclick="clearSign()">✕ נקה הכל</button>
   </div>
 </div>
 
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
 
-<div class="sub-info">
-  <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
-  <span class="chip" onclick="openPanel('followersPanel')" id="followersChip">👥 0 עוקבים</span>
-  <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
-</div>
-
 <div class="home-divider"></div>
 <div class="friends-section-header">
-  <span class="friends-section-title">- איזה בסדר חברים שלך</span>
-  <span class="friends-section-count" id="friendsCount"></span>
+  <span class="friends-section-title" id="friendsSectionTitle">החברים שלך בסדר?</span>
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
@@ -393,22 +415,18 @@ const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
-const WINDOW_MS = 24 * 3600000; // 24 hours
+const WINDOW_MS = 24 * 3600000;
 
-// ── PANELS ────────────────────────────────────────────────────
-window.openPanel = id => document.getElementById(id).classList.add('show');
+window.openPanel  = id => document.getElementById(id).classList.add('show');
 window.closePanel = id => document.getElementById(id).classList.remove('show');
 window.handlePanelOverlayClick = (e,id) => { if(e.target===document.getElementById(id)) closePanel(id); };
 window.showScreen = name => { if(name==='settings') openPanel('settingsPanel'); if(name==='followers') openPanel('followersPanel'); };
 
-// ── 24H CHECK ─────────────────────────────────────────────────
 function isWithinReportingPeriod() {
   if (!state.lastConfirmed) return false;
   return (Date.now() - state.lastConfirmed.getTime()) < WINDOW_MS;
 }
 
-// ── TIMER GRADIENT ────────────────────────────────────────────
-// Green top/base per mood level
 const G_TOP  = {1:'#6ef0a0', 2:'#4cde80', 3:'#3db870'};
 const G_BASE = {1:'#18c05a', 2:'#1a9e50', 3:'#137040'};
 const SHINE  = 'radial-gradient(ellipse 55% 35% at 38% 28%, rgba(255,255,255,0.14) 0%, transparent 65%)';
@@ -417,24 +435,19 @@ function applyTimerGradient() {
   if (!state.isOk || !state.lastConfirmed) return;
   const btn = document.getElementById('bigBtn');
   const elapsed = Date.now() - state.lastConfirmed.getTime();
-  const pct = Math.min(elapsed / WINDOW_MS, 1) * 100;  // 0→100 over 24h
+  const pct = Math.min(elapsed / WINDOW_MS, 1) * 100;
   const lv = state.moodLevel || 2;
   const gTop  = G_TOP[lv]  || G_TOP[2];
   const gBase = G_BASE[lv] || G_BASE[2];
-
   if (pct <= 0.5) {
     btn.style.background = `${SHINE}, radial-gradient(circle at 40% 35%, ${gTop}, ${gBase})`;
-    btn.style.boxShadow  = '0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)';
   } else {
-    // Top pct% = red, bottom (100-pct)% = green
     btn.style.background = `${SHINE}, linear-gradient(to bottom, #b01525 ${pct}%, ${gBase} ${pct}%)`;
-    const greenGlow = Math.round((1 - pct/100) * 45);
-    const redGlow   = Math.round((pct/100) * 45);
-    btn.style.boxShadow  = `0 0 60px rgba(${180+redGlow},${20+greenGlow},${20},0.5),0 8px 32px rgba(0,0,0,0.4)`;
   }
+  // Glow stays GREEN throughout the entire 24h window
+  btn.style.boxShadow = '0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)';
 }
 
-// ── FCM ───────────────────────────────────────────────────────
 async function registerFCMToken() {
   if (!currentUser) return;
   try {
@@ -458,14 +471,13 @@ async function sendPushToFollowers(type='ok', message='') {
   } catch(e){}
 }
 
-let currentUser=null;
-let state={ isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null };
+let currentUser = null;
+let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null };
 let statusListeners=[], watchingStatuses={};
 
-// ── MOOD PICKER ───────────────────────────────────────────────
 const MOOD_OPTIONS=[
-  {emoji:'🤩',label:'מדהים',level:1}, {emoji:'🥰',label:'אוהב',level:1},  {emoji:'🥳',label:'חוגג',level:1},
-  {emoji:'😊',label:'בסדר', level:2}, {emoji:'😐',label:'ניטרלי',level:2},{emoji:'🤔',label:'חושב',level:2},
+  {emoji:'🤩',label:'מדהים',level:1},{emoji:'🥰',label:'אוהב',level:1},{emoji:'🥳',label:'חוגג',level:1},
+  {emoji:'😊',label:'בסדר',level:2},{emoji:'😐',label:'ניטרלי',level:2},{emoji:'🤔',label:'חושב',level:2},
   {emoji:'🫥',label:'מעורפל',level:3},{emoji:'😒',label:'לא מרוצה',level:3},{emoji:'😤',label:'מתוח',level:3},
 ];
 
@@ -474,7 +486,6 @@ function renderMoodPanel(){
   p.innerHTML='<div class="mood-panel-title">איזה בסדר אתה? 😊</div>'+
     MOOD_OPTIONS.map((m,i)=>`<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span><span class="mood-cell-label">${m.label}</span></div>`).join('');
 }
-
 window.toggleMoodPanel = e => {
   e.stopPropagation();
   document.getElementById('signPanel').classList.remove('show');
@@ -482,7 +493,6 @@ window.toggleMoodPanel = e => {
   if(!p.querySelector('.mood-cell')) renderMoodPanel();
   p.classList.toggle('show');
 };
-
 window.selectMood = idx => {
   const m=MOOD_OPTIONS[idx];
   state.moodEmoji=m.emoji; state.moodLevel=m.level;
@@ -497,32 +507,54 @@ window.selectMood = idx => {
   updateMainUI();
 };
 
-// ── SIGN PICKER ───────────────────────────────────────────────
-const SIGNS=['!','?','.','…'];
+window.selectSignByEl = el => { selectSign(el.dataset.sign); };
+window.selectSign = sign => {
+  state.sign = sign;
+  if(currentUser) localStorage.setItem('sign_'+currentUser.uid, sign);
+  document.querySelectorAll('.sign-cell').forEach(el => el.classList.toggle('selected', el.dataset.sign===sign));
+  const displaySign = sign==='"' ? '״' : sign;
+  document.getElementById('signBtn').textContent = displaySign;
+  document.getElementById('signPanel').classList.remove('show');
+  if(currentUser) setDoc(doc(db,'status',currentUser.uid),{sign},{merge:true}).catch(()=>{});
+  updateMainUI();
+};
 
+let customTextTimer=null;
+window.handleCustomText = inp => {
+  const filtered = inp.value.replace(/[0-9]/g,'').substring(0,6);
+  inp.value = filtered;
+  state.customText = filtered || null;
+  if(currentUser){
+    localStorage.setItem('customText_'+currentUser.uid, filtered);
+    clearTimeout(customTextTimer);
+    customTextTimer = setTimeout(()=>{ setDoc(doc(db,'status',currentUser.uid),{customText:filtered||null},{merge:true}).catch(()=>{}); },1000);
+  }
+  updateMainUI();
+};
+
+window.clearSign = () => {
+  state.sign = null; state.customText = null;
+  document.querySelectorAll('.sign-cell').forEach(el => el.classList.remove('selected'));
+  document.getElementById('signBtn').textContent = '?';
+  const inp=document.getElementById('signCustomInput'); if(inp) inp.value='';
+  if(currentUser){
+    localStorage.removeItem('sign_'+currentUser.uid);
+    localStorage.removeItem('customText_'+currentUser.uid);
+    setDoc(doc(db,'status',currentUser.uid),{sign:null,customText:null},{merge:true}).catch(()=>{});
+  }
+  document.getElementById('signPanel').classList.remove('show');
+  updateMainUI();
+};
 window.toggleSignPanel = e => {
   e.stopPropagation();
   document.getElementById('moodPanel').classList.remove('show');
   document.getElementById('signPanel').classList.toggle('show');
 };
-
-window.selectSign = sign => {
-  state.sign=sign;
-  if(currentUser) localStorage.setItem('sign_'+currentUser.uid,sign);
-  SIGNS.forEach(s=>{ const el=document.getElementById('sc-'+s); if(el) el.classList.toggle('selected',s===sign); });
-  document.getElementById('signBtn').textContent=sign;
-  document.getElementById('signPanel').classList.remove('show');
-  const signEl=document.getElementById('btnSign');
-  signEl.textContent=sign; signEl.classList.add('show');
-  if(currentUser) setDoc(doc(db,'status',currentUser.uid),{sign:sign},{merge:true}).catch(()=>{});
-};
-
 document.addEventListener('click',()=>{
   document.getElementById('moodPanel')?.classList.remove('show');
   document.getElementById('signPanel')?.classList.remove('show');
 });
 
-// ── ALERTS ────────────────────────────────────────────────────
 const defPA=[{id:'p2h',label:'2 שעות לפני',on:true},{id:'p1h',label:'שעה לפני',on:true},{id:'p30',label:'30 דקות לפני',on:true},{id:'p10',label:'10 דקות לפני',on:true},{id:'p1',label:'דקה לפני',on:true}];
 const defFA=[{id:'f0',label:'מיידית',on:true},{id:'f30',label:'30 דקות אחרי',on:true},{id:'f1h',label:'שעה אחרי',on:true},{id:'f2h',label:'שעתיים אחרי',on:true},{id:'f4h',label:'4 שעות אחרי',on:true},{id:'f12',label:'12 שעות אחרי',on:true},{id:'f24',label:'כל 24 שעות',on:true}];
 function getAlerts(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch{return d;}}
@@ -536,7 +568,6 @@ function renderAlerts(){
 window.togglePersonalAlert=i=>{personalAlerts[i].on=!personalAlerts[i].on;saveAlerts('personalAlerts',personalAlerts);renderAlerts();};
 window.toggleFollowerAlert=i=>{followerAlerts[i].on=!followerAlerts[i].on;saveAlerts('followerAlerts',followerAlerts);renderAlerts();};
 
-// ── AUTH ──────────────────────────────────────────────────────
 window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){alert('שגיאה: '+e.message);}};
 window.doSignOut=async()=>{if(confirm('להתנתק?')){statusListeners.forEach(u=>u());await signOut(auth);}};
 
@@ -564,51 +595,67 @@ onAuthStateChanged(auth,async user=>{
   }
 });
 
-// ── INIT USER ─────────────────────────────────────────────────
+window.openProfilePanel = () => {
+  if(!currentUser) return;
+  const displayName = currentUser.displayName || '';
+  const storedFirst = localStorage.getItem('profileFirstName_'+currentUser.uid);
+  const storedLast  = localStorage.getItem('profileLastName_'+currentUser.uid);
+  let firstName, lastName;
+  if(storedFirst !== null){ firstName=storedFirst; lastName=storedLast||''; }
+  else { const parts=displayName.trim().split(/\s+/); firstName=parts[0]||''; lastName=parts.slice(1).join(' ')||''; }
+  document.getElementById('profileFirstName').value = firstName;
+  document.getElementById('profileLastName').value  = lastName;
+  document.getElementById('profileEmail').textContent = currentUser.email||'';
+  document.getElementById('profileFullName').textContent = displayName;
+  document.getElementById('profileFollowerCount').textContent = state.followers.length;
+  document.getElementById('profileWatchingCount').textContent = state.watching.length;
+  const circle = document.getElementById('profileAvatarCircle');
+  if(currentUser.photoURL) circle.innerHTML=`<img src="${currentUser.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  else circle.textContent=(displayName[0]||'?').toUpperCase();
+  openPanel('profilePanel');
+};
+window.saveProfileName = async () => {
+  const firstName = document.getElementById('profileFirstName').value.trim();
+  const lastName  = document.getElementById('profileLastName').value.trim();
+  const fullName  = [firstName,lastName].filter(Boolean).join(' ');
+  if(!firstName){ alert('אנא הכנס שם פרטי'); return; }
+  localStorage.setItem('profileFirstName_'+currentUser.uid, firstName);
+  localStorage.setItem('profileLastName_'+currentUser.uid,  lastName);
+  try { await setDoc(doc(db,'users',currentUser.uid),{name:fullName},{merge:true}); document.getElementById('profileFullName').textContent=fullName; alert('✅ השם עודכן!'); }
+  catch(e){ alert('שגיאה: '+e.message); }
+};
+window.scrollToWatchingList = () => {
+  closePanel('profilePanel');
+  setTimeout(()=>{ const el=document.getElementById('watchingList'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },350);
+};
+
 async function initUser(){
   const ref=doc(db,'users',currentUser.uid);
   const snap=await getDoc(ref);
   if(snap.exists()){
-    const d=snap.data();
-    state.okCount=d.okCount||0;
+    const d=snap.data(); state.okCount=d.okCount||0;
     if(d.lastConfirmed){ state.lastConfirmed=d.lastConfirmed.toDate(); state.isOk=isWithinReportingPeriod(); if(!state.isOk) state.okCount=0; }
-  } else {
-    await setDoc(ref,{name:currentUser.displayName,email:currentUser.email,okCount:0,createdAt:serverTimestamp()});
-  }
+  } else { await setDoc(ref,{name:currentUser.displayName,email:currentUser.email,okCount:0,createdAt:serverTimestamp()}); }
   const stored=localStorage.getItem('lastConfirmed_'+currentUser.uid);
-  if(stored){
-    const t=new Date(stored);
-    if(!state.isOk){ const prev=state.lastConfirmed; state.lastConfirmed=t; state.isOk=isWithinReportingPeriod(); if(!state.isOk) state.lastConfirmed=prev; else state.okCount=parseInt(localStorage.getItem('okCount_'+currentUser.uid)||'1'); }
-  }
-  if(state.isOk){
-    const se=localStorage.getItem('moodEmoji_'+currentUser.uid);
-    const sl=localStorage.getItem('moodLevel_'+currentUser.uid);
-    if(se){state.moodEmoji=se;state.moodLevel=parseInt(sl)||2;}
-  }
-  // restore sign
+  if(stored){ const t=new Date(stored); if(!state.isOk){ const prev=state.lastConfirmed; state.lastConfirmed=t; state.isOk=isWithinReportingPeriod(); if(!state.isOk) state.lastConfirmed=prev; else state.okCount=parseInt(localStorage.getItem('okCount_'+currentUser.uid)||'1'); } }
+  if(state.isOk){ const se=localStorage.getItem('moodEmoji_'+currentUser.uid); const sl=localStorage.getItem('moodLevel_'+currentUser.uid); if(se){state.moodEmoji=se;state.moodLevel=parseInt(sl)||2;} }
   const ss=localStorage.getItem('sign_'+currentUser.uid);
-  if(ss){
-    state.sign=ss;
-    document.getElementById('signBtn').textContent=ss;
-    SIGNS.forEach(s=>{const el=document.getElementById('sc-'+s);if(el)el.classList.toggle('selected',s===ss);});
-  }
+  if(ss){ state.sign=ss; document.getElementById('signBtn').textContent=(ss==='"'?'״':ss); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===ss)); }
+  const sct=localStorage.getItem('customText_'+currentUser.uid);
+  if(sct){ state.customText=sct||null; const inp=document.getElementById('signCustomInput'); if(inp) inp.value=sct; }
   await loadFollowers();
   updateMainUI();
 }
 
-// ── FOLLOWERS ─────────────────────────────────────────────────
 async function loadFollowers(){
   const q=query(collection(db,'follows'),where('followingUid','==',currentUser.uid));
-  const snaps=await getDocs(q);
-  state.followers=[];
+  const snaps=await getDocs(q); state.followers=[];
   snaps.forEach(d=>state.followers.push(d.data()));
-  await buildMutualSet();
-  renderFollowers(); updateChips();
+  await buildMutualSet(); renderFollowers(); updateChips();
 }
 async function buildMutualSet(){
   const q2=query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
-  const snaps2=await getDocs(q2);
-  const s=new Set(); snaps2.forEach(d=>s.add(d.data().followingUid)); state.mutualUids=s;
+  const snaps2=await getDocs(q2); const s=new Set(); snaps2.forEach(d=>s.add(d.data().followingUid)); state.mutualUids=s;
 }
 function renderFollowers(){
   const el=document.getElementById('followersList');
@@ -620,20 +667,15 @@ function renderFollowers(){
     const timeText=state.lastConfirmed?formatDateTime(state.lastConfirmed):'';
     const isMutual=state.mutualUids.has(f.followerUid);
     const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`:`<span class="follow-badge fb-followback" onclick="followBack('${f.followerUid}','${(f.followerName||'').replace(/'/g,"\\'")}')">עקוב אחריו בחזרה ＋</span>`;
-    return `<div class="person-row" id="frow-${f.followerUid}">
-      <div class="person-row-top"><div class="person-info"><div class="person-name">${f.followerName||'משתמש'}</div><div class="person-email">${f.followerEmail||''}</div>${timeText?`<div class="person-time ${ok?'ok':'late'}">דיווח אחרון: ${timeText}</div>`:''}</div>
-      <button class="trash-btn" onclick="confirmRemoveFollower('${f.followerUid}','${(f.followerName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר עוקב</span></button></div>
-      <div class="person-row-bottom">${badge}</div></div>`;
+    return `<div class="person-row" id="frow-${f.followerUid}"><div class="person-row-top"><div class="person-info"><div class="person-name">${f.followerName||'משתמש'}</div><div class="person-email">${f.followerEmail||''}</div>${timeText?`<div class="person-time ${ok?'ok':'late'}">דיווח אחרון: ${timeText}</div>`:''}</div><button class="trash-btn" onclick="confirmRemoveFollower('${f.followerUid}','${(f.followerName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר</span></button></div><div class="person-row-bottom">${badge}</div></div>`;
   }).join('');
 }
 function formatDateTime(d){if(!d)return'';return d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});}
-function formatRelativeTime(d){if(!d)return'';const ms=Date.now()-d.getTime(),m=Math.floor(ms/60000),h=Math.round(ms/3600000),dy=Math.round(ms/86400000);if(m<1)return'דיווחת לפני פחות מדקה';if(m<60)return`דיווחת לפני ${m} דקות`;if(h<24)return`דיווחת לפני כ-${h} שעות`;return`דיווחת לפני כ-${dy} ימים`;}
+function formatRelativeTimeOther(d){if(!d)return'';const ms=Date.now()-d.getTime(),m=Math.floor(ms/60000),h=Math.round(ms/3600000),dy=Math.round(ms/86400000);if(m<1)return'לפני פחות מדקה';if(m<60)return`לפני ${m} דק׳`;if(h<24)return`לפני ${h} שע׳`;return`לפני ${dy} ימים`;}
 
-// ── WATCHING ──────────────────────────────────────────────────
 async function loadWatching(){
   const q=query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
-  const snaps=await getDocs(q);
-  state.watching=[];
+  const snaps=await getDocs(q); state.watching=[];
   snaps.forEach(d=>state.watching.push({...d.data()}));
   statusListeners.forEach(u=>u()); statusListeners=[]; watchingStatuses={};
   if(!state.watching.length){renderWatchingList([]);updateChips();return;}
@@ -642,12 +684,11 @@ async function loadWatching(){
     const unsub=onSnapshot(doc(db,'status',w.followingUid),snap=>{
       if(snap.exists()){
         const d=snap.data();
-        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null};
+        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null};
         const ts=d.timestamp?.toDate();
         if(ts&&(Date.now()-ts)/60000<2&&Notification.permission==='granted')
           new Notification(`${d.name} בסדר! 🤝`,{body:`${d.name} עדכן עכשיו שהכל בסדר`,icon:'/icon-192.png'});
         localStorage.setItem(`read_${d.uid}_${currentUser.uid}`,new Date().toISOString());
-        renderFollowers();
       }
       renderWatchingWithStatuses(state.watching,watchingStatuses);
     });
@@ -655,33 +696,47 @@ async function loadWatching(){
   });
   updateChips();
 }
-function sortWatchingEntries(w,s){const now=Date.now();const hrs=uid=>{const st=s[uid];return st?.timestamp?(now-st.timestamp.getTime())/3600000:9999;};const ok=uid=>{const st=s[uid];return st?.isOk&&hrs(uid)<24;};return[...w].sort((a,b)=>{const oa=ok(a.followingUid),ob=ok(b.followingUid);if(!oa&&ob)return-1;if(oa&&!ob)return 1;return hrs(b.followingUid)-hrs(a.followingUid);});}
+function sortWatchingEntries(w,s){
+  const now=Date.now();
+  const hrs=uid=>{const st=s[uid];return st?.timestamp?(now-st.timestamp.getTime())/3600000:9999;};
+  const ok=uid=>{const st=s[uid];return st?.isOk&&hrs(uid)<24;};
+  return[...w].sort((a,b)=>{const oa=ok(a.followingUid),ob=ok(b.followingUid);if(!oa&&ob)return-1;if(oa&&!ob)return 1;return hrs(b.followingUid)-hrs(a.followingUid);});
+}
 function renderWatchingList(w){renderWatchingWithStatuses(w,{});}
 function renderWatchingWithStatuses(watching,statuses){
   const el=document.getElementById('watchingList');
-  const countEl=document.getElementById('friendsCount');
-  if(countEl) countEl.textContent=watching.length>0?`(${watching.length})`:'';
-  if(!watching.length){el.innerHTML='<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.</p>';updateChips();return;}
+  if(!watching.length){el.innerHTML='<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>';updateChips();return;}
   const fUids=new Set(state.followers.map(f=>f.followerUid));
   const now=Date.now();
   el.innerHTML=sortWatchingEntries(watching,statuses).map(w=>{
     const s=statuses[w.followingUid];
-    let cc='sc-unknown',ct='?',tt='טרם עדכן',tc='rgba(200,230,255,0.35)';
-    if(s){const hrs=s.timestamp?(now-s.timestamp.getTime())/3600000:999;if(s.isOk&&hrs<24){cc='sc-green';ct=s.moodEmoji||'✓';tt='עדכון: '+formatDateTime(s.timestamp);tc='#4cde80';}else if(hrs>=24){cc='sc-late';ct='לא\nבסדר';tt='לא עדכן מ-24+ שעות';tc='#ff6666';}else{tc='#ff6666';}}
+    const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
+    const isOkStatus=s?.isOk&&hrs<24;
+    const isUnknown=!s;
+    const circleClass=isUnknown?'wc-unknown':(isOkStatus?'wc-green':'wc-red');
+    const circleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
+    let statusHTML='';
+    if(isOkStatus){
+      const sign=s.sign, ct=s.customText||'', emoji=s.moodEmoji||'';
+      const quoteSign=sign==='"';
+      let txt;
+      if(quoteSign) txt=`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+      else txt=`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+      statusHTML=`<div class="wcard-status">${txt}</div>`;
+    } else if(!isUnknown){
+      statusHTML=`<div class="wcard-status err">לא עדכן 24+ שעות</div>`;
+    } else {
+      statusHTML=`<div class="wcard-status dim">טרם עדכן</div>`;
+    }
+    const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const isMutual=fUids.has(w.followingUid);
     const reqSent=localStorage.getItem('followReqSent_'+currentUser.uid+'_'+w.followingUid);
-    const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`:reqSent?`<span class="follow-badge fb-request-sent">ממתין לאישור מעקב ⏳</span>`:`<span class="follow-badge fb-request-me" onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">בקש מעקב אחריך ＋</span>`;
-    return `<div class="person-row" id="wrow-${w.followingUid}">
-      <div class="person-row-top"><div class="person-info"><div class="person-name">${w.followingName||'משתמש'}</div><div class="person-time" style="color:${tc}">${tt}</div></div>
-      <div class="status-circle ${cc}" style="white-space:pre-line;text-align:center;line-height:1;font-size:${(s?.moodEmoji&&cc==='sc-green')?'22px':'11px'}">${ct}</div>
-      <button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>
-      <button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר מעקב</span></button></div>
-      <div class="person-row-bottom">${badge}</div></div>`;
+    const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים הדדי</span>`:reqSent?`<span class="follow-badge fb-request-sent">ממתין לאישור ⏳</span>`:`<span class="follow-badge fb-request-me" onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">בקש מעקב ＋</span>`;
+    return `<div class="wcard" id="wrow-${w.followingUid}"><div class="wcard-top"><div class="wcard-identity"><div class="wcard-circle ${circleClass}">${circleContent}</div><div class="wcard-iname">${w.followingName||'משתמש'}</div></div><div class="wcard-status-wrap">${statusHTML}</div></div><div class="wcard-bottom"><button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר</span></button>${badge}<button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>${timeStr?`<span class="wcard-time">${timeStr}</span>`:''}</div></div>`;
   }).join('');
   updateChips();
 }
 
-// ── FOLLOW REQUEST ────────────────────────────────────────────
 window.requestFollowBack=async(uid,name)=>{
   await setDoc(doc(db,'followRequests',`${currentUser.uid}_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',fromEmail:currentUser.email||'',toUid:uid,status:'pending',createdAt:serverTimestamp()});
   localStorage.setItem('followReqSent_'+currentUser.uid+'_'+uid,'1');
@@ -691,13 +746,10 @@ window.requestFollowBack=async(uid,name)=>{
 async function checkPendingFollowRequests(){
   if(!currentUser)return;
   const q=query(collection(db,'followRequests'),where('toUid','==',currentUser.uid),where('status','==','pending'));
-  const snaps=await getDocs(q);
-  const c=document.getElementById('followRequestsContainer');
-  c.innerHTML='';
+  const snaps=await getDocs(q); const c=document.getElementById('followRequestsContainer'); c.innerHTML='';
   snaps.forEach(snap=>{
     const req=snap.data(),reqId=snap.id;
-    const div=document.createElement('div');
-    div.className='follow-req-banner show';div.style.margin='4px 0';
+    const div=document.createElement('div'); div.className='follow-req-banner show'; div.style.margin='4px 0';
     div.innerHTML=`<div class="follow-req-title">👋 ${req.fromName} מבקש שתעקוב אחריו</div><div class="follow-req-btns"><button class="follow-req-accept" onclick="acceptFollowRequest('${reqId}','${req.fromUid}','${(req.fromName||'').replace(/'/g,"\\'")}','${req.fromEmail||''}')">✅ אשר לעקוב</button><button class="follow-req-decline" onclick="declineFollowRequest('${reqId}',this.closest('.follow-req-banner'))">דחה</button></div>`;
     c.appendChild(div);
   });
@@ -705,8 +757,7 @@ async function checkPendingFollowRequests(){
 window.acceptFollowRequest=async(reqId,fromUid,fromName,fromEmail)=>{
   await setDoc(doc(db,'follows',`${currentUser.uid}_${fromUid}`),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:fromUid,followingName:fromName,createdAt:serverTimestamp()});
   await updateDoc(doc(db,'followRequests',reqId),{status:'accepted'});
-  state.mutualUids.add(fromUid);
-  await loadWatching();renderFollowers();updateChips();await checkPendingFollowRequests();
+  state.mutualUids.add(fromUid); await loadWatching();renderFollowers();updateChips();await checkPendingFollowRequests();
 };
 window.declineFollowRequest=async(reqId,banner)=>{await updateDoc(doc(db,'followRequests',reqId),{status:'declined'});if(banner)banner.remove();};
 window.followBack=async(uid,name)=>{
@@ -719,7 +770,6 @@ window.sendNudge=async(uid,name)=>{
   alert(`נדנוד נשלח ל-${name}! 👋`);
 };
 
-// ── REMOVE / UNFOLLOW ─────────────────────────────────────────
 let pendingAction=null;
 window.confirmRemoveFollower=(uid,name)=>{
   document.getElementById('confirmTitle').textContent='הסר עוקב';
@@ -738,7 +788,6 @@ window.confirmUnfollow=(uid,name)=>{
 window.closeConfirm=()=>document.getElementById('confirmModal').classList.remove('show');
 document.getElementById('confirmOkBtn').addEventListener('click',async()=>{if(pendingAction){await pendingAction();pendingAction=null;}closeConfirm();});
 
-// ── FOLLOW PARAM ──────────────────────────────────────────────
 async function checkFollowParam(){
   const p=new URLSearchParams(window.location.search);
   const uid=p.get('follow');
@@ -754,10 +803,9 @@ async function checkFollowParam(){
     document.getElementById('followBanner').classList.add('show');
     setTimeout(()=>document.getElementById('followBanner').classList.remove('show'),6000);
   }
-  window.history.replaceState({},'','/ ');
+  window.history.replaceState({},'','/');
 }
 
-// ── OK BUTTON ─────────────────────────────────────────────────
 window.handleOkPress=async()=>{
   if(!currentUser||state.okCount>=100)return;
   const btn=document.getElementById('bigBtn');
@@ -766,14 +814,13 @@ window.handleOkPress=async()=>{
   localStorage.setItem('lastConfirmed_'+currentUser.uid,state.lastConfirmed.toISOString());
   localStorage.setItem('okCount_'+currentUser.uid,state.okCount);
   await setDoc(doc(db,'users',currentUser.uid),{lastConfirmed:serverTimestamp(),okCount:state.okCount},{merge:true});
-  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null});
+  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null});
   updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
   sendPushToFollowers('ok');
 };
 
-// ── SHARE ─────────────────────────────────────────────────────
 window.doShare=()=>{
   const link=`https://anibeseder.netlify.app/?follow=${currentUser.uid}`;
   const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך לעקוב ב״אני בסדר״.\nתקבל התראה כשאני בסדר:\n${link}`;
@@ -781,92 +828,96 @@ window.doShare=()=>{
   else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
 
-// ── NOTIF ─────────────────────────────────────────────────────
 function checkNotifPermission(){if('Notification'in window&&Notification.permission==='default')document.getElementById('notifBar').classList.add('show');}
 function updateNotifToggleBtn(){const btn=document.getElementById('notifToggleBtn');if(!('Notification'in window)){btn.style.display='none';return;}if(Notification.permission==='granted'){btn.textContent='🔕 בטל התראות';btn.className='settings-action-btn notif-on-btn';}else{btn.textContent='🔔 הפעל התראות';btn.className='settings-action-btn notif-off-btn';}}
 window.toggleNotifications=async()=>{if(!('Notification'in window)){alert('המכשיר שלך אינו תומך בהתראות');return;}if(Notification.permission==='granted'){alert('כדי לבטל התראות, עבור להגדרות הדפדפן.');}else{const p=await Notification.requestPermission();if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות.'});registerFCMToken();document.getElementById('notifBar').classList.remove('show');}updateNotifToggleBtn();}};
 window.askNotifications=async()=>{const p=await Notification.requestPermission();document.getElementById('notifBar').classList.remove('show');if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה!'});registerFCMToken();}updateNotifToggleBtn();};
 
-// ── ADD TO HOME ───────────────────────────────────────────────
 let deferredInstallPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;updateAddHomeBtn();});
 function updateAddHomeBtn(){const btn=document.getElementById('addHomeBtn');if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){btn.style.display='none';return;}const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);if(deferredInstallPrompt){btn.style.display='block';btn.textContent='📲 הוסף אפליקציה למסך הבית (Chrome)';}else if(isIOS&&isSafari){btn.style.display='block';btn.textContent='📲 הוסף לדף הבית (Safari)';}else if(isIOS&&!isSafari){btn.style.display='block';btn.textContent='📲 הוסף לדף הבית (פתח ב-Safari)';}else{btn.style.display='none';}}
 window.addToHomeScreen=()=>{const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);if(deferredInstallPrompt)doInstall();else if(isIOS&&!isSafari)alert('פתח ב-Safari ← ⎙ ← ״הוסף למסך הבית״');else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';else alert('פתח את תפריט הדפדפן ← הוסף לדף הבית');};
 
-// ── POLICY ────────────────────────────────────────────────────
 window.openPolicyModal=()=>document.getElementById('policyModal').classList.add('show');
 window.closePolicyModal=(e)=>{if(!e||e.target===document.getElementById('policyModal')||e.currentTarget?.tagName==='BUTTON')document.getElementById('policyModal').classList.remove('show');};
 
-// ── MAIN UI ───────────────────────────────────────────────────
 function updateMainUI(){
   const btn=document.getElementById('bigBtn');
   const btnText=document.getElementById('btnText');
   const btnEmoji=document.getElementById('btnEmoji');
-  const btnSignEl=document.getElementById('btnSign');
+  const btnCustom=document.getElementById('btnCustomText');
   const st=document.getElementById('statusText');
-  const lt=document.getElementById('lastTimeAbove');
-  const ld=document.getElementById('lastDateBelow');
   const moodBtn=document.getElementById('moodBtn');
   const signBtn=document.getElementById('signBtn');
+  const addFriendsBtn=document.getElementById('addFriendsInlineBtn');
   const ok=isWithinReportingPeriod();
   state.isOk=ok;
-  lt.textContent=state.lastConfirmed?formatRelativeTime(state.lastConfirmed):'';
-  ld.textContent=state.lastConfirmed?formatDateTime(state.lastConfirmed):'';
+  const cnt=state.watching.length;
+  const titleEl=document.getElementById('friendsSectionTitle');
+  if(titleEl) titleEl.textContent=`${cnt} החברים שלך בסדר?`;
 
   if(ok){
-    btnEmoji.textContent=state.moodEmoji||'';
-    btnText.innerHTML='אני<br>בסדר';
-    // Show sign on button
-    if(state.sign){btnSignEl.textContent=state.sign;btnSignEl.classList.add('show');}
-    else{btnSignEl.classList.remove('show');}
+    const sign=state.sign, emoji=state.moodEmoji||'', quoteSign=sign==='"';
+    if(quoteSign) btnText.innerHTML='״אני<br>בסדר״';
+    else if(sign) btnText.innerHTML=`אני<br>בסדר<span class="btn-sign-inline"> ${sign}</span>`;
+    else btnText.innerHTML='אני<br>בסדר';
+    btnEmoji.textContent=emoji;
+    if(state.customText){ btnCustom.textContent=state.customText; btnCustom.style.display='block'; }
+    else { btnCustom.style.display='none'; }
     applyTimerGradient();
-    if(state.okCount>=100){st.textContent='✅ עדכנת 100 פעמים!';btn.style.cursor='not-allowed';}
-    else{st.textContent='✅ העוקבים שלך קיבלו דיווח';btn.style.cursor='pointer';}
-    moodBtn.classList.add('visible');moodBtn.textContent=state.moodEmoji||'😊';
+    // Build status line
+    const signPart=sign?(quoteSign?' ״':sign):'';
+    if(state.okCount>=100){ st.textContent='✅ עדכנת 100 פעמים!'; btn.style.cursor='not-allowed'; }
+    else { st.textContent=`${cnt} החברים שלך יודעים שאתה בסדר${signPart}${emoji?' '+emoji:''}`; }
+    if(addFriendsBtn) addFriendsBtn.style.display='flex';
+    moodBtn.classList.add('visible'); moodBtn.textContent=emoji||'😊';
     signBtn.classList.add('visible');
   } else if(state.lastConfirmed){
     btn.style.background='radial-gradient(circle at 40% 35%,#ff8c42,#c04a00)';
     btn.style.boxShadow='0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
-    btnEmoji.textContent='';btnText.innerHTML='לא<br>בסדר';btnSignEl.classList.remove('show');
-    const cnt=state.followers.length;
-    st.textContent=cnt>0?`${cnt} העוקבים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
-    btn.style.cursor='pointer';state.okCount=0;
-    moodBtn.classList.remove('visible');signBtn.classList.remove('visible');
-    state.moodEmoji=null;state.moodLevel=2;
+    btnEmoji.textContent=''; btnText.innerHTML='לא<br>בסדר'; btnCustom.style.display='none';
+    const fcnt=state.followers.length;
+    st.textContent=fcnt>0?`${fcnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
+    btn.style.cursor='pointer'; state.okCount=0;
+    if(addFriendsBtn) addFriendsBtn.style.display='none';
+    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
+    state.moodEmoji=null; state.moodLevel=2;
   } else {
     btn.style.background='radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a)';
     btn.style.boxShadow='0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
-    btnEmoji.textContent='👋';btnText.innerHTML='אני<br>בסדר';btnSignEl.classList.remove('show');
-    st.textContent=state.followers.length>0?`${state.followers.length} העוקבים שלך לא יודעים אם את/ה בסדר!`:'לחץ לעדכן שהכל בסדר';
-    btn.style.cursor='pointer';moodBtn.classList.remove('visible');signBtn.classList.remove('visible');
+    btnEmoji.textContent='👋'; btnText.innerHTML='אני<br>בסדר'; btnCustom.style.display='none';
+    st.textContent=state.followers.length>0?`${state.followers.length} החברים שלך לא יודעים אם את/ה בסדר!`:'לחץ לעדכן שהכל בסדר';
+    btn.style.cursor='pointer';
+    if(addFriendsBtn) addFriendsBtn.style.display='none';
+    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
   }
   updateChips();
 }
+
 function updateChips(){
-  document.getElementById('followersChip').textContent=`👥 ${state.followers.length} עוקבים`;
-  const c=document.getElementById('friendsCount');
-  if(c) c.textContent=state.watching.length>0?`(${state.watching.length})`:'';
+  const cnt=state.watching.length;
+  const titleEl=document.getElementById('friendsSectionTitle');
+  if(titleEl) titleEl.textContent=`${cnt} החברים שלך בסדר?`;
+  const pfc=document.getElementById('profileFollowerCount');
+  const pwc=document.getElementById('profileWatchingCount');
+  if(pfc) pfc.textContent=state.followers.length;
+  if(pwc) pwc.textContent=state.watching.length;
 }
 
-// ── PWA INSTALL ───────────────────────────────────────────────
 function checkInstallPrompt(){if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||localStorage.getItem('installDismissed'))return;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);setTimeout(()=>{if(deferredInstallPrompt)document.getElementById('installBanner').style.display='block';else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';},2500);}
 window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementById('installBanner').style.display='none';deferredInstallPrompt.prompt();deferredInstallPrompt=null;updateAddHomeBtn();};
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
-// ── TICKERS ───────────────────────────────────────────────────
 setInterval(()=>{
-  const lt=document.getElementById('lastTimeAbove');
-  if(lt&&state.lastConfirmed) lt.textContent=formatRelativeTime(state.lastConfirmed);
   const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
   if(wasOk&&!state.isOk) updateMainUI();
   else if(state.isOk) applyTimerGradient();
 },60000);
 
-// ── SERVICE WORKER v10 ────────────────────────────────────────
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v10';
+var CACHE_NAME='ani-beseder-v11';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
