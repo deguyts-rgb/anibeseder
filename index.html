@@ -24,8 +24,8 @@
     .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
     #app{display:none;flex-direction:column;align-items:center;width:100%}
     #header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-    .header{width:100%;max-width:480px;margin:0 auto;padding:2px 16px;display:flex;align-items:center;justify-content:space-between}
-    .header-logo{height:65px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
+    .header{width:100%;max-width:480px;margin:0 auto;padding:2px 16px;display:flex;align-items:center;justify-content:space-between;overflow:visible}
+    .header-logo{height:82px;margin:-8px 0 -6px;cursor:pointer;transition:transform 0.15s;flex-shrink:0;position:relative;z-index:2}
     .header-logo:active{transform:scale(0.94)}
     .avatar{width:36px;height:36px;border-radius:50%;background:rgba(126,207,255,0.15);border:2px solid rgba(126,207,255,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:transform 0.15s}
     .avatar:active{transform:scale(0.88)}
@@ -34,7 +34,8 @@
     .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:8px;font-family:inherit;display:flex;align-items:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
     #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:22px 20px 40px}
-    .last-time-above{font-size:16px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;min-height:20px;margin-bottom:4px;width:100%}
+    .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
+    .last-time-above.visible{display:block}
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
     .notif-bar.show{display:block}
     .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
@@ -88,12 +89,12 @@
     .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
     .wcard{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:14px;margin-bottom:10px;width:100%;display:flex;align-items:stretch;overflow:hidden;min-height:110px}
-    .wcard-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0;width:72px;padding:10px 6px;background:rgba(0,0,0,0.12);border-left:1px solid rgba(126,207,255,0.1)}
-    .wcard-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0}
+    .wcard-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0;width:90px;padding:10px 8px;background:rgba(0,0,0,0.12);border-left:1px solid rgba(126,207,255,0.1)}
+    .wcard-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0}
     .wc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
     .wc-red{background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite}
     .wc-unknown{background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35)}
-    .wcard-iname{font-size:10px;font-weight:600;color:rgba(200,230,255,0.6);text-align:center;word-break:break-word;line-height:1.2;max-width:66px}
+    .wcard-iname{font-size:11px;font-weight:600;color:rgba(200,230,255,0.65);text-align:center;word-break:break-word;line-height:1.2;max-width:84px}
     .wcard-status-wrap{flex:1;display:flex;align-items:center;padding:10px 10px;min-width:0}
     .wcard-status{font-size:18px;font-weight:700;color:#e8f4f8;line-height:1.5;word-break:break-word}
     .wcard-status.dim{font-size:13px;color:rgba(200,230,255,0.3);font-weight:400}
@@ -349,16 +350,9 @@
   <div id="followRequestsContainer" style="width:100%;max-width:480px;padding:0 0 4px"></div>
 
   <div id="main-content">
-    <div class="status-row">
-      <span class="status-text-inline dim" id="statusText">לחץ לעדכן שהכל בסדר</span>
-      <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
-        <span class="add-friends-plus">+</span>הוסף חברים
-      </button>
-    </div>
+    <p class="last-time-above" id="lastTimeAbove"></p>
 
 ```
-<p class="last-time-above" id="lastTimeAbove"></p>
-
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
@@ -391,9 +385,16 @@
 
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
 
+<div class="status-row" style="margin-top:18px">
+  <span class="status-text-inline dim" id="statusText">לחץ לעדכן שהכל בסדר</span>
+  <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
+    <span class="add-friends-plus">+</span>הוסף חברים
+  </button>
+</div>
+
 <div class="home-divider"></div>
 <div class="friends-section-header">
-  <span class="friends-section-title" id="friendsSectionTitle">החברים שלך בסדר?</span>
+  <span class="friends-section-title" id="friendsSectionTitle">מה קורה עם החברים שלך?</span>
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
@@ -455,7 +456,6 @@ function applyTimerGradient() {
   } else {
     btn.style.background = `${SHINE}, linear-gradient(to bottom, #b01525 ${pct}%, ${gBase} ${pct}%)`;
   }
-  // Glow stays GREEN throughout the entire 24h window
   btn.style.boxShadow = '0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)';
 }
 
@@ -711,8 +711,8 @@ async function loadWatching(){
 function sortWatchingEntries(w,s){
   const now=Date.now();
   const hrs=uid=>{const st=s[uid];return st?.timestamp?(now-st.timestamp.getTime())/3600000:9999;};
-  const ok=uid=>{const st=s[uid];return st?.isOk&&hrs(uid)<24;};
-  return[...w].sort((a,b)=>{const oa=ok(a.followingUid),ob=ok(b.followingUid);if(!oa&&ob)return-1;if(oa&&!ob)return 1;return hrs(b.followingUid)-hrs(a.followingUid);});
+  // Sort: most recently reported first, never-reported last
+  return[...w].sort((a,b)=>hrs(a.followingUid)-hrs(b.followingUid));
 }
 function renderWatchingList(w){renderWatchingWithStatuses(w,{});}
 function renderWatchingWithStatuses(watching,statuses){
@@ -879,28 +879,31 @@ function updateMainUI(){
   const addFriendsBtn=document.getElementById('addFriendsInlineBtn');
   const ok=isWithinReportingPeriod();
   state.isOk=ok;
-  const cnt=state.watching.length;
-  const titleEl=document.getElementById('friendsSectionTitle');
-  if(titleEl) titleEl.textContent=`${cnt} החברים שלך בסדר?`;
-  // Relative time above button
-  if(ltEl) ltEl.textContent=state.lastConfirmed?formatRelativeTime(state.lastConfirmed):'';
+  // followers = people who get notified; watching = people we follow
+  const followerCnt=state.followers.length;
+
+  // Relative time above button — only show when there's a timestamp
+  if(ltEl){
+    if(state.lastConfirmed){ ltEl.textContent=formatRelativeTime(state.lastConfirmed); ltEl.classList.add('visible'); }
+    else { ltEl.textContent=''; ltEl.classList.remove('visible'); }
+  }
 
   if(ok){
     const sign=state.sign, emoji=state.moodEmoji||'', quoteSign=sign==='"';
     if(quoteSign) btnText.innerHTML='״אני<br>בסדר״';
-    else if(sign) btnText.innerHTML=`אני<br>בסדר<span class="btn-sign-inline"> ${sign}</span>`;
+    else if(sign) btnText.innerHTML=`אני<br>בסדר<span class="btn-sign-inline">${sign}</span>`;
     else btnText.innerHTML='אני<br>בסדר';
     btnEmoji.textContent=emoji;
     if(state.customText){ btnCustom.textContent=state.customText; btnCustom.style.display='block'; }
     else { btnCustom.style.display='none'; }
     applyTimerGradient();
-    // Status text – green, with correct quote placement
+    // Status text – green, uses follower count (people who receive notifications)
     st.className='status-text-inline';
     if(state.okCount>=100){ st.textContent='✅ עדכנת 100 פעמים!'; btn.style.cursor='not-allowed'; }
     else {
       let statusStr;
-      if(quoteSign) statusStr=`${cnt} החברים שלך יודעים ש״אתה בסדר״${emoji?' '+emoji:''}`;
-      else statusStr=`${cnt} החברים שלך יודעים שאתה בסדר${sign||''}${emoji?' '+emoji:''}`;
+      if(quoteSign) statusStr=`${followerCnt} החברים שלך יודעים ש״אתה בסדר״${emoji?' '+emoji:''}`;
+      else statusStr=`${followerCnt} החברים שלך יודעים שאתה בסדר${sign||''}${emoji?' '+emoji:''}`;
       st.textContent=statusStr;
     }
     if(addFriendsBtn) addFriendsBtn.style.display='flex';
@@ -910,9 +913,8 @@ function updateMainUI(){
     btn.style.background='radial-gradient(circle at 40% 35%,#ff8c42,#c04a00)';
     btn.style.boxShadow='0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
     btnEmoji.textContent=''; btnText.innerHTML='לא<br>בסדר'; btnCustom.style.display='none';
-    const fcnt=state.followers.length;
     st.className='status-text-inline err';
-    st.textContent=fcnt>0?`✕ ${fcnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
+    st.textContent=followerCnt>0?`✕ ${followerCnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
     btn.style.cursor='pointer'; state.okCount=0;
     if(addFriendsBtn) addFriendsBtn.style.display='none';
     moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
@@ -931,9 +933,6 @@ function updateMainUI(){
 }
 
 function updateChips(){
-  const cnt=state.watching.length;
-  const titleEl=document.getElementById('friendsSectionTitle');
-  if(titleEl) titleEl.textContent=`${cnt} החברים שלך בסדר?`;
   const pfc=document.getElementById('profileFollowerCount');
   const pwc=document.getElementById('profileWatchingCount');
   if(pfc) pfc.textContent=state.followers.length;
@@ -947,7 +946,7 @@ window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.
 
 setInterval(()=>{
   const ltEl=document.getElementById('lastTimeAbove');
-  if(ltEl&&state.lastConfirmed) ltEl.textContent=formatRelativeTime(state.lastConfirmed);
+  if(ltEl&&state.lastConfirmed){ ltEl.textContent=formatRelativeTime(state.lastConfirmed); ltEl.classList.add('visible'); }
   const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
   if(wasOk&&!state.isOk) updateMainUI();
   else if(state.isOk) applyTimerGradient();
@@ -955,7 +954,7 @@ setInterval(()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v12';
+var CACHE_NAME='ani-beseder-v14';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
