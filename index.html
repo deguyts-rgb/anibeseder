@@ -16,195 +16,171 @@
     #loading{position:fixed;inset:0;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999}
     .spinner{width:48px;height:48px;border:3px solid rgba(126,207,255,0.2);border-top-color:#7ecfff;border-radius:50%;animation:spin 0.8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-
-```
-/* LOGIN */
-#login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;width:100%;max-width:480px}
-.login-logo-img{width:180px;margin-bottom:20px}
-.login-sub{font-size:16px;color:rgba(200,230,255,0.55);margin-bottom:48px;text-align:center;line-height:1.7}
-.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:16px;padding:15px 28px;font-size:16px;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);font-family:inherit;transition:transform 0.15s}
-.google-btn:active{transform:scale(0.97)}
-.login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
-
-/* APP */
-#app{display:none;flex-direction:column;align-items:center;width:100%}
-
-/* HEADER WRAPPER – sticky, full width, dark */
-#header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.header{width:100%;max-width:480px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px}
-.header-logo{height:58px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
-.header-logo:active{transform:scale(0.94)}
-.header-right{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
-.avatar{width:26px;height:26px;border-radius:50%;background:rgba(126,207,255,0.15);border:1px solid rgba(126,207,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;overflow:hidden;flex-shrink:0}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.logout-btn{background:none;border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:rgba(200,230,255,0.45);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
-.policy-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.25);border-radius:8px;color:rgba(255,220,130,0.7);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
-.header-icon-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:8px;color:rgba(200,230,255,0.7);font-size:16px;padding:4px 8px;cursor:pointer;font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
-.header-icon-btn:active{background:rgba(126,207,255,0.2)}
-
-/* MAIN CONTENT – single scrollable area */
-#main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:12px 20px 40px;overflow-y:auto}
-
-/* NOTIF BAR */
-.notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
-.notif-bar.show{display:block}
-.notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
-
-/* FOLLOW BANNER */
-.follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
-.follow-banner.show{display:block}
-
-/* FOLLOW REQUEST BANNER */
-.follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
-.follow-req-banner.show{display:flex}
-.follow-req-title{font-size:13px;font-weight:700;color:#7ecfff}
-.follow-req-btns{display:flex;gap:8px}
-.follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-.follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
-
-/* HOME MAIN AREA */
-.status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px;width:100%}
-.time-freq-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
-.last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:right;min-height:22px}
-.last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
-.big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none}
-.big-btn.ok{background:radial-gradient(circle at 40% 35%,#4cde80,#1a9e50);box-shadow:0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)}
-.big-btn.late{background:radial-gradient(circle at 40% 35%,#ff8c42,#c04a00);box-shadow:0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)}
-.big-btn.pulse{transform:scale(0.93)}
-.btn-emoji{font-size:40px;line-height:1}
-.btn-text{font-size:20px;font-weight:800;text-align:center;line-height:1.3;margin-top:6px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
-.btn-marks{font-size:14px;font-weight:800;letter-spacing:1px;margin-top:4px}
-.sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
-.sent-badge.show{opacity:1;transform:translateY(0)}
-.sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-.chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
-.add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
-.add-followers-btn:active{transform:scale(0.97)}
-.followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
-
-/* MOOD PICKER */
-.btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
-.mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
-.mood-btn:active{transform:scale(0.88)}
-.mood-btn.visible{display:flex}
-.mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
-.mood-panel.show{display:grid}
-.mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
-.mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
-.mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
-.mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
-
-/* FRIENDS SECTION (watching embedded in home) */
-.home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
-.friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-.friends-section-count{font-size:11px;color:rgba(200,230,255,0.3)}
-
-/* PERSON ROWS */
-.person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px;width:100%}
-.person-row-top{display:flex;align-items:center;gap:8px}
-.person-info{flex:1;min-width:0}
-.person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
-.person-time{font-size:10px;margin-top:2px}
-.person-time.ok{color:#4cde80}
-.person-time.late{color:#ff6666}
-.person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
-
-/* STATUS CIRCLES */
-.status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
-.sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
-.sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
-.sc-red{background:rgba(220,40,40,0.2);border:2px solid #ff4444;color:#ff6666}
-.sc-late{width:40px;height:40px;background:rgba(220,40,40,0.25);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;font-size:9px}
-@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
-
-/* FOLLOW STATUS BADGE */
-.follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
-.fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
-.fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
-.fb-following{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
-.fb-request-sent{background:rgba(255,200,50,0.12);border:1px solid rgba(255,200,50,0.35);color:rgba(255,220,130,0.8)}
-.fb-request-me{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
-
-/* ACTION BUTTONS */
-.trash-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,120,120,0.6);font-size:14px;flex-shrink:0}
-.trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
-.nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
-.nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
-
-/* PANEL (settings + followers – slide up from bottom) */
-.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
-.panel-overlay.show{display:flex}
-.panel-box{background:#111e2b;border-radius:20px 20px 0 0;padding:0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18)}
-.panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(126,207,255,0.1);flex-shrink:0}
-.panel-title{font-size:17px;font-weight:800;color:#7ecfff}
-.panel-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
-.panel-content{overflow-y:auto;padding:16px 20px 32px;flex:1}
-
-/* SETTINGS CONTENT */
-.section-title{font-size:19px;font-weight:800;color:#7ecfff;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
-.settings-section-title{font-size:15px;font-weight:700;color:#7ecfff;margin:14px 0 8px}
-.freq-option{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:12px;padding:11px 14px;margin-bottom:7px;cursor:pointer;color:rgba(200,230,255,0.7);transition:all 0.2s;font-size:13px}
-.freq-option.active{background:rgba(126,207,255,0.15);border-color:#7ecfff;color:#7ecfff;font-weight:700}
-.freq-hint{font-size:11px;font-weight:300;color:rgba(200,230,255,0.45);margin-top:4px;line-height:1.5}
-.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
-.day-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:7px 0;text-align:center;font-size:10px;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
-.day-cell.active{background:#7ecfff;color:#0f1923;font-weight:700}
-.interval-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
-.interval-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:11px 0;text-align:center;font-size:17px;font-weight:700;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
-.interval-cell.active{background:#7ecfff;color:#0f1923}
-.card{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:16px;padding:14px 18px;margin-bottom:12px}
-.card-hint{font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;line-height:1.6}
-.settings-action-btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
-.notif-on-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:rgba(200,230,255,0.75)}
-.notif-off-btn{background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);color:#ff8888}
-.addhome-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:#7ecfff}
-.alert-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:9px;margin-bottom:5px;font-size:13px;cursor:pointer;transition:all 0.2s;user-select:none}
-.alert-row.blue-on{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.15);color:rgba(200,230,255,0.8)}
-.alert-row.blue-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
-.alert-row.orange-on{background:rgba(255,150,80,0.06);border:1px solid rgba(255,150,80,0.2);color:rgba(255,200,160,0.85)}
-.alert-row.orange-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
-.alert-status-on{font-size:11px;color:#4cde80;white-space:nowrap}
-.alert-status-off{font-size:11px;color:#ff6666;white-space:nowrap}
-
-/* FOLLOWERS PANEL CONTENT */
-.share-box{background:rgba(40,200,100,0.07);border:1px solid rgba(40,200,100,0.2);border-radius:16px;padding:16px;margin-bottom:12px}
-.share-link{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;font-size:11px;color:#7ecfff;word-break:break-all;margin:8px 0;font-family:monospace;line-height:1.5;border:1px solid rgba(126,207,255,0.15)}
-.share-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:12px;color:#fff;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
-
-/* CONFIRM MODAL */
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
-.confirm-overlay.show{display:flex}
-.confirm-box{background:#1a2a3a;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(126,207,255,0.2);text-align:center}
-.confirm-title{font-size:16px;font-weight:700;margin-bottom:8px;color:#e8f4f8}
-.confirm-text{font-size:13px;color:rgba(200,230,255,0.6);margin-bottom:20px;line-height:1.6}
-.confirm-btns{display:flex;gap:10px}
-.confirm-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(200,230,255,0.6);padding:11px;font-size:14px;cursor:pointer;font-family:inherit}
-.confirm-ok{flex:1;background:linear-gradient(135deg,#c01515,#8a0f0f);border:none;border-radius:12px;color:#fff;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-
-/* POLICY MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:150;display:none;align-items:flex-end;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal-box{background:#1a2a3a;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(126,207,255,0.2)}
-.modal-close{float:left;background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px;margin-bottom:12px}
-.modal-title{font-size:17px;font-weight:800;color:#ffd97d;margin-bottom:14px}
-.policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
-.policy-text p{margin-bottom:10px}
-.policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
-
-/* INSTALL BANNERS */
-.install-banner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-#iosInstallBanner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-
-@media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:32px}.btn-text{font-size:18px}}
-```
-
+    /* LOGIN */
+    #login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;width:100%;max-width:480px}
+    .login-logo-img{width:180px;margin-bottom:20px}
+    .login-sub{font-size:16px;color:rgba(200,230,255,0.55);margin-bottom:48px;text-align:center;line-height:1.7}
+    .google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:16px;padding:15px 28px;font-size:16px;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);font-family:inherit;transition:transform 0.15s}
+    .google-btn:active{transform:scale(0.97)}
+    .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
+    /* APP */
+    #app{display:none;flex-direction:column;align-items:center;width:100%}
+    /* STICKY HEADER */
+    #header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .header{width:100%;max-width:480px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+    .header-logo{height:58px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
+    .header-logo:active{transform:scale(0.94)}
+    .header-right{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+    .avatar{width:26px;height:26px;border-radius:50%;background:rgba(126,207,255,0.15);border:1px solid rgba(126,207,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;overflow:hidden;flex-shrink:0}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .logout-btn{background:none;border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:rgba(200,230,255,0.45);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
+    .policy-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.25);border-radius:8px;color:rgba(255,220,130,0.7);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
+    .header-icon-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:8px;color:rgba(200,230,255,0.7);font-size:16px;padding:4px 8px;cursor:pointer;font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
+    .header-icon-btn:active{background:rgba(126,207,255,0.2)}
+    /* MAIN CONTENT */
+    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:12px 20px 40px}
+    /* NOTIF BAR */
+    .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
+    .notif-bar.show{display:block}
+    .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
+    /* FOLLOW BANNER */
+    .follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
+    .follow-banner.show{display:block}
+    /* FOLLOW REQUEST */
+    .follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
+    .follow-req-banner.show{display:flex}
+    .follow-req-title{font-size:13px;font-weight:700;color:#7ecfff}
+    .follow-req-btns{display:flex;gap:8px}
+    .follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+    .follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
+    /* STATUS TEXT & TIME */
+    .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px;width:100%}
+    .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:center;min-height:22px;margin-bottom:2px;width:100%}
+    .last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
+    /* BIG BUTTON */
+    .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
+    .big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:box-shadow 0.5s ease,transform 0.15s ease;display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none;overflow:hidden}
+    .big-btn.pulse{transform:scale(0.93)}
+    .btn-emoji{font-size:38px;line-height:1;margin-bottom:4px}
+    .btn-main-row{display:flex;align-items:center;justify-content:center;gap:5px}
+    .btn-sign{font-size:46px;font-weight:900;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,0.4);display:none}
+    .btn-sign.show{display:block}
+    .btn-text{font-size:20px;font-weight:800;text-align:center;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    /* SENT BADGE */
+    .sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
+    .sent-badge.show{opacity:1;transform:translateY(0)}
+    /* SUB INFO */
+    .sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+    .chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
+    .add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
+    .add-followers-btn:active{transform:scale(0.97)}
+    .followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
+    /* SMALL FLOATING BUTTONS */
+    .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
+    .mood-btn:active{transform:scale(0.88)}
+    .mood-btn.visible{display:flex}
+    .sign-btn{position:absolute;bottom:-14px;left:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:#e8f4f8;font-family:inherit}
+    .sign-btn:active{transform:scale(0.88)}
+    .sign-btn.visible{display:flex}
+    /* MOOD PANEL */
+    .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
+    .mood-panel.show{display:grid}
+    .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
+    .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
+    .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
+    .mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
+    /* SIGN PANEL */
+    .sign-panel{position:absolute;bottom:-14px;left:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:14px 16px;z-index:100;display:none;flex-direction:column;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:200px}
+    .sign-panel.show{display:flex}
+    .sign-panel-title{text-align:center;font-size:12px;color:rgba(200,230,255,0.5);font-weight:600}
+    .sign-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .sign-cell{height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);color:#e8f4f8;transition:all 0.14s;user-select:none;font-family:inherit}
+    .sign-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
+    .sign-cell.selected{background:rgba(126,207,255,0.18);border-color:#7ecfff;color:#7ecfff}
+    /* FRIENDS SECTION */
+    .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
+    .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
+    .friends-section-count{font-size:11px;color:rgba(200,230,255,0.3)}
+    /* PERSON ROWS */
+    .person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px;width:100%}
+    .person-row-top{display:flex;align-items:center;gap:8px}
+    .person-info{flex:1;min-width:0}
+    .person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
+    .person-time{font-size:10px;margin-top:2px}
+    .person-time.ok{color:#4cde80}
+    .person-time.late{color:#ff6666}
+    .person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+    /* STATUS CIRCLES */
+    .status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
+    .sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
+    .sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
+    .sc-late{width:40px;height:40px;background:rgba(220,40,40,0.25);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;font-size:9px}
+    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
+    /* BADGES */
+    .follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
+    .fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
+    .fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
+    .fb-request-sent{background:rgba(255,200,50,0.12);border:1px solid rgba(255,200,50,0.35);color:rgba(255,220,130,0.8)}
+    .fb-request-me{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
+    /* ACTION BUTTONS */
+    .trash-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,120,120,0.6);font-size:14px;flex-shrink:0}
+    .trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
+    .nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
+    .nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
+    /* PANELS */
+    .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+    .panel-overlay.show{display:flex}
+    .panel-box{background:#111e2b;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18)}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(126,207,255,0.1);flex-shrink:0}
+    .panel-title{font-size:17px;font-weight:800;color:#7ecfff}
+    .panel-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
+    .panel-content{overflow-y:auto;padding:16px 20px 32px;flex:1}
+    /* SETTINGS */
+    .settings-section-title{font-size:15px;font-weight:700;color:#7ecfff;margin:14px 0 8px}
+    .card{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:16px;padding:14px 18px;margin-bottom:12px}
+    .settings-action-btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
+    .notif-on-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:rgba(200,230,255,0.75)}
+    .notif-off-btn{background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);color:#ff8888}
+    .addhome-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:#7ecfff}
+    .alert-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:9px;margin-bottom:5px;font-size:13px;cursor:pointer;transition:all 0.2s;user-select:none}
+    .alert-row.blue-on{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.15);color:rgba(200,230,255,0.8)}
+    .alert-row.blue-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
+    .alert-row.orange-on{background:rgba(255,150,80,0.06);border:1px solid rgba(255,150,80,0.2);color:rgba(255,200,160,0.85)}
+    .alert-row.orange-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
+    .alert-status-on{font-size:11px;color:#4cde80;white-space:nowrap}
+    .alert-status-off{font-size:11px;color:#ff6666;white-space:nowrap}
+    /* FOLLOWERS PANEL */
+    .section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
+    .share-box{background:rgba(40,200,100,0.07);border:1px solid rgba(40,200,100,0.2);border-radius:16px;padding:16px;margin-bottom:12px}
+    .share-link{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;font-size:11px;color:#7ecfff;word-break:break-all;margin:8px 0;font-family:monospace;line-height:1.5;border:1px solid rgba(126,207,255,0.15)}
+    .share-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:12px;color:#fff;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
+    /* CONFIRM MODAL */
+    .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+    .confirm-overlay.show{display:flex}
+    .confirm-box{background:#1a2a3a;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(126,207,255,0.2);text-align:center}
+    .confirm-title{font-size:16px;font-weight:700;margin-bottom:8px;color:#e8f4f8}
+    .confirm-text{font-size:13px;color:rgba(200,230,255,0.6);margin-bottom:20px;line-height:1.6}
+    .confirm-btns{display:flex;gap:10px}
+    .confirm-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(200,230,255,0.6);padding:11px;font-size:14px;cursor:pointer;font-family:inherit}
+    .confirm-ok{flex:1;background:linear-gradient(135deg,#c01515,#8a0f0f);border:none;border-radius:12px;color:#fff;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+    /* POLICY MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:150;display:none;align-items:flex-end;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal-box{background:#1a2a3a;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(126,207,255,0.2)}
+    .modal-close{float:left;background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px;margin-bottom:12px}
+    .modal-title{font-size:17px;font-weight:800;color:#ffd97d;margin-bottom:14px}
+    .policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
+    .policy-text p{margin-bottom:10px}
+    .policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
+    /* INSTALL */
+    .install-banner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+    #iosInstallBanner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+    @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:30px}.btn-text{font-size:17px}.btn-sign{font-size:38px}}
   </style>
 </head>
 <body>
-
 <div id="loading">
   <div style="font-size:56px">🤝</div>
   <div class="spinner"></div>
@@ -253,7 +229,7 @@
       <p>בשימוש באפליקציה המשתמש מצהיר כי הבין את כל האמור לעיל ומוותר על כל זכות תביעה, תלונה, דרישה או הליך משפטי כלשהו – בישראל או בכל מדינה אחרת – כנגד מפתחי האפליקציה, מפיציה, מארחיה ובעליה.</p>
       <h4>🔒 פרטיות</h4>
       <p>נשמרים: שם, כתובת אימייל ומועד הדיווח האחרון. אין מעקב מיקום. אין שיתוף מידע עם צדדים שלישיים. אין פרסום.</p>
-      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 9.0 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 10.0 | שימוש אישי בלבד | כל הזכויות שמורות</p>
     </div>
   </div>
 </div>
@@ -269,35 +245,7 @@
     <div class="panel-content">
       <button id="notifToggleBtn" class="settings-action-btn notif-off-btn" onclick="toggleNotifications()">🔔 הפעל התראות</button>
       <button id="addHomeBtn" class="settings-action-btn addhome-btn" onclick="addToHomeScreen()" style="display:none">📲 הוסף אפליקציה למסך הבית</button>
-      <p class="settings-section-title">🔄 תדירות דיווח</p>
-      <p class="freq-hint" style="margin-bottom:8px">הדיווח מתאפס בחצות לפי תדירות הדיווח</p>
-      <div class="freq-option active" id="freq-daily" onclick="setFreq('daily')">כל יום</div>
-      <div class="freq-option" id="freq-odd" onclick="setFreq('odd')">כל יום אי-זוגי (א׳,ג׳,ה׳,ש׳)</div>
-      <div class="freq-option" id="freq-even" onclick="setFreq('even')">כל יום זוגי (ב׳,ד׳,ו׳)</div>
-      <div class="freq-option" id="freq-specific" onclick="setFreq('specific')">ימים ספציפיים</div>
-      <div class="freq-option" id="freq-interval" onclick="setFreq('interval')">מרווח זמן קבוע</div>
-      <div class="card" id="specificDaysCard" style="display:none;margin-top:8px">
-        <p class="card-hint">בחר ימים:</p>
-        <div class="day-grid">
-          <div class="day-cell" id="day-0" onclick="toggleDay(0)">א׳</div>
-          <div class="day-cell" id="day-1" onclick="toggleDay(1)">ב׳</div>
-          <div class="day-cell" id="day-2" onclick="toggleDay(2)">ג׳</div>
-          <div class="day-cell" id="day-3" onclick="toggleDay(3)">ד׳</div>
-          <div class="day-cell" id="day-4" onclick="toggleDay(4)">ה׳</div>
-          <div class="day-cell" id="day-5" onclick="toggleDay(5)">ו׳</div>
-          <div class="day-cell" id="day-6" onclick="toggleDay(6)">ש׳</div>
-        </div>
-      </div>
-      <div class="card" id="intervalCard" style="display:none;margin-top:8px">
-        <p class="card-hint">כל כמה ימים?</p>
-        <div class="interval-grid">
-          <div class="interval-cell active" id="int-1" onclick="setIntervalDays(1)">1</div>
-          <div class="interval-cell" id="int-2" onclick="setIntervalDays(2)">2</div>
-          <div class="interval-cell" id="int-3" onclick="setIntervalDays(3)">3</div>
-          <div class="interval-cell" id="int-4" onclick="setIntervalDays(4)">4</div>
-        </div>
-      </div>
-      <p class="settings-section-title" style="margin-top:16px">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
+      <p class="settings-section-title">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
       <div class="card" id="personalAlertsCard"></div>
       <p class="settings-section-title">⚠️ התראות לעוקבים אם לא דיווחתי <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
       <div class="card" id="followerAlertsCard"></div>
@@ -331,10 +279,7 @@
 <div class="install-banner" id="installBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
-    <div style="flex:1">
-      <div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:3px">הוסף לדף הבית</div>
-      <div style="font-size:12px;color:rgba(200,230,255,0.6)">גישה מהירה כמו אפליקציה רגילה</div>
-    </div>
+    <div style="flex:1"><div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:3px">הוסף לדף הבית</div><div style="font-size:12px;color:rgba(200,230,255,0.6)">גישה מהירה כמו אפליקציה רגילה</div></div>
   </div>
   <div style="display:flex;gap:8px;margin-top:10px">
     <button onclick="doInstall()" style="flex:2;background:linear-gradient(135deg,#1a6fa0,#0d4f7a);border:none;border-radius:10px;color:#fff;padding:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">הוסף לדף הבית ✓</button>
@@ -344,10 +289,7 @@
 <div id="iosInstallBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
-    <div style="flex:1">
-      <div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:4px">הוסף לדף הבית</div>
-      <div style="font-size:12px;color:rgba(200,230,255,0.7);line-height:1.6">1. לחץ ⎙ בתחתית Safari<br>2. בחר <strong style="color:#7ecfff">״הוסף למסך הבית״</strong></div>
-    </div>
+    <div style="flex:1"><div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:4px">הוסף לדף הבית</div><div style="font-size:12px;color:rgba(200,230,255,0.7);line-height:1.6">1. לחץ ⎙ בתחתית Safari<br>2. בחר <strong style="color:#7ecfff">״הוסף למסך הבית״</strong></div></div>
   </div>
   <button onclick="dismissIosInstall()" style="width:100%;margin-top:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:9px;font-size:12px;cursor:pointer;font-family:inherit">הבנתי</button>
 </div>
@@ -355,9 +297,6 @@
 <!-- APP -->
 
 <div id="app">
-
-  <!-- STICKY HEADER -->
-
   <div id="header-wrapper">
     <div class="header">
       <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="location.reload()"/>
@@ -371,8 +310,6 @@
     </div>
   </div>
 
-  <!-- NOTIFICATION + BANNERS (full width) -->
-
   <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
   <div class="follow-banner" id="followBanner">
     <div style="font-weight:700;color:#4cde80;margin-bottom:5px" id="followBannerTitle"></div>
@@ -380,65 +317,60 @@
   </div>
   <div id="followRequestsContainer" style="width:100%;max-width:480px;padding:0 0 4px"></div>
 
-  <!-- SINGLE SCROLLABLE PAGE -->
-
   <div id="main-content">
+    <p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
+    <p class="last-time-above" id="lastTimeAbove"></p>
+    <p class="last-date-below" id="lastDateBelow"></p>
 
 ```
-<!-- STATUS TEXT -->
-<p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
-
-<!-- TIME + FREQ ROW -->
-<div class="time-freq-row">
-  <p class="last-time-above" id="lastTimeAbove"></p>
-  <span class="chip" onclick="openPanel('settingsPanel')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
-</div>
-<p class="last-date-below" id="lastDateBelow"></p>
-
-<!-- BIG BUTTON -->
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
-    <span class="btn-text" id="btnText">אני<br>בסדר</span>
-    <span class="btn-marks" id="btnMarks"></span>
+    <div class="btn-main-row">
+      <span class="btn-sign" id="btnSign"></span>
+      <span class="btn-text" id="btnText">אני<br>בסדר</span>
+    </div>
   </button>
-  <button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)" title="איזה בסדר אתה?">😊</button>
+  <!-- MOOD (bottom-right) -->
+  <button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)">😊</button>
   <div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
     <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
   </div>
+  <!-- SIGN (bottom-left) -->
+  <button class="sign-btn" id="signBtn" onclick="toggleSignPanel(event)">?</button>
+  <div class="sign-panel" id="signPanel" onclick="event.stopPropagation()">
+    <div class="sign-panel-title">הוסף סימן לדיווח</div>
+    <div class="sign-options">
+      <div class="sign-cell" id="sc-!" onclick="selectSign('!')">!</div>
+      <div class="sign-cell" id="sc-?" onclick="selectSign('?')">?</div>
+      <div class="sign-cell" id="sc-." onclick="selectSign('.')">.</div>
+      <div class="sign-cell" id="sc-…" onclick="selectSign('…')">…</div>
+    </div>
+  </div>
 </div>
+
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
 
-<!-- SUB INFO -->
 <div class="sub-info">
   <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
   <span class="chip" onclick="openPanel('followersPanel')" id="followersChip">👥 0 עוקבים</span>
   <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
 </div>
 
-<!-- FRIENDS SECTION DIVIDER -->
 <div class="home-divider"></div>
 <div class="friends-section-header">
   <span class="friends-section-title">- איזה בסדר חברים שלך</span>
   <span class="friends-section-count" id="friendsCount"></span>
 </div>
-
-<!-- WATCHING LIST (embedded) -->
-<!-- hidden watchingTitle for JS compatibility -->
 <span id="watchingTitle" style="display:none"></span>
-<!-- hidden battery bar for JS compatibility -->
-<div id="watchingBarWrap" style="display:none">
-  <div id="watchingBarLabel"></div>
-  <div><div id="barGreen"></div><div id="barRed"></div></div>
-</div>
+<div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
 <div id="watchingList" style="width:100%">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 ```
 
-  </div><!-- end #main-content -->
-
-</div><!-- end #app -->
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -458,934 +390,492 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
-const auth = getAuth(fbApp);
-const db = getFirestore(fbApp);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
+const WINDOW_MS = 24 * 3600000; // 24 hours
 
-// ── PANEL OPEN / CLOSE ────────────────────────────────────────
-window.openPanel = (id) => {
-  document.getElementById(id).classList.add('show');
-};
-window.closePanel = (id) => {
-  document.getElementById(id).classList.remove('show');
-};
-window.handlePanelOverlayClick = (e, id) => {
-  if (e.target === document.getElementById(id)) closePanel(id);
-};
+// ── PANELS ────────────────────────────────────────────────────
+window.openPanel = id => document.getElementById(id).classList.add('show');
+window.closePanel = id => document.getElementById(id).classList.remove('show');
+window.handlePanelOverlayClick = (e,id) => { if(e.target===document.getElementById(id)) closePanel(id); };
+window.showScreen = name => { if(name==='settings') openPanel('settingsPanel'); if(name==='followers') openPanel('followersPanel'); };
 
-// showScreen kept for backward compatibility
-window.showScreen = (name) => {
-  if (name === 'settings') { openPanel('settingsPanel'); return; }
-  if (name === 'followers') { openPanel('followersPanel'); return; }
-};
-
-// ── MIDNIGHT RESET LOGIC ──────────────────────────────────────
-function getMidnightMs(daysAgo = 0) {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - daysAgo);
-  return d.getTime();
-}
-
+// ── 24H CHECK ─────────────────────────────────────────────────
 function isWithinReportingPeriod() {
   if (!state.lastConfirmed) return false;
-  const lc = state.lastConfirmed.getTime();
-  const freq = state.freq;
-  if (freq === 'daily') return lc >= getMidnightMs(0);
-  if (freq === 'interval') {
-    const n = state.intervalDays || 1;
-    return lc >= getMidnightMs(n - 1);
-  }
-  if (freq === 'odd') return lc >= getLastRequiredDayMidnight([0, 2, 4, 6]);
-  if (freq === 'even') return lc >= getLastRequiredDayMidnight([1, 3, 5]);
-  if (freq === 'specific') {
-    const days = state.specificDays || [];
-    if (!days.length) return lc >= getMidnightMs(0);
-    return lc >= getLastRequiredDayMidnight(days);
-  }
-  return lc >= getMidnightMs(0);
+  return (Date.now() - state.lastConfirmed.getTime()) < WINDOW_MS;
 }
 
-function getLastRequiredDayMidnight(allowedDays) {
-  const today = new Date().getDay();
-  for (let back = 0; back <= 7; back++) {
-    const checkDay = (today - back + 7) % 7;
-    if (allowedDays.includes(checkDay)) return getMidnightMs(back);
+// ── TIMER GRADIENT ────────────────────────────────────────────
+// Green top/base per mood level
+const G_TOP  = {1:'#6ef0a0', 2:'#4cde80', 3:'#3db870'};
+const G_BASE = {1:'#18c05a', 2:'#1a9e50', 3:'#137040'};
+const SHINE  = 'radial-gradient(ellipse 55% 35% at 38% 28%, rgba(255,255,255,0.14) 0%, transparent 65%)';
+
+function applyTimerGradient() {
+  if (!state.isOk || !state.lastConfirmed) return;
+  const btn = document.getElementById('bigBtn');
+  const elapsed = Date.now() - state.lastConfirmed.getTime();
+  const pct = Math.min(elapsed / WINDOW_MS, 1) * 100;  // 0→100 over 24h
+  const lv = state.moodLevel || 2;
+  const gTop  = G_TOP[lv]  || G_TOP[2];
+  const gBase = G_BASE[lv] || G_BASE[2];
+
+  if (pct <= 0.5) {
+    btn.style.background = `${SHINE}, radial-gradient(circle at 40% 35%, ${gTop}, ${gBase})`;
+    btn.style.boxShadow  = '0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)';
+  } else {
+    // Top pct% = red, bottom (100-pct)% = green
+    btn.style.background = `${SHINE}, linear-gradient(to bottom, #b01525 ${pct}%, ${gBase} ${pct}%)`;
+    const greenGlow = Math.round((1 - pct/100) * 45);
+    const redGlow   = Math.round((pct/100) * 45);
+    btn.style.boxShadow  = `0 0 60px rgba(${180+redGlow},${20+greenGlow},${20},0.5),0 8px 32px rgba(0,0,0,0.4)`;
   }
-  return getMidnightMs(0);
 }
 
 // ── FCM ───────────────────────────────────────────────────────
 async function registerFCMToken() {
   if (!currentUser) return;
   try {
-    const { getMessaging, getToken, onMessage } = await import(
-      "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js"
-    );
+    const { getMessaging, getToken, onMessage } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js");
     const messaging = getMessaging(fbApp);
     const sw = await navigator.serviceWorker.ready;
     const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
-    if (token) {
-      await setDoc(doc(db, 'fcmTokens', currentUser.uid), {
-        token, uid: currentUser.uid, updatedAt: serverTimestamp()
-      });
-    }
+    if (token) await setDoc(doc(db,'fcmTokens',currentUser.uid),{token,uid:currentUser.uid,updatedAt:serverTimestamp()});
     onMessage(messaging, payload => {
-      const { title, body } = payload.notification || {};
-      if (title && Notification.permission === 'granted') {
-        new Notification(title, { body, icon: '/icon-192.png', dir: 'rtl' });
-      }
+      const {title,body} = payload.notification||{};
+      if (title && Notification.permission==='granted') new Notification(title,{body,icon:'/icon-192.png',dir:'rtl'});
     });
-  } catch(e) { console.log('FCM token error:', e.message); }
+  } catch(e){ console.log('FCM:',e.message); }
 }
 
-async function sendPushToFollowers(type = 'ok', message = '') {
-  if (!currentUser || !state.followers.length) return;
-  const followerUids = state.followers.map(f => f.followerUid);
+async function sendPushToFollowers(type='ok', message='') {
+  if (!currentUser||!state.followers.length) return;
   try {
-    await fetch('/.netlify/functions/send-push', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        senderUid: currentUser.uid,
-        senderName: currentUser.displayName,
-        followerUids, type, message
-      })
-    });
-  } catch(e) {}
+    await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:state.followers.map(f=>f.followerUid),type,message})});
+  } catch(e){}
 }
 
-let currentUser = null;
-let state = {
-  freq:'daily', specificDays:[], intervalDays:1,
-  isOk:false, lastConfirmed:null, okCount:0,
-  followers:[], watching:[],
-  mutualUids: new Set(),
-  moodEmoji: null, moodLevel: 2
-};
-let statusListeners = [];
-let watchingStatuses = {};
+let currentUser=null;
+let state={ isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null };
+let statusListeners=[], watchingStatuses={};
 
 // ── MOOD PICKER ───────────────────────────────────────────────
-const MOOD_OPTIONS = [
-  {emoji:'🤩', label:'מדהים',  level:1},
-  {emoji:'😄', label:'שמח',    level:1},
-  {emoji:'🥳', label:'חוגג',   level:1},
-  {emoji:'😊', label:'טוב',    level:2},
-  {emoji:'😌', label:'רגוע',   level:2},
-  {emoji:'🥰', label:'אוהב',   level:2},
-  {emoji:'🙂', label:'בסדר',   level:3},
-  {emoji:'😅', label:'עסוק',   level:3},
-  {emoji:'😐', label:'ניטרלי', level:3},
+const MOOD_OPTIONS=[
+  {emoji:'🤩',label:'מדהים',level:1}, {emoji:'🥰',label:'אוהב',level:1},  {emoji:'🥳',label:'חוגג',level:1},
+  {emoji:'😊',label:'בסדר', level:2}, {emoji:'😐',label:'ניטרלי',level:2},{emoji:'🤔',label:'חושב',level:2},
+  {emoji:'🫥',label:'מעורפל',level:3},{emoji:'😒',label:'לא מרוצה',level:3},{emoji:'😤',label:'מתוח',level:3},
 ];
-const MOOD_COLORS = {
-  1: {bg:'radial-gradient(circle at 40% 35%,#6ef0a0,#18c05a)', glow:'0 0 72px rgba(40,240,120,0.6),0 8px 32px rgba(0,0,0,0.4)'},
-  2: {bg:'radial-gradient(circle at 40% 35%,#4cde80,#1a9e50)', glow:'0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)'},
-  3: {bg:'radial-gradient(circle at 40% 35%,#3db870,#137040)', glow:'0 0 48px rgba(30,155,80,0.35),0 8px 32px rgba(0,0,0,0.4)'},
-};
 
-function renderMoodPanel() {
-  const panel = document.getElementById('moodPanel');
-  panel.innerHTML = '<div class="mood-panel-title">איזה בסדר אתה? 😊</div>' +
-    MOOD_OPTIONS.map((m,i) =>
-      `<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span><span class="mood-cell-label">${m.label}</span></div>`
-    ).join('');
+function renderMoodPanel(){
+  const p=document.getElementById('moodPanel');
+  p.innerHTML='<div class="mood-panel-title">איזה בסדר אתה? 😊</div>'+
+    MOOD_OPTIONS.map((m,i)=>`<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span><span class="mood-cell-label">${m.label}</span></div>`).join('');
 }
 
-window.toggleMoodPanel = (e) => {
+window.toggleMoodPanel = e => {
   e.stopPropagation();
-  const panel = document.getElementById('moodPanel');
-  if (!panel.querySelector('.mood-cell')) renderMoodPanel();
-  panel.classList.toggle('show');
+  document.getElementById('signPanel').classList.remove('show');
+  const p=document.getElementById('moodPanel');
+  if(!p.querySelector('.mood-cell')) renderMoodPanel();
+  p.classList.toggle('show');
 };
 
-window.selectMood = (idx) => {
-  const mood = MOOD_OPTIONS[idx];
-  state.moodEmoji = mood.emoji;
-  state.moodLevel = mood.level;
-  if (currentUser) {
-    localStorage.setItem('moodEmoji_' + currentUser.uid, mood.emoji);
-    localStorage.setItem('moodLevel_' + currentUser.uid, String(mood.level));
-    setDoc(doc(db,'status',currentUser.uid),{moodEmoji:mood.emoji},{merge:true}).catch(()=>{});
+window.selectMood = idx => {
+  const m=MOOD_OPTIONS[idx];
+  state.moodEmoji=m.emoji; state.moodLevel=m.level;
+  if(currentUser){
+    localStorage.setItem('moodEmoji_'+currentUser.uid,m.emoji);
+    localStorage.setItem('moodLevel_'+currentUser.uid,String(m.level));
+    setDoc(doc(db,'status',currentUser.uid),{moodEmoji:m.emoji},{merge:true}).catch(()=>{});
   }
   document.getElementById('moodPanel').classList.remove('show');
-  document.getElementById('moodBtn').textContent = mood.emoji;
+  document.getElementById('moodBtn').textContent=m.emoji;
+  applyTimerGradient();
   updateMainUI();
 };
 
-document.addEventListener('click', () => {
+// ── SIGN PICKER ───────────────────────────────────────────────
+const SIGNS=['!','?','.','…'];
+
+window.toggleSignPanel = e => {
+  e.stopPropagation();
+  document.getElementById('moodPanel').classList.remove('show');
+  document.getElementById('signPanel').classList.toggle('show');
+};
+
+window.selectSign = sign => {
+  state.sign=sign;
+  if(currentUser) localStorage.setItem('sign_'+currentUser.uid,sign);
+  SIGNS.forEach(s=>{ const el=document.getElementById('sc-'+s); if(el) el.classList.toggle('selected',s===sign); });
+  document.getElementById('signBtn').textContent=sign;
+  document.getElementById('signPanel').classList.remove('show');
+  const signEl=document.getElementById('btnSign');
+  signEl.textContent=sign; signEl.classList.add('show');
+  if(currentUser) setDoc(doc(db,'status',currentUser.uid),{sign:sign},{merge:true}).catch(()=>{});
+};
+
+document.addEventListener('click',()=>{
   document.getElementById('moodPanel')?.classList.remove('show');
+  document.getElementById('signPanel')?.classList.remove('show');
 });
 
-// Alert settings
-const defaultPersonalAlerts = [
-  {id:'p2h', label:'2 שעות לפני', on:true},
-  {id:'p1h', label:'שעה לפני', on:true},
-  {id:'p30', label:'30 דקות לפני', on:true},
-  {id:'p10', label:'10 דקות לפני', on:true},
-  {id:'p1',  label:'דקה לפני', on:true},
-];
-const defaultFollowerAlerts = [
-  {id:'f0',  label:'מיידית', on:true},
-  {id:'f30', label:'30 דקות אחרי', on:true},
-  {id:'f1h', label:'שעה אחרי', on:true},
-  {id:'f2h', label:'שעתיים אחרי', on:true},
-  {id:'f4h', label:'4 שעות אחרי', on:true},
-  {id:'f12', label:'12 שעות אחרי', on:true},
-  {id:'f24', label:'כל 24 שעות', on:true},
-];
-
-function getAlerts(key, defaults) {
-  try { return JSON.parse(localStorage.getItem(key)) || defaults; } catch { return defaults; }
+// ── ALERTS ────────────────────────────────────────────────────
+const defPA=[{id:'p2h',label:'2 שעות לפני',on:true},{id:'p1h',label:'שעה לפני',on:true},{id:'p30',label:'30 דקות לפני',on:true},{id:'p10',label:'10 דקות לפני',on:true},{id:'p1',label:'דקה לפני',on:true}];
+const defFA=[{id:'f0',label:'מיידית',on:true},{id:'f30',label:'30 דקות אחרי',on:true},{id:'f1h',label:'שעה אחרי',on:true},{id:'f2h',label:'שעתיים אחרי',on:true},{id:'f4h',label:'4 שעות אחרי',on:true},{id:'f12',label:'12 שעות אחרי',on:true},{id:'f24',label:'כל 24 שעות',on:true}];
+function getAlerts(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch{return d;}}
+function saveAlerts(k,a){localStorage.setItem(k,JSON.stringify(a));}
+let personalAlerts=getAlerts('personalAlerts',defPA);
+let followerAlerts=getAlerts('followerAlerts',defFA);
+function renderAlerts(){
+  document.getElementById('personalAlertsCard').innerHTML=personalAlerts.map((a,i)=>`<div class="alert-row ${a.on?'blue-on':'blue-off'}" onclick="togglePersonalAlert(${i})"><span>${a.label}</span>${a.on?'<span class="alert-status-on">✓ פעיל</span>':'<span class="alert-status-off">✕ לא פעיל</span>'}</div>`).join('');
+  document.getElementById('followerAlertsCard').innerHTML=followerAlerts.map((a,i)=>`<div class="alert-row ${a.on?'orange-on':'orange-off'}" onclick="toggleFollowerAlert(${i})"><span>${a.label}</span>${a.on?'<span class="alert-status-on">✓ פעיל</span>':'<span class="alert-status-off">✕ לא פעיל</span>'}</div>`).join('');
 }
-function saveAlerts(key, arr) { localStorage.setItem(key, JSON.stringify(arr)); }
-
-let personalAlerts = getAlerts('personalAlerts', defaultPersonalAlerts);
-let followerAlerts = getAlerts('followerAlerts', defaultFollowerAlerts);
-
-function renderAlerts() {
-  const pc = document.getElementById('personalAlertsCard');
-  pc.innerHTML = personalAlerts.map((a,i) => `
-    <div class="alert-row ${a.on?'blue-on':'blue-off'}" onclick="togglePersonalAlert(${i})">
-      <span>${a.label}</span>
-      ${a.on ? '<span class="alert-status-on">✓ פעיל</span>' : '<span class="alert-status-off">✕ לא פעיל</span>'}
-    </div>`).join('');
-  const fc = document.getElementById('followerAlertsCard');
-  fc.innerHTML = followerAlerts.map((a,i) => `
-    <div class="alert-row ${a.on?'orange-on':'orange-off'}" onclick="toggleFollowerAlert(${i})">
-      <span>${a.label}</span>
-      ${a.on ? '<span class="alert-status-on">✓ פעיל</span>' : '<span class="alert-status-off">✕ לא פעיל</span>'}
-    </div>`).join('');
-}
-
-window.togglePersonalAlert = i => {
-  personalAlerts[i].on = !personalAlerts[i].on;
-  saveAlerts('personalAlerts', personalAlerts);
-  renderAlerts();
-};
-window.toggleFollowerAlert = i => {
-  followerAlerts[i].on = !followerAlerts[i].on;
-  saveAlerts('followerAlerts', followerAlerts);
-  renderAlerts();
-};
+window.togglePersonalAlert=i=>{personalAlerts[i].on=!personalAlerts[i].on;saveAlerts('personalAlerts',personalAlerts);renderAlerts();};
+window.toggleFollowerAlert=i=>{followerAlerts[i].on=!followerAlerts[i].on;saveAlerts('followerAlerts',followerAlerts);renderAlerts();};
 
 // ── AUTH ──────────────────────────────────────────────────────
-window.signInWithGoogle = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch(e) { alert('שגיאה בכניסה: ' + e.message); }
-};
-window.doSignOut = async () => {
-  if (confirm('להתנתק?')) { statusListeners.forEach(u=>u()); await signOut(auth); }
-};
+window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){alert('שגיאה: '+e.message);}};
+window.doSignOut=async()=>{if(confirm('להתנתק?')){statusListeners.forEach(u=>u());await signOut(auth);}};
 
-onAuthStateChanged(auth, async user => {
-  document.getElementById('loading').style.display = 'none';
-  if (user) {
-    currentUser = user;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    const av = document.getElementById('userAvatar');
-    if (user.photoURL) av.innerHTML = `<img src="${user.photoURL}">`;
-    else av.textContent = (user.displayName||'U')[0];
-    document.getElementById('myShareLink').textContent = `https://anibeseder.netlify.app/?follow=${user.uid}`;
+onAuthStateChanged(auth,async user=>{
+  document.getElementById('loading').style.display='none';
+  if(user){
+    currentUser=user;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    const av=document.getElementById('userAvatar');
+    if(user.photoURL) av.innerHTML=`<img src="${user.photoURL}">`;
+    else av.textContent=(user.displayName||'U')[0];
+    document.getElementById('myShareLink').textContent=`https://anibeseder.netlify.app/?follow=${user.uid}`;
     await initUser();
     await checkFollowParam();
-    checkNotifPermission();
-    updateNotifToggleBtn();
-    updateAddHomeBtn();
+    checkNotifPermission(); updateNotifToggleBtn(); updateAddHomeBtn();
     await loadWatching();
     await checkPendingFollowRequests();
-    renderAlerts();
-    checkInstallPrompt();
-    if (Notification.permission === 'granted') registerFCMToken();
+    renderAlerts(); checkInstallPrompt();
+    if(Notification.permission==='granted') registerFCMToken();
   } else {
-    currentUser = null;
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
+    currentUser=null;
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('app').style.display='none';
   }
 });
 
 // ── INIT USER ─────────────────────────────────────────────────
-async function initUser() {
-  const ref = doc(db,'users',currentUser.uid);
-  const snap = await getDoc(ref);
-  if (snap.exists()) {
-    const d = snap.data();
-    state.freq = d.freq||'daily';
-    state.specificDays = d.specificDays||[];
-    state.intervalDays = d.intervalDays||1;
-    state.okCount = d.okCount||0;
-    if (d.lastConfirmed) {
-      state.lastConfirmed = d.lastConfirmed.toDate();
-      state.isOk = isWithinReportingPeriod();
-      if (!state.isOk) state.okCount = 0;
-    }
+async function initUser(){
+  const ref=doc(db,'users',currentUser.uid);
+  const snap=await getDoc(ref);
+  if(snap.exists()){
+    const d=snap.data();
+    state.okCount=d.okCount||0;
+    if(d.lastConfirmed){ state.lastConfirmed=d.lastConfirmed.toDate(); state.isOk=isWithinReportingPeriod(); if(!state.isOk) state.okCount=0; }
   } else {
-    await setDoc(ref,{name:currentUser.displayName,email:currentUser.email,freq:'daily',specificDays:[],intervalDays:1,okCount:0,createdAt:serverTimestamp()});
+    await setDoc(ref,{name:currentUser.displayName,email:currentUser.email,okCount:0,createdAt:serverTimestamp()});
   }
-  const stored = localStorage.getItem('lastConfirmed_'+currentUser.uid);
-  if (stored) {
-    const t = new Date(stored);
-    if (!state.isOk) {
-      const prevLC = state.lastConfirmed;
-      state.lastConfirmed = t;
-      state.isOk = isWithinReportingPeriod();
-      if (!state.isOk) state.lastConfirmed = prevLC;
-      else state.okCount = parseInt(localStorage.getItem('okCount_'+currentUser.uid)||'1');
-    }
+  const stored=localStorage.getItem('lastConfirmed_'+currentUser.uid);
+  if(stored){
+    const t=new Date(stored);
+    if(!state.isOk){ const prev=state.lastConfirmed; state.lastConfirmed=t; state.isOk=isWithinReportingPeriod(); if(!state.isOk) state.lastConfirmed=prev; else state.okCount=parseInt(localStorage.getItem('okCount_'+currentUser.uid)||'1'); }
+  }
+  if(state.isOk){
+    const se=localStorage.getItem('moodEmoji_'+currentUser.uid);
+    const sl=localStorage.getItem('moodLevel_'+currentUser.uid);
+    if(se){state.moodEmoji=se;state.moodLevel=parseInt(sl)||2;}
+  }
+  // restore sign
+  const ss=localStorage.getItem('sign_'+currentUser.uid);
+  if(ss){
+    state.sign=ss;
+    document.getElementById('signBtn').textContent=ss;
+    SIGNS.forEach(s=>{const el=document.getElementById('sc-'+s);if(el)el.classList.toggle('selected',s===ss);});
   }
   await loadFollowers();
-  syncFreqUI();
-  if (state.isOk) {
-    const savedEmoji = localStorage.getItem('moodEmoji_' + currentUser.uid);
-    const savedLevel = localStorage.getItem('moodLevel_' + currentUser.uid);
-    if (savedEmoji) { state.moodEmoji = savedEmoji; state.moodLevel = parseInt(savedLevel)||2; }
-  }
   updateMainUI();
 }
 
 // ── FOLLOWERS ─────────────────────────────────────────────────
-async function loadFollowers() {
-  const q = query(collection(db,'follows'),where('followingUid','==',currentUser.uid));
-  const snaps = await getDocs(q);
-  state.followers = [];
+async function loadFollowers(){
+  const q=query(collection(db,'follows'),where('followingUid','==',currentUser.uid));
+  const snaps=await getDocs(q);
+  state.followers=[];
   snaps.forEach(d=>state.followers.push(d.data()));
   await buildMutualSet();
-  renderFollowers();
-  updateChips();
+  renderFollowers(); updateChips();
 }
-
-async function buildMutualSet() {
-  const q2 = query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
-  const snaps2 = await getDocs(q2);
-  const iFollow = new Set();
-  snaps2.forEach(d=>iFollow.add(d.data().followingUid));
-  state.mutualUids = iFollow;
+async function buildMutualSet(){
+  const q2=query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
+  const snaps2=await getDocs(q2);
+  const s=new Set(); snaps2.forEach(d=>s.add(d.data().followingUid)); state.mutualUids=s;
 }
-
-function renderFollowers() {
-  const el = document.getElementById('followersList');
-  const title = document.getElementById('followersPanelTitle');
-  if (title) title.textContent = `👥 עוקבים שלי (${state.followers.length})`;
-  if (!state.followers.length) {
-    el.innerHTML = '<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p>';
-    return;
-  }
-  const userIsOk = state.isOk && isWithinReportingPeriod();
-  el.innerHTML = state.followers.map(f => {
-    const timeText = state.lastConfirmed ? `${formatDateTime(state.lastConfirmed)}` : '';
-    const timeClass = userIsOk ? 'ok' : 'late';
-    const isMutual = state.mutualUids.has(f.followerUid);
-    const badgeHtml = isMutual
-      ? `<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`
-      : `<span class="follow-badge fb-followback" onclick="followBack('${f.followerUid}','${(f.followerName||'').replace(/'/g,"\\'")}')">עקוב אחריו בחזרה ＋</span>`;
+function renderFollowers(){
+  const el=document.getElementById('followersList');
+  const title=document.getElementById('followersPanelTitle');
+  if(title) title.textContent=`👥 עוקבים שלי (${state.followers.length})`;
+  if(!state.followers.length){el.innerHTML='<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p>';return;}
+  const ok=isWithinReportingPeriod();
+  el.innerHTML=state.followers.map(f=>{
+    const timeText=state.lastConfirmed?formatDateTime(state.lastConfirmed):'';
+    const isMutual=state.mutualUids.has(f.followerUid);
+    const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`:`<span class="follow-badge fb-followback" onclick="followBack('${f.followerUid}','${(f.followerName||'').replace(/'/g,"\\'")}')">עקוב אחריו בחזרה ＋</span>`;
     return `<div class="person-row" id="frow-${f.followerUid}">
-      <div class="person-row-top">
-        <div class="person-info">
-          <div class="person-name">${f.followerName||'משתמש'}</div>
-          <div class="person-email">${f.followerEmail||''}</div>
-          ${timeText ? `<div class="person-time ${timeClass}">דיווח אחרון: ${timeText}</div>` : ''}
-        </div>
-        <button class="trash-btn" onclick="confirmRemoveFollower('${f.followerUid}','${(f.followerName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר עוקב</span></button>
-      </div>
-      <div class="person-row-bottom">${badgeHtml}</div>
-    </div>`;
+      <div class="person-row-top"><div class="person-info"><div class="person-name">${f.followerName||'משתמש'}</div><div class="person-email">${f.followerEmail||''}</div>${timeText?`<div class="person-time ${ok?'ok':'late'}">דיווח אחרון: ${timeText}</div>`:''}</div>
+      <button class="trash-btn" onclick="confirmRemoveFollower('${f.followerUid}','${(f.followerName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר עוקב</span></button></div>
+      <div class="person-row-bottom">${badge}</div></div>`;
   }).join('');
 }
-
-function formatDateTime(date) {
-  if (!date) return '';
-  const timeStr = date.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
-  const dateStr = date.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});
-  return `${timeStr} ${dateStr}`;
-}
-
-function formatRelativeTime(date) {
-  if (!date) return '';
-  const diffMs = Date.now() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.round(diffMs / 3600000);
-  const diffDays = Math.round(diffMs / 86400000);
-  if (diffMins < 1) return 'דיווחת לפני פחות מדקה';
-  if (diffMins < 60) return `דיווחת לפני ${diffMins} דקות`;
-  if (diffHours < 24) return `דיווחת לפני כ-${diffHours} שעות`;
-  return `דיווחת לפני כ-${diffDays} ימים`;
-}
+function formatDateTime(d){if(!d)return'';return d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function formatRelativeTime(d){if(!d)return'';const ms=Date.now()-d.getTime(),m=Math.floor(ms/60000),h=Math.round(ms/3600000),dy=Math.round(ms/86400000);if(m<1)return'דיווחת לפני פחות מדקה';if(m<60)return`דיווחת לפני ${m} דקות`;if(h<24)return`דיווחת לפני כ-${h} שעות`;return`דיווחת לפני כ-${dy} ימים`;}
 
 // ── WATCHING ──────────────────────────────────────────────────
-async function loadWatching() {
-  const q = query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
-  const snaps = await getDocs(q);
-  state.watching = [];
-  snaps.forEach(d=>state.watching.push({...d.data(), _iFollow:true}));
-  statusListeners.forEach(u=>u());
-  statusListeners = [];
-  watchingStatuses = {};
-  if (!state.watching.length) { renderWatchingList([]); updateChips(); return; }
-  state.watching.forEach(w => {
-    watchingStatuses[w.followingUid] = null;
-    const unsub = onSnapshot(doc(db,'status',w.followingUid), snap => {
-      if (snap.exists()) {
-        const d = snap.data();
-        watchingStatuses[w.followingUid] = {isOk:d.isOk, timestamp:d.timestamp?.toDate(), name:d.name, moodEmoji:d.moodEmoji||null};
-        const ts = d.timestamp?.toDate();
-        if (ts && (Date.now()-ts)/60000 < 2 && Notification.permission === 'granted') {
+async function loadWatching(){
+  const q=query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
+  const snaps=await getDocs(q);
+  state.watching=[];
+  snaps.forEach(d=>state.watching.push({...d.data()}));
+  statusListeners.forEach(u=>u()); statusListeners=[]; watchingStatuses={};
+  if(!state.watching.length){renderWatchingList([]);updateChips();return;}
+  state.watching.forEach(w=>{
+    watchingStatuses[w.followingUid]=null;
+    const unsub=onSnapshot(doc(db,'status',w.followingUid),snap=>{
+      if(snap.exists()){
+        const d=snap.data();
+        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null};
+        const ts=d.timestamp?.toDate();
+        if(ts&&(Date.now()-ts)/60000<2&&Notification.permission==='granted')
           new Notification(`${d.name} בסדר! 🤝`,{body:`${d.name} עדכן עכשיו שהכל בסדר`,icon:'/icon-192.png'});
-        }
-        const readKey = `read_${d.uid}_${currentUser.uid}`;
-        localStorage.setItem(readKey, new Date().toISOString());
+        localStorage.setItem(`read_${d.uid}_${currentUser.uid}`,new Date().toISOString());
         renderFollowers();
       }
-      renderWatchingWithStatuses(state.watching, watchingStatuses);
+      renderWatchingWithStatuses(state.watching,watchingStatuses);
     });
     statusListeners.push(unsub);
   });
   updateChips();
 }
-
-function sortWatchingEntries(watching, statuses) {
-  const now = Date.now();
-  const getHrs = uid => {
-    const s = statuses[uid];
-    return s?.timestamp ? (now - s.timestamp.getTime()) / 3600000 : 9999;
-  };
-  const isPersonOk = uid => {
-    const s = statuses[uid];
-    return s?.isOk && getHrs(uid) < 24;
-  };
-  return [...watching].sort((a, b) => {
-    const okA = isPersonOk(a.followingUid);
-    const okB = isPersonOk(b.followingUid);
-    if (!okA && okB) return -1;
-    if (okA && !okB) return 1;
-    return getHrs(b.followingUid) - getHrs(a.followingUid);
-  });
-}
-
-function renderWatchingList(watching) { renderWatchingWithStatuses(watching, {}); }
-
-function renderWatchingWithStatuses(watching, statuses) {
-  const el = document.getElementById('watchingList');
-  const countEl = document.getElementById('friendsCount');
-  if (countEl) countEl.textContent = watching.length > 0 ? `(${watching.length})` : '';
-  if (!watching.length) {
-    el.innerHTML = '<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.</p>';
-    updateChips();
-    return;
-  }
-  const followerUids = new Set(state.followers.map(f => f.followerUid));
-  const now = Date.now();
-  const sorted = sortWatchingEntries(watching, statuses);
-  el.innerHTML = sorted.map(w => {
-    const s = statuses[w.followingUid];
-    let circleClass = 'sc-unknown', circleText = '?', timeText = 'טרם עדכן';
-    let timeColor = 'rgba(200,230,255,0.35)';
-    if (s) {
-      const hrs = s.timestamp ? (now - s.timestamp.getTime()) / 3600000 : 999;
-      if (s.isOk && hrs < 24) {
-        circleClass = 'sc-green';
-        circleText = s.moodEmoji || '✓';
-        timeText = 'עדכון: ' + formatDateTime(s.timestamp);
-        timeColor = '#4cde80';
-      } else if (hrs >= 24) {
-        circleClass = 'sc-late'; circleText = 'לא\nבסדר';
-        timeText = 'לא עדכן מ-24+ שעות';
-        timeColor = '#ff6666';
-      } else {
-        timeColor = '#ff6666';
-      }
-    }
-    const isMutual = followerUids.has(w.followingUid);
-    let badgeHtml;
-    if (isMutual) {
-      badgeHtml = `<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`;
-    } else {
-      const reqSent = localStorage.getItem('followReqSent_' + currentUser.uid + '_' + w.followingUid);
-      if (reqSent) {
-        badgeHtml = `<span class="follow-badge fb-request-sent">ממתין לאישור מעקב ⏳</span>`;
-      } else {
-        badgeHtml = `<span class="follow-badge fb-request-me" onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">בקש מעקב אחריך ＋</span>`;
-      }
-    }
+function sortWatchingEntries(w,s){const now=Date.now();const hrs=uid=>{const st=s[uid];return st?.timestamp?(now-st.timestamp.getTime())/3600000:9999;};const ok=uid=>{const st=s[uid];return st?.isOk&&hrs(uid)<24;};return[...w].sort((a,b)=>{const oa=ok(a.followingUid),ob=ok(b.followingUid);if(!oa&&ob)return-1;if(oa&&!ob)return 1;return hrs(b.followingUid)-hrs(a.followingUid);});}
+function renderWatchingList(w){renderWatchingWithStatuses(w,{});}
+function renderWatchingWithStatuses(watching,statuses){
+  const el=document.getElementById('watchingList');
+  const countEl=document.getElementById('friendsCount');
+  if(countEl) countEl.textContent=watching.length>0?`(${watching.length})`:'';
+  if(!watching.length){el.innerHTML='<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.</p>';updateChips();return;}
+  const fUids=new Set(state.followers.map(f=>f.followerUid));
+  const now=Date.now();
+  el.innerHTML=sortWatchingEntries(watching,statuses).map(w=>{
+    const s=statuses[w.followingUid];
+    let cc='sc-unknown',ct='?',tt='טרם עדכן',tc='rgba(200,230,255,0.35)';
+    if(s){const hrs=s.timestamp?(now-s.timestamp.getTime())/3600000:999;if(s.isOk&&hrs<24){cc='sc-green';ct=s.moodEmoji||'✓';tt='עדכון: '+formatDateTime(s.timestamp);tc='#4cde80';}else if(hrs>=24){cc='sc-late';ct='לא\nבסדר';tt='לא עדכן מ-24+ שעות';tc='#ff6666';}else{tc='#ff6666';}}
+    const isMutual=fUids.has(w.followingUid);
+    const reqSent=localStorage.getItem('followReqSent_'+currentUser.uid+'_'+w.followingUid);
+    const badge=isMutual?`<span class="follow-badge fb-mutual">עוקבים אחד אחרי השני</span>`:reqSent?`<span class="follow-badge fb-request-sent">ממתין לאישור מעקב ⏳</span>`:`<span class="follow-badge fb-request-me" onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">בקש מעקב אחריך ＋</span>`;
     return `<div class="person-row" id="wrow-${w.followingUid}">
-      <div class="person-row-top">
-        <div class="person-info">
-          <div class="person-name">${w.followingName||'משתמש'}</div>
-          <div class="person-time" style="color:${timeColor}">${timeText}</div>
-        </div>
-        <div class="status-circle ${circleClass}" style="white-space:pre-line;text-align:center;line-height:1;font-size:${(s?.moodEmoji && circleClass==='sc-green') ? '22px' : '11px'}">${circleText}</div>
-        <button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>
-        <button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר מעקב</span></button>
-      </div>
-      <div class="person-row-bottom">${badgeHtml}</div>
-    </div>`;
+      <div class="person-row-top"><div class="person-info"><div class="person-name">${w.followingName||'משתמש'}</div><div class="person-time" style="color:${tc}">${tt}</div></div>
+      <div class="status-circle ${cc}" style="white-space:pre-line;text-align:center;line-height:1;font-size:${(s?.moodEmoji&&cc==='sc-green')?'22px':'11px'}">${ct}</div>
+      <button class="nudge-btn" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span class="nudge-label">נדנד</span></button>
+      <button class="trash-btn" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span class="trash-label">הסר מעקב</span></button></div>
+      <div class="person-row-bottom">${badge}</div></div>`;
   }).join('');
   updateChips();
 }
 
 // ── FOLLOW REQUEST ────────────────────────────────────────────
-window.requestFollowBack = async (uid, name) => {
-  const reqId = `${currentUser.uid}_${uid}`;
-  await setDoc(doc(db, 'followRequests', reqId), {
-    fromUid: currentUser.uid,
-    fromName: currentUser.displayName || '',
-    fromEmail: currentUser.email || '',
-    toUid: uid,
-    status: 'pending',
-    createdAt: serverTimestamp()
-  });
-  localStorage.setItem('followReqSent_' + currentUser.uid + '_' + uid, '1');
-  try {
-    await fetch('/.netlify/functions/send-push', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        senderUid: currentUser.uid, senderName: currentUser.displayName,
-        followerUids: [uid], type: 'followRequest',
-        message: `${currentUser.displayName || 'מישהו'} מבקש שתעקוב אחריו`
-      })
-    });
-  } catch(e) {}
-  renderWatchingWithStatuses(state.watching, watchingStatuses);
+window.requestFollowBack=async(uid,name)=>{
+  await setDoc(doc(db,'followRequests',`${currentUser.uid}_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',fromEmail:currentUser.email||'',toUid:uid,status:'pending',createdAt:serverTimestamp()});
+  localStorage.setItem('followReqSent_'+currentUser.uid+'_'+uid,'1');
+  try{await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'followRequest',message:`${currentUser.displayName||'מישהו'} מבקש שתעקוב אחריו`})});}catch(e){}
+  renderWatchingWithStatuses(state.watching,watchingStatuses);
 };
-
-async function checkPendingFollowRequests() {
-  if (!currentUser) return;
-  const q = query(collection(db,'followRequests'), where('toUid','==',currentUser.uid), where('status','==','pending'));
-  const snaps = await getDocs(q);
-  const container = document.getElementById('followRequestsContainer');
-  container.innerHTML = '';
-  snaps.forEach(snap => {
-    const req = snap.data();
-    const reqId = snap.id;
-    const div = document.createElement('div');
-    div.className = 'follow-req-banner show';
-    div.style.margin = '4px 0';
-    div.innerHTML = `
-      <div class="follow-req-title">👋 ${req.fromName} מבקש שתעקוב אחריו</div>
-      <div class="follow-req-btns">
-        <button class="follow-req-accept" onclick="acceptFollowRequest('${reqId}','${req.fromUid}','${(req.fromName||'').replace(/'/g,"\\'")}','${req.fromEmail||''}')">✅ אשר לעקוב</button>
-        <button class="follow-req-decline" onclick="declineFollowRequest('${reqId}',this.closest('.follow-req-banner'))">דחה</button>
-      </div>`;
-    container.appendChild(div);
+async function checkPendingFollowRequests(){
+  if(!currentUser)return;
+  const q=query(collection(db,'followRequests'),where('toUid','==',currentUser.uid),where('status','==','pending'));
+  const snaps=await getDocs(q);
+  const c=document.getElementById('followRequestsContainer');
+  c.innerHTML='';
+  snaps.forEach(snap=>{
+    const req=snap.data(),reqId=snap.id;
+    const div=document.createElement('div');
+    div.className='follow-req-banner show';div.style.margin='4px 0';
+    div.innerHTML=`<div class="follow-req-title">👋 ${req.fromName} מבקש שתעקוב אחריו</div><div class="follow-req-btns"><button class="follow-req-accept" onclick="acceptFollowRequest('${reqId}','${req.fromUid}','${(req.fromName||'').replace(/'/g,"\\'")}','${req.fromEmail||''}')">✅ אשר לעקוב</button><button class="follow-req-decline" onclick="declineFollowRequest('${reqId}',this.closest('.follow-req-banner'))">דחה</button></div>`;
+    c.appendChild(div);
   });
 }
-
-window.acceptFollowRequest = async (reqId, fromUid, fromName, fromEmail) => {
-  const followId = `${currentUser.uid}_${fromUid}`;
-  await setDoc(doc(db, 'follows', followId), {
-    followerUid: currentUser.uid, followerName: currentUser.displayName,
-    followerEmail: currentUser.email, followingUid: fromUid,
-    followingName: fromName, createdAt: serverTimestamp()
-  });
-  await updateDoc(doc(db, 'followRequests', reqId), { status: 'accepted' });
+window.acceptFollowRequest=async(reqId,fromUid,fromName,fromEmail)=>{
+  await setDoc(doc(db,'follows',`${currentUser.uid}_${fromUid}`),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:fromUid,followingName:fromName,createdAt:serverTimestamp()});
+  await updateDoc(doc(db,'followRequests',reqId),{status:'accepted'});
   state.mutualUids.add(fromUid);
-  await loadWatching();
-  renderFollowers();
-  updateChips();
-  await checkPendingFollowRequests();
+  await loadWatching();renderFollowers();updateChips();await checkPendingFollowRequests();
 };
-
-window.declineFollowRequest = async (reqId, banner) => {
-  await updateDoc(doc(db, 'followRequests', reqId), { status: 'declined' });
-  if (banner) banner.remove();
+window.declineFollowRequest=async(reqId,banner)=>{await updateDoc(doc(db,'followRequests',reqId),{status:'declined'});if(banner)banner.remove();};
+window.followBack=async(uid,name)=>{
+  await setDoc(doc(db,'follows',`${currentUser.uid}_${uid}`),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:uid,followingName:name,createdAt:serverTimestamp()});
+  state.mutualUids.add(uid);await loadWatching();renderFollowers();updateChips();
 };
-
-// ── FOLLOW BACK ───────────────────────────────────────────────
-window.followBack = async (uid, name) => {
-  const followId = `${currentUser.uid}_${uid}`;
-  await setDoc(doc(db,'follows',followId),{
-    followerUid:currentUser.uid,followerName:currentUser.displayName,
-    followerEmail:currentUser.email,followingUid:uid,followingName:name,createdAt:serverTimestamp()
-  });
-  state.mutualUids.add(uid);
-  await loadWatching();
-  renderFollowers();
-  updateChips();
-};
-
-// ── NUDGE ─────────────────────────────────────────────────────
-window.sendNudge = async (uid, name) => {
-  await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{
-    fromUid:currentUser.uid,fromName:currentUser.displayName,
-    toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()
-  });
-  try {
-    await fetch('/.netlify/functions/send-push', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ senderUid:currentUser.uid, senderName:currentUser.displayName, followerUids:[uid], type:'nudge' })
-    });
-  } catch(e){}
+window.sendNudge=async(uid,name)=>{
+  await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
+  try{await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'nudge'})});}catch(e){}
   alert(`נדנוד נשלח ל-${name}! 👋`);
 };
 
-// ── REMOVE FOLLOWER ───────────────────────────────────────────
-let pendingAction = null;
-window.confirmRemoveFollower = (uid, name) => {
-  document.getElementById('confirmTitle').textContent = 'הסר עוקב';
-  document.getElementById('confirmText').textContent = `האם אתה בטוח שברצונך להסיר את ${name} מהעוקבים שלך?`;
-  document.getElementById('confirmOkBtn').textContent = 'כן, הסר';
-  pendingAction = async () => {
-    const followId = `${uid}_${currentUser.uid}`;
-    await deleteDoc(doc(db,'follows',followId));
-    state.followers = state.followers.filter(f=>f.followerUid!==uid);
-    renderFollowers(); updateChips();
-  };
+// ── REMOVE / UNFOLLOW ─────────────────────────────────────────
+let pendingAction=null;
+window.confirmRemoveFollower=(uid,name)=>{
+  document.getElementById('confirmTitle').textContent='הסר עוקב';
+  document.getElementById('confirmText').textContent=`האם אתה בטוח שברצונך להסיר את ${name} מהעוקבים שלך?`;
+  document.getElementById('confirmOkBtn').textContent='כן, הסר';
+  pendingAction=async()=>{await deleteDoc(doc(db,'follows',`${uid}_${currentUser.uid}`));state.followers=state.followers.filter(f=>f.followerUid!==uid);renderFollowers();updateChips();};
   document.getElementById('confirmModal').classList.add('show');
 };
-
-window.confirmUnfollow = (uid, name) => {
-  document.getElementById('confirmTitle').textContent = 'הסר מעקב';
-  document.getElementById('confirmText').textContent = `האם אתה בטוח שברצונך להפסיק לעקוב אחרי ${name}?`;
-  document.getElementById('confirmOkBtn').textContent = 'כן, הסר';
-  pendingAction = async () => {
-    const followId = `${currentUser.uid}_${uid}`;
-    await deleteDoc(doc(db,'follows',followId));
-    state.watching = state.watching.filter(w=>w.followingUid!==uid);
-    state.mutualUids.delete(uid);
-    delete watchingStatuses[uid];
-    renderWatchingWithStatuses(state.watching, watchingStatuses);
-    renderFollowers(); updateChips();
-  };
+window.confirmUnfollow=(uid,name)=>{
+  document.getElementById('confirmTitle').textContent='הסר מעקב';
+  document.getElementById('confirmText').textContent=`האם אתה בטוח שברצונך להפסיק לעקוב אחרי ${name}?`;
+  document.getElementById('confirmOkBtn').textContent='כן, הסר';
+  pendingAction=async()=>{await deleteDoc(doc(db,'follows',`${currentUser.uid}_${uid}`));state.watching=state.watching.filter(w=>w.followingUid!==uid);state.mutualUids.delete(uid);delete watchingStatuses[uid];renderWatchingWithStatuses(state.watching,watchingStatuses);renderFollowers();updateChips();};
   document.getElementById('confirmModal').classList.add('show');
 };
-
-window.closeConfirm = () => document.getElementById('confirmModal').classList.remove('show');
-document.getElementById('confirmOkBtn').addEventListener('click', async () => {
-  if (pendingAction) { await pendingAction(); pendingAction=null; }
-  closeConfirm();
-});
+window.closeConfirm=()=>document.getElementById('confirmModal').classList.remove('show');
+document.getElementById('confirmOkBtn').addEventListener('click',async()=>{if(pendingAction){await pendingAction();pendingAction=null;}closeConfirm();});
 
 // ── FOLLOW PARAM ──────────────────────────────────────────────
-async function checkFollowParam() {
-  const params = new URLSearchParams(window.location.search);
-  const followUid = params.get('follow');
-  if (!followUid||followUid===currentUser.uid) return;
-  const followId=`${currentUser.uid}_${followUid}`;
-  const snap=await getDoc(doc(db,'follows',followId));
-  const userSnap=await getDoc(doc(db,'users',followUid));
-  const followedName=userSnap.exists()?(userSnap.data().name||'המשתמש'):'המשתמש';
-  if (!snap.exists()) {
-    await setDoc(doc(db,'follows',followId),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:followUid,followingName:followedName,createdAt:serverTimestamp()});
-    document.getElementById('followBannerTitle').textContent=`✅ עכשיו אתה עוקב אחרי ${followedName}`;
-    document.getElementById('followBannerText').textContent=`תקבל התראה כשהכל בסדר עם ${followedName}.`;
+async function checkFollowParam(){
+  const p=new URLSearchParams(window.location.search);
+  const uid=p.get('follow');
+  if(!uid||uid===currentUser.uid)return;
+  const fid=`${currentUser.uid}_${uid}`;
+  const snap=await getDoc(doc(db,'follows',fid));
+  const us=await getDoc(doc(db,'users',uid));
+  const name=us.exists()?(us.data().name||'המשתמש'):'המשתמש';
+  if(!snap.exists()){
+    await setDoc(doc(db,'follows',fid),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:uid,followingName:name,createdAt:serverTimestamp()});
+    document.getElementById('followBannerTitle').textContent=`✅ עכשיו אתה עוקב אחרי ${name}`;
+    document.getElementById('followBannerText').textContent=`תקבל התראה כשהכל בסדר עם ${name}.`;
     document.getElementById('followBanner').classList.add('show');
     setTimeout(()=>document.getElementById('followBanner').classList.remove('show'),6000);
   }
-  window.history.replaceState({},'',' /');
+  window.history.replaceState({},'','/ ');
 }
 
 // ── OK BUTTON ─────────────────────────────────────────────────
-window.handleOkPress = async () => {
-  if (!currentUser) return;
-  if (state.okCount >= 6) return;
-  const btn = document.getElementById('bigBtn');
-  btn.classList.add('pulse');
-  setTimeout(()=>btn.classList.remove('pulse'),300);
-  state.isOk = true;
-  state.lastConfirmed = new Date();
-  state.okCount = (state.okCount||0) + 1;
-  localStorage.setItem('lastConfirmed_'+currentUser.uid, state.lastConfirmed.toISOString());
-  localStorage.setItem('okCount_'+currentUser.uid, state.okCount);
+window.handleOkPress=async()=>{
+  if(!currentUser||state.okCount>=100)return;
+  const btn=document.getElementById('bigBtn');
+  btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),300);
+  state.isOk=true;state.lastConfirmed=new Date();state.okCount=(state.okCount||0)+1;
+  localStorage.setItem('lastConfirmed_'+currentUser.uid,state.lastConfirmed.toISOString());
+  localStorage.setItem('okCount_'+currentUser.uid,state.okCount);
   await setDoc(doc(db,'users',currentUser.uid),{lastConfirmed:serverTimestamp(),okCount:state.okCount},{merge:true});
-  await setDoc(doc(db,'status',currentUser.uid),{
-    uid:currentUser.uid,name:currentUser.displayName,isOk:true,
-    timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null
-  });
-  updateMainUI();
-  renderFollowers();
+  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null});
+  updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
   sendPushToFollowers('ok');
 };
 
 // ── SHARE ─────────────────────────────────────────────────────
-window.doShare = () => {
+window.doShare=()=>{
   const link=`https://anibeseder.netlify.app/?follow=${currentUser.uid}`;
   const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך לעקוב ב״אני בסדר״.\nתקבל התראה כשאני בסדר:\n${link}`;
-  if (navigator.share) navigator.share({title:'אני בסדר',text,url:link});
+  if(navigator.share)navigator.share({title:'אני בסדר',text,url:link});
   else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
 
-// ── FREQUENCY ─────────────────────────────────────────────────
-window.setFreq = async mode => {
-  state.freq=mode; syncFreqUI(); updateChips();
-  await setDoc(doc(db,'users',currentUser.uid),{freq:mode},{merge:true});
-};
-window.toggleDay = async d => {
-  const i=state.specificDays.indexOf(d);
-  if(i>-1)state.specificDays.splice(i,1);else state.specificDays.push(d);
-  document.querySelectorAll('.day-cell').forEach((el,j)=>el.classList.toggle('active',state.specificDays.includes(j)));
-  await setDoc(doc(db,'users',currentUser.uid),{specificDays:state.specificDays},{merge:true});
-};
-window.setIntervalDays = async n => {
-  state.intervalDays=n;
-  document.querySelectorAll('.interval-cell').forEach((el,i)=>el.classList.toggle('active',i+1===n));
-  updateChips();
-  await setDoc(doc(db,'users',currentUser.uid),{intervalDays:n},{merge:true});
-};
-function syncFreqUI(){
-  document.querySelectorAll('.freq-option').forEach(el=>el.classList.remove('active'));
-  const el=document.getElementById('freq-'+state.freq);
-  if(el)el.classList.add('active');
-  document.getElementById('specificDaysCard').style.display=state.freq==='specific'?'block':'none';
-  document.getElementById('intervalCard').style.display=state.freq==='interval'?'block':'none';
-  state.specificDays.forEach(d=>{const c=document.getElementById('day-'+d);if(c)c.classList.add('active');});
-  document.querySelectorAll('.interval-cell').forEach((el,i)=>el.classList.toggle('active',i+1===state.intervalDays));
-}
+// ── NOTIF ─────────────────────────────────────────────────────
+function checkNotifPermission(){if('Notification'in window&&Notification.permission==='default')document.getElementById('notifBar').classList.add('show');}
+function updateNotifToggleBtn(){const btn=document.getElementById('notifToggleBtn');if(!('Notification'in window)){btn.style.display='none';return;}if(Notification.permission==='granted'){btn.textContent='🔕 בטל התראות';btn.className='settings-action-btn notif-on-btn';}else{btn.textContent='🔔 הפעל התראות';btn.className='settings-action-btn notif-off-btn';}}
+window.toggleNotifications=async()=>{if(!('Notification'in window)){alert('המכשיר שלך אינו תומך בהתראות');return;}if(Notification.permission==='granted'){alert('כדי לבטל התראות, עבור להגדרות הדפדפן.');}else{const p=await Notification.requestPermission();if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות.'});registerFCMToken();document.getElementById('notifBar').classList.remove('show');}updateNotifToggleBtn();}};
+window.askNotifications=async()=>{const p=await Notification.requestPermission();document.getElementById('notifBar').classList.remove('show');if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה!'});registerFCMToken();}updateNotifToggleBtn();};
 
-// ── NOTIFICATIONS ─────────────────────────────────────────────
-function checkNotifPermission(){
-  if('Notification'in window&&Notification.permission==='default')
-    document.getElementById('notifBar').classList.add('show');
-}
-
-function updateNotifToggleBtn() {
-  const btn = document.getElementById('notifToggleBtn');
-  if (!('Notification' in window)) { btn.style.display='none'; return; }
-  if (Notification.permission === 'granted') {
-    btn.textContent = '🔕 בטל התראות';
-    btn.className = 'settings-action-btn notif-on-btn';
-  } else {
-    btn.textContent = '🔔 הפעל התראות';
-    btn.className = 'settings-action-btn notif-off-btn';
-  }
-}
-
-window.toggleNotifications = async () => {
-  if (!('Notification' in window)) { alert('המכשיר שלך אינו תומך בהתראות'); return; }
-  if (Notification.permission === 'granted') {
-    alert('כדי לבטל התראות, עבור להגדרות הדפדפן/מכשיר שלך וחסום התראות עבור האתר הזה.');
-  } else {
-    const p = await Notification.requestPermission();
-    if (p === 'granted') {
-      new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות עדכונים.'});
-      registerFCMToken();
-      document.getElementById('notifBar').classList.remove('show');
-    }
-    updateNotifToggleBtn();
-  }
-};
-
-window.askNotifications = async()=>{
-  const p=await Notification.requestPermission();
-  document.getElementById('notifBar').classList.remove('show');
-  if(p==='granted'){
-    new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות עדכונים.'});
-    registerFCMToken();
-  }
-  updateNotifToggleBtn();
-};
-
-// ── ADD TO HOME SCREEN ────────────────────────────────────────
-let deferredInstallPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  updateAddHomeBtn();
-});
-
-function updateAddHomeBtn() {
-  const btn = document.getElementById('addHomeBtn');
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    btn.style.display = 'none'; return;
-  }
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
-  if (deferredInstallPrompt) {
-    btn.style.display = 'block';
-    btn.textContent = '📲 הוסף אפליקציה למסך הבית (Chrome)';
-  } else if (isIOS && isSafari) {
-    btn.style.display = 'block';
-    btn.textContent = '📲 הוסף לדף הבית (Safari – ראה הנחיות)';
-  } else if (isIOS && !isSafari) {
-    btn.style.display = 'block';
-    btn.textContent = '📲 הוסף לדף הבית (פתח ב-Safari)';
-  } else {
-    btn.style.display = 'none';
-  }
-}
-
-window.addToHomeScreen = () => {
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
-  if (deferredInstallPrompt) {
-    doInstall();
-  } else if (isIOS && !isSafari) {
-    alert('כדי להוסיף את האפליקציה למסך הבית, פתח את האתר ב-Safari ולאחר מכן לחץ על כפתור השיתוף ⎙ ובחר ״הוסף למסך הבית״.');
-  } else if (isIOS) {
-    document.getElementById('iosInstallBanner').style.display = 'block';
-  } else {
-    alert('כדי להוסיף, פתח את תפריט הדפדפן ובחר ״הוסף לדף הבית״ או ״התקן אפליקציה״.');
-  }
-};
+// ── ADD TO HOME ───────────────────────────────────────────────
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;updateAddHomeBtn();});
+function updateAddHomeBtn(){const btn=document.getElementById('addHomeBtn');if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){btn.style.display='none';return;}const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);if(deferredInstallPrompt){btn.style.display='block';btn.textContent='📲 הוסף אפליקציה למסך הבית (Chrome)';}else if(isIOS&&isSafari){btn.style.display='block';btn.textContent='📲 הוסף לדף הבית (Safari)';}else if(isIOS&&!isSafari){btn.style.display='block';btn.textContent='📲 הוסף לדף הבית (פתח ב-Safari)';}else{btn.style.display='none';}}
+window.addToHomeScreen=()=>{const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);const isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);if(deferredInstallPrompt)doInstall();else if(isIOS&&!isSafari)alert('פתח ב-Safari ← ⎙ ← ״הוסף למסך הבית״');else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';else alert('פתח את תפריט הדפדפן ← הוסף לדף הבית');};
 
 // ── POLICY ────────────────────────────────────────────────────
 window.openPolicyModal=()=>document.getElementById('policyModal').classList.add('show');
-window.closePolicyModal=(e)=>{
-  if(!e||e.target===document.getElementById('policyModal')||e.currentTarget?.tagName==='BUTTON')
-    document.getElementById('policyModal').classList.remove('show');
-};
+window.closePolicyModal=(e)=>{if(!e||e.target===document.getElementById('policyModal')||e.currentTarget?.tagName==='BUTTON')document.getElementById('policyModal').classList.remove('show');};
 
 // ── MAIN UI ───────────────────────────────────────────────────
 function updateMainUI(){
   const btn=document.getElementById('bigBtn');
   const btnText=document.getElementById('btnText');
   const btnEmoji=document.getElementById('btnEmoji');
-  const btnMarks=document.getElementById('btnMarks');
+  const btnSignEl=document.getElementById('btnSign');
   const st=document.getElementById('statusText');
   const lt=document.getElementById('lastTimeAbove');
   const ld=document.getElementById('lastDateBelow');
   const moodBtn=document.getElementById('moodBtn');
-  const ok = isWithinReportingPeriod();
-  state.isOk = ok;
+  const signBtn=document.getElementById('signBtn');
+  const ok=isWithinReportingPeriod();
+  state.isOk=ok;
+  lt.textContent=state.lastConfirmed?formatRelativeTime(state.lastConfirmed):'';
+  ld.textContent=state.lastConfirmed?formatDateTime(state.lastConfirmed):'';
 
-  if (state.lastConfirmed) {
-    lt.textContent = formatRelativeTime(state.lastConfirmed);
-    ld.textContent = formatDateTime(state.lastConfirmed);
+  if(ok){
+    btnEmoji.textContent=state.moodEmoji||'';
+    btnText.innerHTML='אני<br>בסדר';
+    // Show sign on button
+    if(state.sign){btnSignEl.textContent=state.sign;btnSignEl.classList.add('show');}
+    else{btnSignEl.classList.remove('show');}
+    applyTimerGradient();
+    if(state.okCount>=100){st.textContent='✅ עדכנת 100 פעמים!';btn.style.cursor='not-allowed';}
+    else{st.textContent='✅ העוקבים שלך קיבלו דיווח';btn.style.cursor='pointer';}
+    moodBtn.classList.add('visible');moodBtn.textContent=state.moodEmoji||'😊';
+    signBtn.classList.add('visible');
+  } else if(state.lastConfirmed){
+    btn.style.background='radial-gradient(circle at 40% 35%,#ff8c42,#c04a00)';
+    btn.style.boxShadow='0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
+    btnEmoji.textContent='';btnText.innerHTML='לא<br>בסדר';btnSignEl.classList.remove('show');
+    const cnt=state.followers.length;
+    st.textContent=cnt>0?`${cnt} העוקבים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
+    btn.style.cursor='pointer';state.okCount=0;
+    moodBtn.classList.remove('visible');signBtn.classList.remove('visible');
+    state.moodEmoji=null;state.moodLevel=2;
   } else {
-    lt.textContent = '';
-    ld.textContent = '';
-  }
-
-  if (ok) {
-    btn.classList.add('ok'); btn.classList.remove('late');
-    if (state.moodEmoji && state.moodLevel) {
-      const mc = MOOD_COLORS[state.moodLevel] || MOOD_COLORS[2];
-      btn.style.background = mc.bg;
-      btn.style.boxShadow = mc.glow;
-      btnEmoji.textContent = state.moodEmoji;
-    } else {
-      btn.style.background = '';
-      btn.style.boxShadow = '';
-      btnEmoji.textContent = '';
-    }
-    btnText.innerHTML = 'אני<br>בסדר';
-    const vCount = Math.min(state.okCount, 6);
-    btnMarks.textContent = '✓'.repeat(vCount);
-    btnMarks.style.color = 'rgba(255,255,255,0.9)';
-    if (state.okCount >= 6) {
-      st.textContent = '✅ עדכנת 6 פעמים היום!';
-      btn.style.cursor = 'not-allowed';
-    } else {
-      st.textContent = '✅ העוקבים שלך קיבלו דיווח';
-      btn.style.cursor = 'pointer';
-    }
-    moodBtn.classList.add('visible');
-    moodBtn.textContent = state.moodEmoji || '😊';
-  } else if (state.lastConfirmed) {
-    btn.classList.remove('ok'); btn.classList.add('late');
-    btn.style.background = ''; btn.style.boxShadow = '';
-    btnEmoji.textContent = '';
-    btnText.innerHTML = 'לא<br>בסדר';
-    btnMarks.textContent = '✕';
-    btnMarks.style.color = 'rgba(255,220,200,0.9)';
-    const cnt = state.followers.length;
-    st.textContent = cnt > 0
-      ? `${cnt} העוקבים שלך לא יודעים אם את/ה בסדר!`
-      : '⚠️ לא דיווחת בזמן! לחץ לעדכן';
-    btn.style.cursor = 'pointer';
-    state.okCount = 0;
-    moodBtn.classList.remove('visible');
-    state.moodEmoji = null; state.moodLevel = 2;
-  } else {
-    btn.classList.remove('ok','late');
-    btn.style.background = ''; btn.style.boxShadow = '';
-    btnEmoji.textContent = '👋';
-    btnText.innerHTML = 'אני<br>בסדר';
-    btnMarks.textContent = '';
-    st.textContent = state.followers.length > 0
-      ? `${state.followers.length} העוקבים שלך לא יודעים אם את/ה בסדר!`
-      : 'לחץ לעדכן שהכל בסדר';
-    btn.style.cursor = 'pointer';
-    moodBtn.classList.remove('visible');
+    btn.style.background='radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a)';
+    btn.style.boxShadow='0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
+    btnEmoji.textContent='👋';btnText.innerHTML='אני<br>בסדר';btnSignEl.classList.remove('show');
+    st.textContent=state.followers.length>0?`${state.followers.length} העוקבים שלך לא יודעים אם את/ה בסדר!`:'לחץ לעדכן שהכל בסדר';
+    btn.style.cursor='pointer';moodBtn.classList.remove('visible');signBtn.classList.remove('visible');
   }
   updateChips();
 }
-
 function updateChips(){
   document.getElementById('followersChip').textContent=`👥 ${state.followers.length} עוקבים`;
-  const labels={daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל ${state.intervalDays} ימים`};
-  document.getElementById('freqChip').textContent='🔄 '+(labels[state.freq]||'כל יום');
-  const countEl = document.getElementById('friendsCount');
-  if (countEl) countEl.textContent = state.watching.length > 0 ? `(${state.watching.length})` : '';
+  const c=document.getElementById('friendsCount');
+  if(c) c.textContent=state.watching.length>0?`(${state.watching.length})`:'';
 }
 
 // ── PWA INSTALL ───────────────────────────────────────────────
-function checkInstallPrompt(){
-  if(window.matchMedia('(display-mode: standalone)').matches)return;
-  if(window.navigator.standalone)return;
-  if(localStorage.getItem('installDismissed'))return;
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  setTimeout(()=>{
-    if(deferredInstallPrompt)document.getElementById('installBanner').style.display='block';
-    else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';
-  },2500);
-}
-window.doInstall=async()=>{
-  if(!deferredInstallPrompt)return;
-  document.getElementById('installBanner').style.display='none';
-  deferredInstallPrompt.prompt();
-  deferredInstallPrompt=null;
-  updateAddHomeBtn();
-};
+function checkInstallPrompt(){if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||localStorage.getItem('installDismissed'))return;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);setTimeout(()=>{if(deferredInstallPrompt)document.getElementById('installBanner').style.display='block';else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';},2500);}
+window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementById('installBanner').style.display='none';deferredInstallPrompt.prompt();deferredInstallPrompt=null;updateAddHomeBtn();};
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
-// ── RELATIVE TIME TICKER ─────────────────────────────────────
-setInterval(() => {
-  const lt = document.getElementById('lastTimeAbove');
-  if (lt && state.lastConfirmed) lt.textContent = formatRelativeTime(state.lastConfirmed);
-}, 60000);
+// ── TICKERS ───────────────────────────────────────────────────
+setInterval(()=>{
+  const lt=document.getElementById('lastTimeAbove');
+  if(lt&&state.lastConfirmed) lt.textContent=formatRelativeTime(state.lastConfirmed);
+  const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
+  if(wasOk&&!state.isOk) updateMainUI();
+  else if(state.isOk) applyTimerGradient();
+},60000);
 
-// ── SERVICE WORKER (v9 – triggers auto-update) ────────────────
+// ── SERVICE WORKER v10 ────────────────────────────────────────
 if('serviceWorker'in navigator){
-  const swCode = `
-var CACHE_NAME='ani-beseder-v9';
-self.addEventListener('install',function(e){
-  e.waitUntil(self.skipWaiting());
-});
-self.addEventListener('activate',function(e){
-  e.waitUntil(
-    caches.keys().then(function(keys){
-      return Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)));
-    }).then(function(){
-      return self.clients.claim();
-    }).then(function(){
-      return self.clients.matchAll({type:'window',includeUncontrolled:true});
-    }).then(function(clients){
-      clients.forEach(function(client){client.postMessage({type:'SW_UPDATED'});});
-    })
-  );
-});
-self.addEventListener('fetch',function(e){
-  if(e.request.method!=='GET')return;
-  e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));
-});
-self.addEventListener('push',function(e){
-  if(!e.data)return;
-  var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}
-  var n=d.notification||{};
-  e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{
-    body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,
-    data:{url:'https://anibeseder.netlify.app'}
-  }));
-});
-self.addEventListener('notificationclick',function(e){
-  e.notification.close();
-  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){
-    for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}
-    return clients.openWindow('https://anibeseder.netlify.app');
-  }));
-});`;
-  var blob = new Blob([swCode], {type:'text/javascript'});
-  var swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl, {scope:'/'}).catch(function(){});
-  navigator.serviceWorker.addEventListener('message', function(e){
-    if(e.data && e.data.type === 'SW_UPDATED'){
-      location.reload();
-    }
-  });
+  const sw=`
+var CACHE_NAME='ani-beseder-v10';
+self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
+self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
+self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
+self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.netlify.app'}}));});
+self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.netlify.app');}));});`;
+  var blob=new Blob([sw],{type:'text/javascript'});
+  var swUrl=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl,{scope:'/'}).catch(function(){});
+  navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='SW_UPDATED')location.reload();});
 }
 </script>
 
