@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-  <meta name="theme-color" content="#0f1923"/>
+  <meta name="theme-color" content="#080f18"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="אני בסדר"/>
@@ -16,177 +16,195 @@
     #loading{position:fixed;inset:0;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999}
     .spinner{width:48px;height:48px;border:3px solid rgba(126,207,255,0.2);border-top-color:#7ecfff;border-radius:50%;animation:spin 0.8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    /* LOGIN */
-    #login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;width:100%;max-width:480px}
-    .login-logo-img{width:180px;margin-bottom:20px}
-    .login-sub{font-size:16px;color:rgba(200,230,255,0.55);margin-bottom:48px;text-align:center;line-height:1.7}
-    .google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:16px;padding:15px 28px;font-size:16px;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);font-family:inherit;transition:transform 0.15s}
-    .google-btn:active{transform:scale(0.97)}
-    .login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
-    /* APP */
-    #app{display:none;flex-direction:column;align-items:center;width:100%;min-height:100vh}
-    /* HEADER */
-    .header{width:100%;max-width:480px;padding:12px 16px 0;display:flex;align-items:center;justify-content:space-between}
-    .header-logo{height:66px;cursor:pointer;transition:transform 0.15s}
-    .header-logo:active{transform:scale(0.94)}
-    .header-right{display:flex;align-items:center;gap:8px}
-    .avatar{width:28px;height:28px;border-radius:50%;background:rgba(126,207,255,0.15);border:1px solid rgba(126,207,255,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;overflow:hidden}
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    .logout-btn{background:none;border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:rgba(200,230,255,0.45);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit}
-    .policy-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.25);border-radius:8px;color:rgba(255,220,130,0.7);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit}
-    /* SCREENS */
-    .screen{display:none;flex-direction:column;width:100%;max-width:480px;flex:1}
-    .screen.active{display:flex}
-    /* MAIN */
-    #screen-main{align-items:center;justify-content:center;padding:12px 24px}
-    .status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px}
-    /* Elapsed time + freq row */
-    .time-freq-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
-    .last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:right;min-height:22px}
-    /* Exact date/time below - small, non-bold */
-    .last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
-    .big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none}
-    .big-btn.ok{background:radial-gradient(circle at 40% 35%,#4cde80,#1a9e50);box-shadow:0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)}
-    .big-btn.late{background:radial-gradient(circle at 40% 35%,#ff8c42,#c04a00);box-shadow:0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)}
-    .big-btn.pulse{transform:scale(0.93)}
-    .btn-emoji{font-size:40px;line-height:1}
-    .btn-text{font-size:20px;font-weight:800;text-align:center;line-height:1.3;margin-top:6px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
-    .btn-marks{font-size:14px;font-weight:800;letter-spacing:1px;margin-top:4px}
-    .sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
-    .sent-badge.show{opacity:1;transform:translateY(0)}
-    /* Home sub-info: vertical stack */
-    .sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-    .chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
-    /* Add followers button */
-    .add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
-    .add-followers-btn:active{transform:scale(0.97)}
-    /* Followers note */
-    .followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
-    /* FOLLOW BANNER */
-    .follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
-    .follow-banner.show{display:block}
-    /* FOLLOW REQUEST BANNER */
-    .follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
-    .follow-req-banner.show{display:flex}
-    .follow-req-title{font-size:13px;font-weight:700;color:#7ecfff}
-    .follow-req-btns{display:flex;gap:8px}
-    .follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-    .follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
-    /* SHARED */
-    #screen-followers,#screen-watching,#screen-settings{padding:16px 20px;overflow-y:auto}
-    .section-title{font-size:19px;font-weight:800;color:#7ecfff;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .refresh-btn-small{font-size:11px;padding:3px 10px;background:rgba(126,207,255,0.1);border:1px solid rgba(126,207,255,0.25);border-radius:10px;color:#7ecfff;cursor:pointer;font-family:inherit;white-space:nowrap;margin-right:auto}
-    .card{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:16px;padding:14px 18px;margin-bottom:12px}
-    .card-hint{font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;line-height:1.6}
-    .share-box{background:rgba(40,200,100,0.07);border:1px solid rgba(40,200,100,0.2);border-radius:16px;padding:16px;margin-bottom:12px}
-    .share-link{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;font-size:11px;color:#7ecfff;word-break:break-all;margin:8px 0;font-family:monospace;line-height:1.5;border:1px solid rgba(126,207,255,0.15)}
-    .share-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:12px;color:#fff;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
-    /* PERSON ROWS */
-    .person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px}
-    .person-row-top{display:flex;align-items:center;gap:8px}
-    .person-info{flex:1;min-width:0}
-    .person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
-    .person-time{font-size:10px;margin-top:2px}
-    .person-time.ok{color:#4cde80}
-    .person-time.late{color:#ff6666}
-    .person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
-    /* STATUS CIRCLES */
-    .status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
-    .sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
-    .sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
-    .sc-red{background:rgba(220,40,40,0.2);border:2px solid #ff4444;color:#ff6666}
-    .sc-late{width:40px;height:40px;background:rgba(220,40,40,0.25);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;font-size:9px}
-    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
-    /* FOLLOW STATUS BADGE */
-    .follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
-    .fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
-    .fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
-    .fb-following{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
-    .fb-request-sent{background:rgba(255,200,50,0.12);border:1px solid rgba(255,200,50,0.35);color:rgba(255,220,130,0.8)}
-    .fb-request-me{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
-    /* ACTION BUTTONS */
-    .trash-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,120,120,0.6);font-size:14px;flex-shrink:0}
-    .trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
-    .nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
-    .nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
-    /* BATTERY BAR */
-    .battery-wrap{margin-bottom:14px}
-    .battery-label{font-size:13px;color:rgba(200,230,255,0.7);margin-bottom:6px}
-    .battery-label.all-ok{color:#4cde80;font-weight:700}
-    .battery-bar-outer{display:flex;height:32px;border-radius:10px;overflow:hidden;width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(126,207,255,0.15)}
-    .battery-seg-green{background:linear-gradient(90deg,#1a9e50,#4cde80);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;transition:width 0.5s;min-width:0;overflow:hidden}
-    .battery-seg-red{background:linear-gradient(90deg,#c0152a,#ff5a5a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;transition:width 0.5s;min-width:0;overflow:hidden}
-    /* SETTINGS */
-    .settings-section-title{font-size:15px;font-weight:700;color:#7ecfff;margin:14px 0 8px}
-    .freq-option{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:12px;padding:11px 14px;margin-bottom:7px;cursor:pointer;color:rgba(200,230,255,0.7);transition:all 0.2s;font-size:13px}
-    .freq-option.active{background:rgba(126,207,255,0.15);border-color:#7ecfff;color:#7ecfff;font-weight:700}
-    .freq-hint{font-size:11px;font-weight:300;color:rgba(200,230,255,0.45);margin-top:4px;line-height:1.5}
-    .day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
-    .day-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:7px 0;text-align:center;font-size:10px;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
-    .day-cell.active{background:#7ecfff;color:#0f1923;font-weight:700}
-    .interval-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
-    .interval-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:11px 0;text-align:center;font-size:17px;font-weight:700;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
-    .interval-cell.active{background:#7ecfff;color:#0f1923}
-    /* SETTINGS ACTION BUTTONS */
-    .settings-action-btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
-    .notif-on-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:rgba(200,230,255,0.75)}
-    .notif-off-btn{background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);color:#ff8888}
-    .addhome-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:#7ecfff}
-    /* ALERT ROWS */
-    .alert-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:9px;margin-bottom:5px;font-size:13px;cursor:pointer;transition:all 0.2s;user-select:none}
-    .alert-row.blue-on{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.15);color:rgba(200,230,255,0.8)}
-    .alert-row.blue-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
-    .alert-row.orange-on{background:rgba(255,150,80,0.06);border:1px solid rgba(255,150,80,0.2);color:rgba(255,200,160,0.85)}
-    .alert-row.orange-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
-    .alert-status-on{font-size:11px;color:#4cde80;white-space:nowrap}
-    .alert-status-off{font-size:11px;color:#ff6666;white-space:nowrap}
-    /* CONFIRM MODAL */
-    .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
-    .confirm-overlay.show{display:flex}
-    .confirm-box{background:#1a2a3a;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(126,207,255,0.2);text-align:center}
-    .confirm-title{font-size:16px;font-weight:700;margin-bottom:8px;color:#e8f4f8}
-    .confirm-text{font-size:13px;color:rgba(200,230,255,0.6);margin-bottom:20px;line-height:1.6}
-    .confirm-btns{display:flex;gap:10px}
-    .confirm-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(200,230,255,0.6);padding:11px;font-size:14px;cursor:pointer;font-family:inherit}
-    .confirm-ok{flex:1;background:linear-gradient(135deg,#c01515,#8a0f0f);border:none;border-radius:12px;color:#fff;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-    /* POLICY MODAL */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:150;display:none;align-items:flex-end;justify-content:center}
-    .modal-overlay.show{display:flex}
-    .modal-box{background:#1a2a3a;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(126,207,255,0.2)}
-    .modal-close{float:left;background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px;margin-bottom:12px}
-    .modal-title{font-size:17px;font-weight:800;color:#ffd97d;margin-bottom:14px}
-    .policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
-    .policy-text p{margin-bottom:10px}
-    .policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
-    /* NOTIF BAR */
-    .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
-    .notif-bar.show{display:block}
-    .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
-    /* NAV */
-    .nav{width:100%;max-width:480px;display:flex;border-top:1px solid rgba(126,207,255,0.1);background:rgba(15,25,35,0.97);position:sticky;bottom:0;z-index:10;min-height:78px}
-    .nav-item{flex:1;padding:12px 4px 4px;text-align:center;font-size:14px;color:rgba(200,230,255,0.35);cursor:pointer;border-top:2px solid transparent;transition:all 0.2s;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:transparent;user-select:none}
-    .nav-item.active{color:#7ecfff;border-top-color:#7ecfff;font-weight:700;background:rgba(126,207,255,0.08)}
-    .nav-icon{font-size:20px;display:block;margin-bottom:3px}
-    /* INSTALL BANNERS */
-    .install-banner{display:none;position:fixed;bottom:86px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    #iosInstallBanner{display:none;position:fixed;bottom:86px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    .section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
-    @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:32px}.btn-text{font-size:18px}}
-    /* MOOD PICKER */
-    .btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
-    .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
-    .mood-btn:active{transform:scale(0.88)}
-    .mood-btn.visible{display:flex}
-    .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
-    .mood-panel.show{display:grid}
-    .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
-    .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
-    .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
-    .mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
+
+```
+/* LOGIN */
+#login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;width:100%;max-width:480px}
+.login-logo-img{width:180px;margin-bottom:20px}
+.login-sub{font-size:16px;color:rgba(200,230,255,0.55);margin-bottom:48px;text-align:center;line-height:1.7}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:16px;padding:15px 28px;font-size:16px;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);font-family:inherit;transition:transform 0.15s}
+.google-btn:active{transform:scale(0.97)}
+.login-policy{margin-top:32px;font-size:12px;color:rgba(200,230,255,0.28);text-align:center;line-height:1.8}
+
+/* APP */
+#app{display:none;flex-direction:column;align-items:center;width:100%}
+
+/* HEADER WRAPPER – sticky, full width, dark */
+#header-wrapper{position:sticky;top:0;z-index:20;width:100%;background:rgba(6,12,20,0.98);border-bottom:1px solid rgba(126,207,255,0.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.header{width:100%;max-width:480px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.header-logo{height:58px;cursor:pointer;transition:transform 0.15s;flex-shrink:0}
+.header-logo:active{transform:scale(0.94)}
+.header-right{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.avatar{width:26px;height:26px;border-radius:50%;background:rgba(126,207,255,0.15);border:1px solid rgba(126,207,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;overflow:hidden;flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.logout-btn{background:none;border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:rgba(200,230,255,0.45);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.policy-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.25);border-radius:8px;color:rgba(255,220,130,0.7);font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.header-icon-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:8px;color:rgba(200,230,255,0.7);font-size:16px;padding:4px 8px;cursor:pointer;font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
+.header-icon-btn:active{background:rgba(126,207,255,0.2)}
+
+/* MAIN CONTENT – single scrollable area */
+#main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:12px 20px 40px;overflow-y:auto}
+
+/* NOTIF BAR */
+.notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
+.notif-bar.show{display:block}
+.notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
+
+/* FOLLOW BANNER */
+.follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
+.follow-banner.show{display:block}
+
+/* FOLLOW REQUEST BANNER */
+.follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
+.follow-req-banner.show{display:flex}
+.follow-req-title{font-size:13px;font-weight:700;color:#7ecfff}
+.follow-req-btns{display:flex;gap:8px}
+.follow-req-accept{flex:1;background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:10px;color:#fff;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.follow-req-decline{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
+
+/* HOME MAIN AREA */
+.status-text{font-size:14px;color:rgba(200,230,255,0.55);margin-bottom:8px;text-align:center;min-height:20px;width:100%}
+.time-freq-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:0 2px;margin-bottom:2px;min-height:28px}
+.last-time-above{font-size:18px;font-weight:600;color:rgba(200,230,255,0.6);text-align:right;min-height:22px}
+.last-date-below{font-size:12px;font-weight:400;color:rgba(200,230,255,0.38);text-align:center;min-height:16px;margin-bottom:14px}
+.big-btn{width:200px;height:200px;border-radius:50%;border:none;cursor:pointer;font-weight:900;color:#fff;background:radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a);box-shadow:0 0 60px rgba(220,40,40,0.45),0 8px 32px rgba(0,0,0,0.4);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;justify-content:center;flex-direction:column;user-select:none;-webkit-user-select:none}
+.big-btn.ok{background:radial-gradient(circle at 40% 35%,#4cde80,#1a9e50);box-shadow:0 0 60px rgba(40,200,100,0.45),0 8px 32px rgba(0,0,0,0.4)}
+.big-btn.late{background:radial-gradient(circle at 40% 35%,#ff8c42,#c04a00);box-shadow:0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)}
+.big-btn.pulse{transform:scale(0.93)}
+.btn-emoji{font-size:40px;line-height:1}
+.btn-text{font-size:20px;font-weight:800;text-align:center;line-height:1.3;margin-top:6px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.btn-marks{font-size:14px;font-weight:800;letter-spacing:1px;margin-top:4px}
+.sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
+.sent-badge.show{opacity:1;transform:translateY(0)}
+.sub-info{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.chip{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.18);border-radius:14px;padding:5px 12px;font-size:12px;color:rgba(200,230,255,0.65);cursor:pointer}
+.add-followers-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:14px;color:#fff;padding:10px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:220px}
+.add-followers-btn:active{transform:scale(0.97)}
+.followers-note{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;line-height:1.5;max-width:260px}
+
+/* MOOD PICKER */
+.btn-wrapper{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
+.mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
+.mood-btn:active{transform:scale(0.88)}
+.mood-btn.visible{display:flex}
+.mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
+.mood-panel.show{display:grid}
+.mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
+.mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
+.mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
+.mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
+
+/* FRIENDS SECTION (watching embedded in home) */
+.home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
+.friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
+.friends-section-count{font-size:11px;color:rgba(200,230,255,0.3)}
+
+/* PERSON ROWS */
+.person-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;margin-bottom:8px;padding:10px 12px;width:100%}
+.person-row-top{display:flex;align-items:center;gap:8px}
+.person-info{flex:1;min-width:0}
+.person-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.person-email{font-size:11px;color:rgba(200,230,255,0.4);margin-top:1px}
+.person-time{font-size:10px;margin-top:2px}
+.person-time.ok{color:#4cde80}
+.person-time.late{color:#ff6666}
+.person-row-bottom{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+
+/* STATUS CIRCLES */
+.status-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all 0.3s;text-align:center;line-height:1.2}
+.sc-unknown{background:rgba(126,207,255,0.1);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.4)}
+.sc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
+.sc-red{background:rgba(220,40,40,0.2);border:2px solid #ff4444;color:#ff6666}
+.sc-late{width:40px;height:40px;background:rgba(220,40,40,0.25);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;font-size:9px}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
+
+/* FOLLOW STATUS BADGE */
+.follow-badge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
+.fb-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
+.fb-followback{background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);color:#4cde80;cursor:pointer}
+.fb-following{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
+.fb-request-sent{background:rgba(255,200,50,0.12);border:1px solid rgba(255,200,50,0.35);color:rgba(255,220,130,0.8)}
+.fb-request-me{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
+
+/* ACTION BUTTONS */
+.trash-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,120,120,0.6);font-size:14px;flex-shrink:0}
+.trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
+.nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
+.nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
+
+/* PANEL (settings + followers – slide up from bottom) */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.panel-overlay.show{display:flex}
+.panel-box{background:#111e2b;border-radius:20px 20px 0 0;padding:0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18)}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(126,207,255,0.1);flex-shrink:0}
+.panel-title{font-size:17px;font-weight:800;color:#7ecfff}
+.panel-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
+.panel-content{overflow-y:auto;padding:16px 20px 32px;flex:1}
+
+/* SETTINGS CONTENT */
+.section-title{font-size:19px;font-weight:800;color:#7ecfff;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.section-subtitle{font-size:12px;color:rgba(200,230,255,0.45);margin-bottom:10px;margin-top:-8px}
+.settings-section-title{font-size:15px;font-weight:700;color:#7ecfff;margin:14px 0 8px}
+.freq-option{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:12px;padding:11px 14px;margin-bottom:7px;cursor:pointer;color:rgba(200,230,255,0.7);transition:all 0.2s;font-size:13px}
+.freq-option.active{background:rgba(126,207,255,0.15);border-color:#7ecfff;color:#7ecfff;font-weight:700}
+.freq-hint{font-size:11px;font-weight:300;color:rgba(200,230,255,0.45);margin-top:4px;line-height:1.5}
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.day-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:7px 0;text-align:center;font-size:10px;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
+.day-cell.active{background:#7ecfff;color:#0f1923;font-weight:700}
+.interval-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.interval-cell{background:rgba(255,255,255,0.05);color:rgba(200,230,255,0.6);border-radius:7px;padding:11px 0;text-align:center;font-size:17px;font-weight:700;cursor:pointer;border:1px solid rgba(126,207,255,0.15);transition:all 0.2s}
+.interval-cell.active{background:#7ecfff;color:#0f1923}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.12);border-radius:16px;padding:14px 18px;margin-bottom:12px}
+.card-hint{font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;line-height:1.6}
+.settings-action-btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
+.notif-on-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:rgba(200,230,255,0.75)}
+.notif-off-btn{background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);color:#ff8888}
+.addhome-btn{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.25);color:#7ecfff}
+.alert-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:9px;margin-bottom:5px;font-size:13px;cursor:pointer;transition:all 0.2s;user-select:none}
+.alert-row.blue-on{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.15);color:rgba(200,230,255,0.8)}
+.alert-row.blue-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
+.alert-row.orange-on{background:rgba(255,150,80,0.06);border:1px solid rgba(255,150,80,0.2);color:rgba(255,200,160,0.85)}
+.alert-row.orange-off{background:rgba(255,60,60,0.04);border:1px solid rgba(255,60,60,0.2);color:rgba(255,120,120,0.6)}
+.alert-status-on{font-size:11px;color:#4cde80;white-space:nowrap}
+.alert-status-off{font-size:11px;color:#ff6666;white-space:nowrap}
+
+/* FOLLOWERS PANEL CONTENT */
+.share-box{background:rgba(40,200,100,0.07);border:1px solid rgba(40,200,100,0.2);border-radius:16px;padding:16px;margin-bottom:12px}
+.share-link{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;font-size:11px;color:#7ecfff;word-break:break-all;margin:8px 0;font-family:monospace;line-height:1.5;border:1px solid rgba(126,207,255,0.15)}
+.share-btn{background:linear-gradient(135deg,#1a9e50,#0d7a3a);border:none;border-radius:12px;color:#fff;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
+
+/* CONFIRM MODAL */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+.confirm-overlay.show{display:flex}
+.confirm-box{background:#1a2a3a;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(126,207,255,0.2);text-align:center}
+.confirm-title{font-size:16px;font-weight:700;margin-bottom:8px;color:#e8f4f8}
+.confirm-text{font-size:13px;color:rgba(200,230,255,0.6);margin-bottom:20px;line-height:1.6}
+.confirm-btns{display:flex;gap:10px}
+.confirm-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(200,230,255,0.6);padding:11px;font-size:14px;cursor:pointer;font-family:inherit}
+.confirm-ok{flex:1;background:linear-gradient(135deg,#c01515,#8a0f0f);border:none;border-radius:12px;color:#fff;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* POLICY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:150;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#1a2a3a;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(126,207,255,0.2)}
+.modal-close{float:left;background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px;margin-bottom:12px}
+.modal-title{font-size:17px;font-weight:800;color:#ffd97d;margin-bottom:14px}
+.policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
+.policy-text p{margin-bottom:10px}
+.policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
+
+/* INSTALL BANNERS */
+.install-banner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+#iosInstallBanner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+
+@media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:32px}.btn-text{font-size:18px}}
+```
+
   </style>
 </head>
 <body>
+
 <div id="loading">
   <div style="font-size:56px">🤝</div>
   <div class="spinner"></div>
@@ -235,7 +253,75 @@
       <p>בשימוש באפליקציה המשתמש מצהיר כי הבין את כל האמור לעיל ומוותר על כל זכות תביעה, תלונה, דרישה או הליך משפטי כלשהו – בישראל או בכל מדינה אחרת – כנגד מפתחי האפליקציה, מפיציה, מארחיה ובעליה.</p>
       <h4>🔒 פרטיות</h4>
       <p>נשמרים: שם, כתובת אימייל ומועד הדיווח האחרון. אין מעקב מיקום. אין שיתוף מידע עם צדדים שלישיים. אין פרסום.</p>
-      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 6.1 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+      <p style="font-size:10px;color:rgba(255,220,130,0.35);margin-top:16px">גרסה 9.0 | שימוש אישי בלבד | כל הזכויות שמורות</p>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+
+<div class="panel-overlay" id="settingsPanel" onclick="handlePanelOverlayClick(event,'settingsPanel')">
+  <div class="panel-box">
+    <div class="panel-header">
+      <span class="panel-title">⚙️ הגדרות</span>
+      <button class="panel-close" onclick="closePanel('settingsPanel')">סגור ✕</button>
+    </div>
+    <div class="panel-content">
+      <button id="notifToggleBtn" class="settings-action-btn notif-off-btn" onclick="toggleNotifications()">🔔 הפעל התראות</button>
+      <button id="addHomeBtn" class="settings-action-btn addhome-btn" onclick="addToHomeScreen()" style="display:none">📲 הוסף אפליקציה למסך הבית</button>
+      <p class="settings-section-title">🔄 תדירות דיווח</p>
+      <p class="freq-hint" style="margin-bottom:8px">הדיווח מתאפס בחצות לפי תדירות הדיווח</p>
+      <div class="freq-option active" id="freq-daily" onclick="setFreq('daily')">כל יום</div>
+      <div class="freq-option" id="freq-odd" onclick="setFreq('odd')">כל יום אי-זוגי (א׳,ג׳,ה׳,ש׳)</div>
+      <div class="freq-option" id="freq-even" onclick="setFreq('even')">כל יום זוגי (ב׳,ד׳,ו׳)</div>
+      <div class="freq-option" id="freq-specific" onclick="setFreq('specific')">ימים ספציפיים</div>
+      <div class="freq-option" id="freq-interval" onclick="setFreq('interval')">מרווח זמן קבוע</div>
+      <div class="card" id="specificDaysCard" style="display:none;margin-top:8px">
+        <p class="card-hint">בחר ימים:</p>
+        <div class="day-grid">
+          <div class="day-cell" id="day-0" onclick="toggleDay(0)">א׳</div>
+          <div class="day-cell" id="day-1" onclick="toggleDay(1)">ב׳</div>
+          <div class="day-cell" id="day-2" onclick="toggleDay(2)">ג׳</div>
+          <div class="day-cell" id="day-3" onclick="toggleDay(3)">ד׳</div>
+          <div class="day-cell" id="day-4" onclick="toggleDay(4)">ה׳</div>
+          <div class="day-cell" id="day-5" onclick="toggleDay(5)">ו׳</div>
+          <div class="day-cell" id="day-6" onclick="toggleDay(6)">ש׳</div>
+        </div>
+      </div>
+      <div class="card" id="intervalCard" style="display:none;margin-top:8px">
+        <p class="card-hint">כל כמה ימים?</p>
+        <div class="interval-grid">
+          <div class="interval-cell active" id="int-1" onclick="setIntervalDays(1)">1</div>
+          <div class="interval-cell" id="int-2" onclick="setIntervalDays(2)">2</div>
+          <div class="interval-cell" id="int-3" onclick="setIntervalDays(3)">3</div>
+          <div class="interval-cell" id="int-4" onclick="setIntervalDays(4)">4</div>
+        </div>
+      </div>
+      <p class="settings-section-title" style="margin-top:16px">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
+      <div class="card" id="personalAlertsCard"></div>
+      <p class="settings-section-title">⚠️ התראות לעוקבים אם לא דיווחתי <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
+      <div class="card" id="followerAlertsCard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOLLOWERS PANEL -->
+
+<div class="panel-overlay" id="followersPanel" onclick="handlePanelOverlayClick(event,'followersPanel')">
+  <div class="panel-box">
+    <div class="panel-header">
+      <span class="panel-title" id="followersPanelTitle">👥 עוקבים שלי (0)</span>
+      <button class="panel-close" onclick="closePanel('followersPanel')">סגור ✕</button>
+    </div>
+    <div class="panel-content">
+      <p class="section-subtitle" style="margin-top:0">מי מעודכן שאני בסדר:</p>
+      <div class="share-box">
+        <p style="font-weight:700;color:#4cde80;margin-bottom:5px;font-size:14px">📲 הלינק האישי שלך</p>
+        <p style="font-size:12px;color:rgba(200,230,255,0.55);margin-bottom:0">שלח לאנשים שרוצים לקבל התראות ממך:</p>
+        <div class="share-link" id="myShareLink">טוען...</div>
+        <button class="share-btn" onclick="doShare()">📤 שתף עכשיו</button>
+      </div>
+      <div id="followersList"><p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p></div>
     </div>
   </div>
 </div>
@@ -266,15 +352,27 @@
   <button onclick="dismissIosInstall()" style="width:100%;margin-top:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(200,230,255,0.5);padding:9px;font-size:12px;cursor:pointer;font-family:inherit">הבנתי</button>
 </div>
 
+<!-- APP -->
+
 <div id="app">
-  <div class="header">
-    <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="goHomeRefresh()"/>
-    <div class="header-right">
-      <button class="policy-btn" onclick="openPolicyModal()">📋 מדיניות</button>
-      <div class="avatar" id="userAvatar">👤</div>
-      <button class="logout-btn" onclick="doSignOut()">יציאה</button>
+
+  <!-- STICKY HEADER -->
+
+  <div id="header-wrapper">
+    <div class="header">
+      <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="location.reload()"/>
+      <div class="header-right">
+        <button class="header-icon-btn" onclick="location.reload()" title="רענן">🔄</button>
+        <button class="header-icon-btn" onclick="openPanel('settingsPanel')" title="הגדרות">⚙️</button>
+        <button class="policy-btn" onclick="openPolicyModal()">📋</button>
+        <div class="avatar" id="userAvatar">👤</div>
+        <button class="logout-btn" onclick="doSignOut()">יציאה</button>
+      </div>
     </div>
   </div>
+
+  <!-- NOTIFICATION + BANNERS (full width) -->
+
   <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
   <div class="follow-banner" id="followBanner">
     <div style="font-weight:700;color:#4cde80;margin-bottom:5px" id="followBannerTitle"></div>
@@ -282,130 +380,65 @@
   </div>
   <div id="followRequestsContainer" style="width:100%;max-width:480px;padding:0 0 4px"></div>
 
-  <!-- MAIN / HOME -->
+  <!-- SINGLE SCROLLABLE PAGE -->
 
-  <div class="screen active" id="screen-main">
-    <!-- Status text -->
-    <p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
+  <div id="main-content">
 
-  <!-- שורה: זמן שחלף (ימין) + כפתור תדירות (שמאל) -->
+```
+<!-- STATUS TEXT -->
+<p class="status-text" id="statusText">לחץ לעדכן שהכל בסדר</p>
 
-  <div class="time-freq-row">
-    <p class="last-time-above" id="lastTimeAbove"></p>
-    <span class="chip" onclick="showScreen('settings')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
-  </div>
-  <!-- תאריך ושעה מדויקים מתחת, קטן ולא מודגש -->
-  <p class="last-date-below" id="lastDateBelow"></p>
+<!-- TIME + FREQ ROW -->
+<div class="time-freq-row">
+  <p class="last-time-above" id="lastTimeAbove"></p>
+  <span class="chip" onclick="openPanel('settingsPanel')" id="freqChip" style="margin:0;flex-shrink:0">🔄 כל יום</span>
+</div>
+<p class="last-date-below" id="lastDateBelow"></p>
 
-  <div class="btn-wrapper">
+<!-- BIG BUTTON -->
+<div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
     <span class="btn-text" id="btnText">אני<br>בסדר</span>
     <span class="btn-marks" id="btnMarks"></span>
   </button>
-  <!-- כפתור בחירת מצב רוח – מופיע רק כשהמצב ירוק -->
   <button class="mood-btn" id="moodBtn" onclick="toggleMoodPanel(event)" title="איזה בסדר אתה?">😊</button>
-  <!-- חלונית בחירת אימוג׳י 3×3 -->
   <div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
     <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
   </div>
-  </div>
-  <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
-
-  <!-- sub-info: ירוק + עוקבים + הערה -->
-
-  <div class="sub-info">
-    <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
-    <span class="chip" onclick="showScreen('followers')" id="followersChip">👥 0 עוקבים</span>
-    <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
-  </div>
-
-  </div>
-
-  <!-- WATCHING -->
-
-  <div class="screen" id="screen-watching">
-    <div class="section-title">
-      <span id="watchingTitle">👁️ נעקבים (0)</span>
-      <button class="refresh-btn-small" onclick="refreshCurrentTab('watching')">🔄 בדוק דיווחים מעודכנים</button>
-    </div>
-    <p style="font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:10px;margin-top:-8px;line-height:1.6">מצב הדיווח של האנשים שאתה עוקב אחריהם:</p>
-    <div class="battery-wrap" id="watchingBarWrap" style="display:none">
-      <div class="battery-label" id="watchingBarLabel"></div>
-      <div class="battery-bar-outer">
-        <div class="battery-seg-green" id="barGreen"></div>
-        <div class="battery-seg-red" id="barRed"></div>
-      </div>
-    </div>
-    <div id="watchingList"><p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p></div>
-  </div>
-
-  <!-- FOLLOWERS -->
-
-  <div class="screen" id="screen-followers">
-    <div class="section-title">
-      <span id="followersTitle">👥 עוקבים שלי (0)</span>
-      <button class="refresh-btn-small" onclick="refreshCurrentTab('followers')">🔄 בדוק דיווחים מעודכנים</button>
-    </div>
-    <p class="section-subtitle">מי מעודכן שאני בסדר:</p>
-    <div class="share-box">
-      <p style="font-weight:700;color:#4cde80;margin-bottom:5px;font-size:14px">📲 הלינק האישי שלך</p>
-      <p style="font-size:12px;color:rgba(200,230,255,0.55);margin-bottom:0">שלח לאנשים שרוצים לקבל התראות ממך:</p>
-      <div class="share-link" id="myShareLink">טוען...</div>
-      <button class="share-btn" onclick="doShare()">📤 שתף עכשיו</button>
-    </div>
-    <div id="followersList"><p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p></div>
-  </div>
-
-  <!-- SETTINGS -->
-
-  <div class="screen" id="screen-settings">
-    <p class="section-title">⚙️ הגדרות</p>
-    <button id="notifToggleBtn" class="settings-action-btn notif-off-btn" onclick="toggleNotifications()">🔔 הפעל התראות</button>
-    <button id="addHomeBtn" class="settings-action-btn addhome-btn" onclick="addToHomeScreen()" style="display:none">📲 הוסף אפליקציה למסך הבית</button>
-    <p class="settings-section-title">🔄 תדירות דיווח</p>
-    <p class="freq-hint" style="margin-bottom:8px">הדיווח מתאפס בחצות לפי תדירות הדיווח</p>
-    <div class="freq-option active" id="freq-daily" onclick="setFreq('daily')">כל יום</div>
-    <div class="freq-option" id="freq-odd" onclick="setFreq('odd')">כל יום אי-זוגי (א׳,ג׳,ה׳,ש׳)</div>
-    <div class="freq-option" id="freq-even" onclick="setFreq('even')">כל יום זוגי (ב׳,ד׳,ו׳)</div>
-    <div class="freq-option" id="freq-specific" onclick="setFreq('specific')">ימים ספציפיים</div>
-    <div class="freq-option" id="freq-interval" onclick="setFreq('interval')">מרווח זמן קבוע</div>
-    <div class="card" id="specificDaysCard" style="display:none;margin-top:8px">
-      <p class="card-hint">בחר ימים:</p>
-      <div class="day-grid">
-        <div class="day-cell" id="day-0" onclick="toggleDay(0)">א׳</div>
-        <div class="day-cell" id="day-1" onclick="toggleDay(1)">ב׳</div>
-        <div class="day-cell" id="day-2" onclick="toggleDay(2)">ג׳</div>
-        <div class="day-cell" id="day-3" onclick="toggleDay(3)">ד׳</div>
-        <div class="day-cell" id="day-4" onclick="toggleDay(4)">ה׳</div>
-        <div class="day-cell" id="day-5" onclick="toggleDay(5)">ו׳</div>
-        <div class="day-cell" id="day-6" onclick="toggleDay(6)">ש׳</div>
-      </div>
-    </div>
-    <div class="card" id="intervalCard" style="display:none;margin-top:8px">
-      <p class="card-hint">כל כמה ימים?</p>
-      <div class="interval-grid">
-        <div class="interval-cell active" id="int-1" onclick="setIntervalDays(1)">1</div>
-        <div class="interval-cell" id="int-2" onclick="setIntervalDays(2)">2</div>
-        <div class="interval-cell" id="int-3" onclick="setIntervalDays(3)">3</div>
-        <div class="interval-cell" id="int-4" onclick="setIntervalDays(4)">4</div>
-      </div>
-    </div>
-    <p class="settings-section-title" style="margin-top:16px">🔔 תזכורות אישיות <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
-    <div class="card" id="personalAlertsCard"></div>
-    <p class="settings-section-title">⚠️ התראות לעוקבים אם לא דיווחתי <span style="font-size:11px;color:rgba(200,230,255,0.4)">(לחץ להפעיל/לבטל)</span></p>
-    <div class="card" id="followerAlertsCard"></div>
-  </div>
-
-  <!-- NAV -->
-
-  <div class="nav" id="mainNav">
-    <div class="nav-item active" id="nav-main" onclick="showScreen('main')"><span class="nav-icon">🏠</span>בית</div>
-    <div class="nav-item" id="nav-watching" onclick="showScreen('watching')"><span class="nav-icon">👁️</span><span id="navWatchingLabel">נעקבים</span></div>
-    <div class="nav-item" id="nav-followers" onclick="showScreen('followers')"><span class="nav-icon">👥</span><span id="navFollowersLabel">עוקבים</span></div>
-    <div class="nav-item" id="nav-settings" onclick="showScreen('settings')"><span class="nav-icon">⚙️</span>הגדרות</div>
-  </div>
 </div>
+<div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
+
+<!-- SUB INFO -->
+<div class="sub-info">
+  <button class="add-followers-btn" onclick="doShare()">➕ הוסף עוקבים</button>
+  <span class="chip" onclick="openPanel('followersPanel')" id="followersChip">👥 0 עוקבים</span>
+  <p class="followers-note">לאחר שמתחילים לעקוב אחריך תוכל לעקוב אחריהם בחזרה</p>
+</div>
+
+<!-- FRIENDS SECTION DIVIDER -->
+<div class="home-divider"></div>
+<div class="friends-section-header">
+  <span class="friends-section-title">- איזה בסדר חברים שלך</span>
+  <span class="friends-section-count" id="friendsCount"></span>
+</div>
+
+<!-- WATCHING LIST (embedded) -->
+<!-- hidden watchingTitle for JS compatibility -->
+<span id="watchingTitle" style="display:none"></span>
+<!-- hidden battery bar for JS compatibility -->
+<div id="watchingBarWrap" style="display:none">
+  <div id="watchingBarLabel"></div>
+  <div><div id="barGreen"></div><div id="barRed"></div></div>
+</div>
+<div id="watchingList" style="width:100%">
+  <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
+</div>
+```
+
+  </div><!-- end #main-content -->
+
+</div><!-- end #app -->
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -429,9 +462,24 @@ const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 
-const TAB_ORDER = ['main','watching','followers','settings'];
+// ── PANEL OPEN / CLOSE ────────────────────────────────────────
+window.openPanel = (id) => {
+  document.getElementById(id).classList.add('show');
+};
+window.closePanel = (id) => {
+  document.getElementById(id).classList.remove('show');
+};
+window.handlePanelOverlayClick = (e, id) => {
+  if (e.target === document.getElementById(id)) closePanel(id);
+};
 
-// ── MIDNIGHT RESET LOGIC ─────────────────────────────────────
+// showScreen kept for backward compatibility
+window.showScreen = (name) => {
+  if (name === 'settings') { openPanel('settingsPanel'); return; }
+  if (name === 'followers') { openPanel('followersPanel'); return; }
+};
+
+// ── MIDNIGHT RESET LOGIC ──────────────────────────────────────
 function getMidnightMs(daysAgo = 0) {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -558,7 +606,6 @@ window.selectMood = (idx) => {
   if (currentUser) {
     localStorage.setItem('moodEmoji_' + currentUser.uid, mood.emoji);
     localStorage.setItem('moodLevel_' + currentUser.uid, String(mood.level));
-    // שמירה גם ב-Firestore כדי שנעקבים יראו את האימוג׳י
     setDoc(doc(db,'status',currentUser.uid),{moodEmoji:mood.emoji},{merge:true}).catch(()=>{});
   }
   document.getElementById('moodPanel').classList.remove('show');
@@ -651,8 +698,6 @@ onAuthStateChanged(auth, async user => {
     renderAlerts();
     checkInstallPrompt();
     if (Notification.permission === 'granted') registerFCMToken();
-    const savedTab = sessionStorage.getItem('activeTab');
-    if (savedTab) { sessionStorage.removeItem('activeTab'); showScreen(savedTab); }
   } else {
     currentUser = null;
     document.getElementById('login-screen').style.display = 'flex';
@@ -691,7 +736,6 @@ async function initUser() {
   }
   await loadFollowers();
   syncFreqUI();
-  // טעינת אימוג׳י מצב רוח שמור (רק אם עדיין בסדר)
   if (state.isOk) {
     const savedEmoji = localStorage.getItem('moodEmoji_' + currentUser.uid);
     const savedLevel = localStorage.getItem('moodLevel_' + currentUser.uid);
@@ -721,7 +765,8 @@ async function buildMutualSet() {
 
 function renderFollowers() {
   const el = document.getElementById('followersList');
-  document.getElementById('followersTitle').textContent = `👥 עוקבים שלי (${state.followers.length})`;
+  const title = document.getElementById('followersPanelTitle');
+  if (title) title.textContent = `👥 עוקבים שלי (${state.followers.length})`;
   if (!state.followers.length) {
     el.innerHTML = '<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">עדיין אין עוקבים – שתף את הלינק!</p>';
     return;
@@ -767,7 +812,7 @@ function formatRelativeTime(date) {
   return `דיווחת לפני כ-${diffDays} ימים`;
 }
 
-// ── WATCHING ─────────────────────────────────────────────────
+// ── WATCHING ──────────────────────────────────────────────────
 async function loadWatching() {
   const q = query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
   const snaps = await getDocs(q);
@@ -776,7 +821,6 @@ async function loadWatching() {
   statusListeners.forEach(u=>u());
   statusListeners = [];
   watchingStatuses = {};
-  document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${state.watching.length})`;
   if (!state.watching.length) { renderWatchingList([]); updateChips(); return; }
   state.watching.forEach(w => {
     watchingStatuses[w.followingUid] = null;
@@ -822,14 +866,13 @@ function renderWatchingList(watching) { renderWatchingWithStatuses(watching, {})
 
 function renderWatchingWithStatuses(watching, statuses) {
   const el = document.getElementById('watchingList');
-  document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${watching.length})`;
+  const countEl = document.getElementById('friendsCount');
+  if (countEl) countEl.textContent = watching.length > 0 ? `(${watching.length})` : '';
   if (!watching.length) {
-    document.getElementById('watchingBarWrap').style.display = 'none';
     el.innerHTML = '<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.</p>';
     updateChips();
     return;
   }
-  updateBatteryBar(watching, statuses);
   const followerUids = new Set(state.followers.map(f => f.followerUid));
   const now = Date.now();
   const sorted = sortWatchingEntries(watching, statuses);
@@ -878,40 +921,6 @@ function renderWatchingWithStatuses(watching, statuses) {
     </div>`;
   }).join('');
   updateChips();
-}
-
-function updateBatteryBar(watching, statuses) {
-  if (!watching.length) {
-    document.getElementById('watchingBarWrap').style.display = 'none';
-    return;
-  }
-  const now = Date.now();
-  let okCount = 0, notOkCount = 0;
-  watching.forEach(w => {
-    const s = statuses[w.followingUid];
-    const hrs = s?.timestamp ? (now - s.timestamp.getTime()) / 3600000 : 999;
-    if (s?.isOk && hrs < 24) okCount++;
-    else notOkCount++;
-  });
-  const total = watching.length;
-  const okPct = Math.round(okCount / total * 100);
-  const notOkPct = 100 - okPct;
-  const barWrap = document.getElementById('watchingBarWrap');
-  const label = document.getElementById('watchingBarLabel');
-  const barGreen = document.getElementById('barGreen');
-  const barRed = document.getElementById('barRed');
-  barWrap.style.display = 'block';
-  if (notOkCount === 0) {
-    label.textContent = 'כל חבריך דיווחו שהם בסדר :)';
-    label.className = 'battery-label all-ok';
-  } else {
-    label.textContent = `${notOkCount} לא דיווחו שהם בסדר`;
-    label.className = 'battery-label';
-  }
-  barGreen.style.width = okPct + '%';
-  barGreen.textContent = okPct > 8 ? okPct + '%' : '';
-  barRed.style.width = notOkPct + '%';
-  barRed.textContent = notOkPct > 8 ? notOkPct + '%' : '';
 }
 
 // ── FOLLOW REQUEST ────────────────────────────────────────────
@@ -1037,7 +1046,6 @@ window.confirmUnfollow = (uid, name) => {
     delete watchingStatuses[uid];
     renderWatchingWithStatuses(state.watching, watchingStatuses);
     renderFollowers(); updateChips();
-    document.getElementById('watchingTitle').textContent = `👁️ נעקבים (${state.watching.length})`;
   };
   document.getElementById('confirmModal').classList.add('show');
 };
@@ -1080,7 +1088,10 @@ window.handleOkPress = async () => {
   localStorage.setItem('lastConfirmed_'+currentUser.uid, state.lastConfirmed.toISOString());
   localStorage.setItem('okCount_'+currentUser.uid, state.okCount);
   await setDoc(doc(db,'users',currentUser.uid),{lastConfirmed:serverTimestamp(),okCount:state.okCount},{merge:true});
-  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp()});
+  await setDoc(doc(db,'status',currentUser.uid),{
+    uid:currentUser.uid,name:currentUser.displayName,isOk:true,
+    timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null
+  });
   updateMainUI();
   renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
@@ -1229,7 +1240,6 @@ function updateMainUI(){
   const ok = isWithinReportingPeriod();
   state.isOk = ok;
 
-  // [1] Relative time (above) + exact date/time (below, small)
   if (state.lastConfirmed) {
     lt.textContent = formatRelativeTime(state.lastConfirmed);
     ld.textContent = formatDateTime(state.lastConfirmed);
@@ -1240,7 +1250,6 @@ function updateMainUI(){
 
   if (ok) {
     btn.classList.add('ok'); btn.classList.remove('late');
-    // החל צבע ואימוג׳י לפי מצב רוח שנבחר
     if (state.moodEmoji && state.moodLevel) {
       const mc = MOOD_COLORS[state.moodLevel] || MOOD_COLORS[2];
       btn.style.background = mc.bg;
@@ -1296,58 +1305,11 @@ function updateMainUI(){
 
 function updateChips(){
   document.getElementById('followersChip').textContent=`👥 ${state.followers.length} עוקבים`;
-  document.getElementById('watchingTitle').textContent=`👁️ נעקבים (${state.watching.length})`;
   const labels={daily:'כל יום',odd:'ימים אי-זוגיים',even:'ימים זוגיים',specific:'ימים ספציפיים',interval:`כל ${state.intervalDays} ימים`};
   document.getElementById('freqChip').textContent='🔄 '+(labels[state.freq]||'כל יום');
-  // עדכון לשוניות ניווט עם מספרים
-  const navW = document.getElementById('navWatchingLabel');
-  const navF = document.getElementById('navFollowersLabel');
-  if (navW) navW.textContent = state.watching.length > 0 ? `${state.watching.length} נעקבים` : 'נעקבים';
-  if (navF) navF.textContent = state.followers.length > 0 ? `${state.followers.length} עוקבים` : 'עוקבים';
+  const countEl = document.getElementById('friendsCount');
+  if (countEl) countEl.textContent = state.watching.length > 0 ? `(${state.watching.length})` : '';
 }
-
-// ── LOGO CLICK → HOME + REFRESH ──────────────────────────────
-window.goHomeRefresh = () => {
-  sessionStorage.setItem('activeTab', 'main');
-  location.reload();
-};
-
-// ── SHOW SCREEN ───────────────────────────────────────────────
-window.showScreen = name => {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  const nav=document.getElementById('nav-'+name);
-  if(nav)nav.classList.add('active');
-};
-
-// ── REFRESH TAB ───────────────────────────────────────────────
-window.refreshCurrentTab = (tabName) => {
-  sessionStorage.setItem('activeTab', tabName);
-  location.reload();
-};
-
-// ── SWIPE NAVIGATION ─────────────────────────────────────────
-(function(){
-  let startX = 0, startY = 0;
-  const appEl = document.getElementById('app');
-  appEl.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, {passive:true});
-  appEl.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      const current = document.querySelector('.nav-item.active');
-      if (!current) return;
-      const currentId = current.id.replace('nav-','');
-      const idx = TAB_ORDER.indexOf(currentId);
-      if (dx < 0 && idx < TAB_ORDER.length - 1) showScreen(TAB_ORDER[idx+1]);
-      if (dx > 0 && idx > 0) showScreen(TAB_ORDER[idx-1]);
-    }
-  }, {passive:true});
-})();
 
 // ── PWA INSTALL ───────────────────────────────────────────────
 function checkInstallPrompt(){
@@ -1376,10 +1338,10 @@ setInterval(() => {
   if (lt && state.lastConfirmed) lt.textContent = formatRelativeTime(state.lastConfirmed);
 }, 60000);
 
-// ── SERVICE WORKER (v8 – triggers auto-update) ────────────────
+// ── SERVICE WORKER (v9 – triggers auto-update) ────────────────
 if('serviceWorker'in navigator){
   const swCode = `
-var CACHE_NAME='ani-beseder-v8';
+var CACHE_NAME='ani-beseder-v9';
 self.addEventListener('install',function(e){
   e.waitUntil(self.skipWaiting());
 });
