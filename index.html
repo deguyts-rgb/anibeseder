@@ -28,6 +28,7 @@
     .header-logo{height:82px;margin:-8px 0 -6px;cursor:pointer;transition:transform 0.15s;flex-shrink:0;position:relative;z-index:2}
     .header-logo:active{transform:scale(0.94)}
     .avatar{width:36px;height:36px;border-radius:50%;background:rgba(126,207,255,0.15);border:2px solid rgba(126,207,255,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:transform 0.15s}
+    .avatar.has-photo{border:2px solid #4cde80;background:transparent}
     .avatar:active{transform:scale(0.88)}
     .avatar img{width:100%;height:100%;object-fit:cover}
     .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 10px 3px;display:flex;align-items:center;justify-content:space-around;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
@@ -423,8 +424,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot, updateDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "__FIREBASE_API_KEY__",
@@ -437,9 +436,8 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
-const auth    = getAuth(fbApp);
-const db      = getFirestore(fbApp);
-const storage = getStorage(fbApp);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
 
@@ -604,8 +602,8 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('app').style.display='flex';
     const av=document.getElementById('userAvatar');
     const storedPhoto=localStorage.getItem('profilePhoto_'+user.uid);
-    if(storedPhoto) av.innerHTML=`<img src="${storedPhoto}">`;
-    else if(user.photoURL) av.innerHTML=`<img src="${user.photoURL}">`;
+    if(storedPhoto){ av.innerHTML=`<img src="${storedPhoto}">`; av.classList.add('has-photo'); }
+    else if(user.photoURL){ av.innerHTML=`<img src="${user.photoURL}">`; }
     else av.textContent=(user.displayName||'U')[0];
     document.getElementById('myShareLink').textContent=`https://anibeseder.netlify.app/?follow=${user.uid}`;
     await initUser();
@@ -623,15 +621,16 @@ onAuthStateChanged(auth,async user=>{
 });
 
 // ── PROFILE PHOTO ─────────────────────────────────────────────
-async function compressImage(file){
+async function compressToBase64(file){
   return new Promise(resolve=>{
     const img=new Image(), url=URL.createObjectURL(file);
     img.onload=()=>{
-      const max=400; let w=img.width,h=img.height;
+      const max=320; let w=img.width,h=img.height;
       if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}else{if(h>max){w=Math.round(w*max/h);h=max;}}
       const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
-      canvas.toBlob(blob=>{ URL.revokeObjectURL(url); resolve(blob); },'image/jpeg',0.78);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg',0.72));
     };
     img.src=url;
   });
@@ -642,19 +641,17 @@ window.handleProfilePhotoUpload=async inp=>{
   const circle=document.getElementById('profileAvatarCircle');
   circle.style.opacity='0.5';
   try{
-    const blob=await compressImage(file);
-    const sRef=storageRef(storage,`profilePhotos/${currentUser.uid}/photo.jpg`);
-    await uploadBytes(sRef,blob,{contentType:'image/jpeg'});
-    const url=await getDownloadURL(sRef);
-    // Save to Firestore and localStorage
-    await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:url},{merge:true});
-    await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:url},{merge:true});
-    localStorage.setItem('profilePhoto_'+currentUser.uid,url);
-    // Update UI
-    circle.innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    const base64=await compressToBase64(file);
+    // Save to Firestore (both users and status docs)
+    await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:base64},{merge:true});
+    await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:base64},{merge:true});
+    // Save locally
+    localStorage.setItem('profilePhoto_'+currentUser.uid,base64);
+    // Update profile circle
+    circle.innerHTML=`<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="profile-circle-edit"></div>`;
     // Update header avatar
     const av=document.getElementById('userAvatar');
-    if(av) av.innerHTML=`<img src="${url}">`;
+    if(av){ av.innerHTML=`<img src="${base64}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
   }catch(e){ alert('שגיאה בהעלאת תמונה: '+e.message); }
   circle.style.opacity='1';
   inp.value='';
@@ -1018,7 +1015,7 @@ setInterval(()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v15';
+var CACHE_NAME='ani-beseder-v17';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
