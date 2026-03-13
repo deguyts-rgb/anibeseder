@@ -12,7 +12,7 @@
   <link rel="manifest" href="/manifest.json">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    body{min-height:100vh;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;color:#e8f4f8;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+    body{min-height:100vh;background:#060c14;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;color:#e8f4f8;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
     #loading{position:fixed;inset:0;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999}
     .spinner{width:48px;height:48px;border:3px solid rgba(126,207,255,0.2);border-top-color:#7ecfff;border-radius:50%;animation:spin 0.8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -39,7 +39,7 @@
     .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 10px 3px;display:flex;align-items:center;justify-content:space-around;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
     .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 7px;border-radius:8px;font-family:inherit;display:flex;align-items:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
-    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:22px 20px 40px}
+    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:80px 20px 40px}
     .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
     .last-time-above.visible{display:block}
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
@@ -92,27 +92,30 @@
     .sign-text-input::placeholder{color:rgba(200,230,255,0.28);font-size:11px}
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:24px 0 18px}
-    .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .friends-section-header{width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-    .wcard{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:14px;margin-bottom:10px;width:100%;display:flex;align-items:stretch;overflow:hidden;min-height:110px}
-    .wcard-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0;width:90px;padding:10px 8px;background:rgba(0,0,0,0.12);border-left:1px solid rgba(126,207,255,0.1);position:relative;overflow:hidden}
-    .wcard-identity-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);}
-    .wcard-identity-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:5px;width:100%}
-    .wcard-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0}
+    .wcard{background:transparent;border:none;border-bottom:1px solid rgba(126,207,255,0.1);border-radius:0;margin-bottom:0;width:100%;display:flex;align-items:stretch;overflow:hidden;min-height:88px}
+    .wcard:last-child{border-bottom:none}
+    .wcard-identity{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-shrink:0;width:72px;background:rgba(0,0,0,0.25);position:relative;overflow:hidden}
+    .wcard-identity-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.32);}
+    .wcard-identity-content{display:none}
+    .wcard-circle{width:43px;height:43px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0}
     .wc-green{background:rgba(40,200,100,0.2);border:2px solid #4cde80;color:#4cde80}
     .wc-red{background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite}
     .wc-unknown{background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35)}
-    .wcard-iname{font-size:11px;font-weight:600;color:rgba(200,230,255,0.65);text-align:center;word-break:break-word;line-height:1.2;max-width:84px}
+    .wcard-iname{font-size:12px;font-weight:700;color:rgba(200,230,255,0.8);margin-bottom:2px}
+    .wcard-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:10px 10px 8px;min-width:0}
+    .wcard-main-row{display:flex;align-items:center;gap:8px;flex:1}
+    .wcard-texts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
     .wcard-status-wrap{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:10px 10px;min-width:0;gap:4px}
     .wcard-status-row{display:flex;align-items:center;gap:10px;flex:1}
     .wcard-status-texts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-    .wcard-status{font-size:17px;font-weight:700;color:#e8f4f8;line-height:1.4;word-break:break-word}
-    .wcard-status.dim{font-size:13px;color:rgba(200,230,255,0.3);font-weight:400}
-    .wcard-status.err{font-size:14px;color:#ff8888;font-weight:600}
-    .wcard-time{font-size:9px;color:rgba(200,230,255,0.3);text-align:left;line-height:1.2;align-self:flex-end}
-    .wcard-actions{display:flex;flex-direction:column;align-items:stretch;gap:5px;flex-shrink:0;width:54px;padding:8px 6px;justify-content:space-between;border-right:1px solid rgba(126,207,255,0.1)}
-    .wcard-action-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:8px;padding:5px 3px;cursor:pointer;font-size:14px;flex:1;text-align:center}
-    .wcard-badge-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:8px;padding:4px 2px;flex:1;text-align:center;font-size:9px;font-weight:600;line-height:1.2}
+    .wcard-status{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.4;word-break:break-word}
+    .wcard-status.dim{font-size:12px;color:rgba(200,230,255,0.3);font-weight:400}
+    .wcard-status.err{font-size:13px;color:#ff8888;font-weight:600}
+    .wcard-time{font-size:9px;color:rgba(200,230,255,0.3);line-height:1.2}
+    .wcard-actions-row{display:flex;align-items:center;gap:5px;margin-top:8px}
+    .wcard-action-mini{display:flex;align-items:center;justify-content:center;gap:2px;border-radius:8px;padding:4px 6px;cursor:pointer;font-size:11px;font-weight:600;flex:1;text-align:center;white-space:nowrap}
     .wcard-badge-mutual{background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.5)}
     .wcard-badge-req{background:rgba(126,207,255,0.12);border:1px solid rgba(126,207,255,0.3);color:#7ecfff;cursor:pointer}
     .wcard-badge-pending{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);color:rgba(255,220,130,0.75)}
@@ -377,6 +380,13 @@
     <p class="last-time-above" id="lastTimeAbove"></p>
 
 ```
+<div class="status-row" style="margin-bottom:14px">
+  <span class="status-text-inline dim" id="statusText">לחץ לעדכן שהכל בסדר</span>
+  <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
+    <span class="add-friends-plus">+</span>הוסף חברים
+  </button>
+</div>
+
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
@@ -408,13 +418,6 @@
 </div>
 
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
-
-<div class="status-row" style="margin-top:18px">
-  <span class="status-text-inline dim" id="statusText">לחץ לעדכן שהכל בסדר</span>
-  <button class="add-friends-inline-btn" id="addFriendsInlineBtn" onclick="doShare()">
-    <span class="add-friends-plus">+</span>הוסף חברים
-  </button>
-</div>
 
 <div class="home-divider"></div>
 <div class="friends-section-header">
@@ -827,23 +830,23 @@ function renderWatchingWithStatuses(watching,statuses){
     return `<div class="wcard" id="wrow-${w.followingUid}">
       <div class="wcard-identity" ${identityStyle}>
         ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
-        <div class="wcard-identity-content">
-          <div class="wcard-iname">${w.followingName||'משתמש'}</div>
-        </div>
       </div>
-      <div class="wcard-status-wrap">
-        <div class="wcard-status-row">
-          <div class="wcard-status-texts">${statusHTML}</div>
+      <div class="wcard-body">
+        <div class="wcard-main-row">
           <div class="wcard-circle ${circleClass}">${circleContent}</div>
+          <div class="wcard-texts">
+            <div class="wcard-iname">${w.followingName||'משתמש'}</div>
+            ${statusHTML}
+            ${timeStr?`<div class="wcard-time">${timeStr}</div>`:''}
+          </div>
         </div>
-        ${timeStr?`<div class="wcard-time">${timeStr}</div>`:''}
-      </div>
-      <div class="wcard-actions">
-        <div class="wcard-action-btn wcard-badge-cell ${isMutual?'wcard-badge-mutual':reqSent?'wcard-badge-pending':'wcard-badge-req'}"
-          ${!isMutual&&!reqSent?`onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')"`:''}
-        >${isMutual?'🤝<br>הדדי':reqSent?'⏳<br>ממתין':'➕<br>בקש'}</div>
-        <button class="wcard-action-btn wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋<span style="font-size:8px;color:rgba(255,220,130,0.6)">נדנד</span></button>
-        <button class="wcard-action-btn wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️<span style="font-size:8px;color:rgba(255,120,120,0.5)">הסר</span></button>
+        <div class="wcard-actions-row">
+          <div class="wcard-action-mini ${isMutual?'wcard-badge-mutual':reqSent?'wcard-badge-pending':'wcard-badge-req'}"
+            ${!isMutual&&!reqSent?`onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')"`:''}
+          >${isMutual?'🤝 הדדי':reqSent?'⏳ ממתין':'➕ בקש'}</div>
+          <button class="wcard-action-mini wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋 נדנד</button>
+          <button class="wcard-action-mini wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️ הסר</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -971,8 +974,15 @@ function updateMainUI(){
 
   // Relative time above button — only show when there's a timestamp
   if(ltEl){
-    if(state.lastConfirmed){ ltEl.textContent=formatRelativeTime(state.lastConfirmed); ltEl.classList.add('visible'); }
-    else { ltEl.textContent=''; ltEl.classList.remove('visible'); }
+    if(state.lastConfirmed && ok){
+      ltEl.innerHTML=`<span style="color:#4cde80">✅</span> ${formatRelativeTime(state.lastConfirmed)}`;
+      ltEl.classList.add('visible');
+    } else if(state.lastConfirmed && !ok){
+      ltEl.innerHTML=`<span style="color:#ff6666">✕</span> <span style="color:#ff8888">לא דיווחת 24+ שעות</span>`;
+      ltEl.classList.add('visible');
+    } else {
+      ltEl.innerHTML=''; ltEl.classList.remove('visible');
+    }
   }
 
   if(ok){
@@ -1033,7 +1043,11 @@ window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.
 
 setInterval(()=>{
   const ltEl=document.getElementById('lastTimeAbove');
-  if(ltEl&&state.lastConfirmed){ ltEl.textContent=formatRelativeTime(state.lastConfirmed); ltEl.classList.add('visible'); }
+  const nowOk=isWithinReportingPeriod();
+  if(ltEl&&state.lastConfirmed){
+    if(nowOk){ ltEl.innerHTML=`<span style="color:#4cde80">✅</span> ${formatRelativeTime(state.lastConfirmed)}`; ltEl.classList.add('visible'); }
+    else { ltEl.innerHTML=`<span style="color:#ff6666">✕</span> <span style="color:#ff8888">לא דיווחת 24+ שעות</span>`; ltEl.classList.add('visible'); }
+  }
   const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
   if(wasOk&&!state.isOk) updateMainUI();
   else if(state.isOk) applyTimerGradient();
@@ -1041,7 +1055,7 @@ setInterval(()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v20';
+var CACHE_NAME='ani-beseder-v21';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
