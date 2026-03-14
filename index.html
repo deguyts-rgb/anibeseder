@@ -574,7 +574,18 @@ window.openFriendHeaderPopup = (uid) => {
   const stEl = document.getElementById('fhpStatusText');
   stEl.innerHTML = statusTxt.replace(/\n/g, '<br>');
   document.getElementById('fhpTime').textContent = fullTimeStr;
-  document.getElementById('friendHeaderPopup').style.display = 'flex';
+  const popup = document.getElementById('friendHeaderPopup');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.right = '0';
+  popup.style.bottom = '0';
+  popup.style.zIndex = '9';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.paddingTop = '160px';
+  popup.style.background = 'rgba(0,0,0,0.82)';
 };
 window.closeFriendHeaderPopup = () => {
   document.getElementById('friendHeaderPopup').style.display = 'none';
@@ -1339,7 +1350,7 @@ document.addEventListener('visibilitychange',()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v28';
+var CACHE_NAME='ani-beseder-v29';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
