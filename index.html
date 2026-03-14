@@ -218,11 +218,12 @@
 
 ```
 /* ── FRIEND HEADER POPUP ── */
-#friendHeaderPopup{position:fixed;top:115px;left:0;right:0;bottom:0;z-index:15;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+#friendHeaderPopup{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.78);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
 #friendHeaderPopup.show{opacity:1;pointer-events:all}
-.fhp-blob{position:relative;width:290px;height:340px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 80px rgba(40,200,100,0.28),0 0 30px rgba(40,200,100,0.12),0 24px 70px rgba(0,0,0,0.65);transform:scale(0.78) translateY(20px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden;padding:24px 20px 32px}
+.fhp-blob{position:relative;width:290px;height:360px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 80px rgba(40,200,100,0.28),0 0 30px rgba(40,200,100,0.12),0 24px 70px rgba(0,0,0,0.65);transform:scale(0.78) translateY(20px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden;padding:24px 20px 32px;margin-top:100px}
 #friendHeaderPopup.show .fhp-blob{transform:scale(1) translateY(0)}
-.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.07) 0%,transparent 70%);pointer-events:none}
+.fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(18px) brightness(0.35) saturate(1.4);transform:scale(1.15);z-index:0}
+.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.09) 0%,transparent 70%);pointer-events:none;z-index:1}
 .fhp-close{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:5;font-family:inherit;line-height:1;padding:0}
 .fhp-close:active{transform:translateX(-50%) scale(0.88)}
 .fhp-name{font-size:15px;font-weight:800;color:rgba(200,230,255,0.9);text-align:center;margin-top:6px;z-index:2;text-shadow:0 1px 8px rgba(0,0,0,0.4)}
@@ -233,8 +234,8 @@
 .fhp-ripple:nth-child(3){animation-delay:1.5s}
 .fhp-circle{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 30%,#5ef5a0,#22c86a 45%,#18a858 100%);border:3px solid rgba(255,255,255,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 40px rgba(40,220,100,0.7),0 0 16px rgba(40,220,100,0.4),inset 0 2px 12px rgba(255,255,255,0.15);position:relative;z-index:2}
 .fhp-emoji{font-size:44px;line-height:1}
-.fhp-status-text{font-size:13px;font-weight:800;color:#fff;text-align:center;line-height:1.3;text-shadow:0 1px 6px rgba(0,0,0,0.4);z-index:2;max-width:220px;padding:0 8px}
-.fhp-time{font-size:11px;color:rgba(76,222,128,0.75);font-weight:600;z-index:2}
+.fhp-status-text{font-size:20px;font-weight:900;color:#fff;text-align:center;line-height:1.35;text-shadow:0 2px 10px rgba(0,0,0,0.7);z-index:2;max-width:230px;padding:0 8px}
+.fhp-time{font-size:11px;color:rgba(76,222,128,0.7);font-weight:600;z-index:2;background:rgba(0,0,0,0.35);padding:3px 10px;border-radius:20px;margin-top:2px}
 ```
 
   </style>
@@ -243,6 +244,7 @@
 <!-- FRIEND HEADER POPUP -->
 <div id="friendHeaderPopup" onclick="closeFriendHeaderPopup()">
   <div class="fhp-blob" onclick="event.stopPropagation()">
+    <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
     <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
     <div class="fhp-name" id="fhpName"></div>
     <div class="fhp-circle-wrap">
@@ -547,16 +549,30 @@ window.openFriendHeaderPopup = (uid) => {
   const name = w.followingName || 'משתמש';
   const emoji = s.moodEmoji || (isOkStatus ? '✓' : '❓');
   const sign = s.sign || '', ct = s.customText || '';
+  // Full status line with all decorations
   let statusTxt = '';
   if (isOkStatus) {
-    if (sign === '"') statusTxt = `״אני בסדר״${ct ? ' ' + ct : ''}`;
-    else statusTxt = `אני בסדר${sign}${ct ? ' ' + ct : ''}`;
+    if (sign === '"') statusTxt = `״אני בסדר״${ct ? '\n' + ct : ''}${emoji ? ' ' + emoji : ''}`;
+    else statusTxt = `אני בסדר${sign}${ct ? '\n' + ct : ''}${emoji ? ' ' + emoji : ''}`;
   }
+  // Timestamp — full relative time
   const timeStr = s.timestamp ? formatRelativeTimeOther(s.timestamp) : '';
+  const fullTimeStr = s.timestamp ? 'דיווח ' + formatRelativeTimeOther(s.timestamp) : '';
+  // Set bg avatar
+  const bgEl = document.getElementById('fhpBgAvatar');
+  if (s.photoURL) {
+    bgEl.style.backgroundImage = `url('${s.photoURL}')`;
+    bgEl.style.display = 'block';
+  } else {
+    bgEl.style.backgroundImage = '';
+    bgEl.style.display = 'none';
+  }
   document.getElementById('fhpName').textContent = name;
   document.getElementById('fhpEmoji').textContent = emoji;
-  document.getElementById('fhpStatusText').textContent = statusTxt;
-  document.getElementById('fhpTime').textContent = timeStr ? `⏱ ${timeStr}` : '';
+  // Status text with line breaks
+  const stEl = document.getElementById('fhpStatusText');
+  stEl.innerHTML = statusTxt.replace(/\n/g, '<br>');
+  document.getElementById('fhpTime').textContent = fullTimeStr;
   document.getElementById('friendHeaderPopup').classList.add('show');
 };
 window.closeFriendHeaderPopup = () => {
