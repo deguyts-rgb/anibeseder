@@ -121,8 +121,8 @@
     .wcard-status.err{font-size:13px;color:#ff8888;font-weight:600}
     .wcard-time{font-size:9px;color:rgba(200,230,255,0.3);text-align:right;line-height:1.2;margin-top:2px}
     .wcard-time-ok{font-size:13px;font-weight:700;color:rgba(76,222,128,0.9);text-align:right;line-height:1.2;margin-top:3px}
-    .wcard-actions-row{display:flex;gap:5px;padding:5px 8px 7px;border-top:1px solid rgba(126,207,255,0.07)}
-    .wcard-action-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:3px;border-radius:7px;padding:5px 4px;cursor:pointer;font-size:11px;flex:1;text-align:center;font-family:inherit;border:none;background:none}
+    .wcard-actions-row{display:flex;gap:5px;padding:5px 8px 7px;border-top:1px solid rgba(126,207,255,0.07);width:100%}
+    .wcard-action-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:3px;border-radius:7px;padding:5px 4px;cursor:pointer;font-size:11px;flex:1;text-align:center;font-family:inherit;border:none;background:none;min-width:0}
     .wcard-badge-cell{font-size:9px;font-weight:600;line-height:1.2}
     .wcard-badge-mutual{background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.18);color:rgba(200,230,255,0.5)}
     .wcard-badge-req{background:rgba(126,207,255,0.1);border:1px solid rgba(126,207,255,0.28);color:#7ecfff;cursor:pointer}
@@ -215,9 +215,49 @@
     .avatar-picker-wrap{margin-top:8px;display:none;background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.15);border-radius:14px;padding:12px}
     .avatar-picker-wrap.show{display:block}
     .avatar-picker-title{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;margin-bottom:4px}
+
+```
+/* ── FRIEND HEADER POPUP ── */
+#friendHeaderPopup{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+#friendHeaderPopup.show{opacity:1;pointer-events:all}
+.fhp-blob{position:relative;width:290px;height:340px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 80px rgba(40,200,100,0.28),0 0 30px rgba(40,200,100,0.12),0 24px 70px rgba(0,0,0,0.65);transform:scale(0.78) translateY(20px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden;padding:24px 20px 32px}
+#friendHeaderPopup.show .fhp-blob{transform:scale(1) translateY(0)}
+.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.07) 0%,transparent 70%);pointer-events:none}
+.fhp-close{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:5;font-family:inherit;line-height:1;padding:0}
+.fhp-close:active{transform:translateX(-50%) scale(0.88)}
+.fhp-name{font-size:15px;font-weight:800;color:rgba(200,230,255,0.9);text-align:center;margin-top:6px;z-index:2;text-shadow:0 1px 8px rgba(0,0,0,0.4)}
+.fhp-circle-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:140px;height:140px;z-index:2}
+@keyframes fhp-ripple{0%{transform:scale(1);opacity:0.55}100%{transform:scale(1.85);opacity:0}}
+.fhp-ripple{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(76,222,128,0.28);animation:fhp-ripple 2.2s ease-out infinite}
+.fhp-ripple:nth-child(2){animation-delay:.75s}
+.fhp-ripple:nth-child(3){animation-delay:1.5s}
+.fhp-circle{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 30%,#5ef5a0,#22c86a 45%,#18a858 100%);border:3px solid rgba(255,255,255,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 40px rgba(40,220,100,0.7),0 0 16px rgba(40,220,100,0.4),inset 0 2px 12px rgba(255,255,255,0.15);position:relative;z-index:2}
+.fhp-emoji{font-size:44px;line-height:1}
+.fhp-status-text{font-size:13px;font-weight:800;color:#fff;text-align:center;line-height:1.3;text-shadow:0 1px 6px rgba(0,0,0,0.4);z-index:2;max-width:220px;padding:0 8px}
+.fhp-time{font-size:11px;color:rgba(76,222,128,0.75);font-weight:600;z-index:2}
+```
+
   </style>
 </head>
 <body>
+<!-- FRIEND HEADER POPUP -->
+<div id="friendHeaderPopup" onclick="closeFriendHeaderPopup()">
+  <div class="fhp-blob" onclick="event.stopPropagation()">
+    <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
+    <div class="fhp-name" id="fhpName"></div>
+    <div class="fhp-circle-wrap">
+      <div class="fhp-ripple"></div>
+      <div class="fhp-ripple"></div>
+      <div class="fhp-ripple"></div>
+      <div class="fhp-circle">
+        <span class="fhp-emoji" id="fhpEmoji">✓</span>
+      </div>
+    </div>
+    <div class="fhp-status-text" id="fhpStatusText"></div>
+    <div class="fhp-time" id="fhpTime"></div>
+  </div>
+</div>
+
 <div id="loading">
   <div style="font-size:56px">🤝</div>
   <div class="spinner"></div>
@@ -496,6 +536,32 @@ window.openPanel  = id => document.getElementById(id).classList.add('show');
 window.closePanel = id => document.getElementById(id).classList.remove('show');
 window.handlePanelOverlayClick = (e,id) => { if(e.target===document.getElementById(id)) closePanel(id); };
 window.showScreen = name => { if(name==='settings') openPanel('settingsPanel'); if(name==='followers') openPanel('followersPanel'); };
+
+window.openFriendHeaderPopup = (uid) => {
+  const w = state.watching.find(x => x.followingUid === uid);
+  const s = watchingStatuses[uid];
+  if (!w || !s) return;
+  const now = Date.now();
+  const hrs = s.timestamp ? (now - s.timestamp.getTime()) / 3600000 : null;
+  const isOkStatus = s.isOk && hrs !== null && hrs < 24;
+  const name = w.followingName || 'משתמש';
+  const emoji = s.moodEmoji || (isOkStatus ? '✓' : '❓');
+  const sign = s.sign || '', ct = s.customText || '';
+  let statusTxt = '';
+  if (isOkStatus) {
+    if (sign === '"') statusTxt = `״אני בסדר״${ct ? ' ' + ct : ''}`;
+    else statusTxt = `אני בסדר${sign}${ct ? ' ' + ct : ''}`;
+  }
+  const timeStr = s.timestamp ? formatRelativeTimeOther(s.timestamp) : '';
+  document.getElementById('fhpName').textContent = name;
+  document.getElementById('fhpEmoji').textContent = emoji;
+  document.getElementById('fhpStatusText').textContent = statusTxt;
+  document.getElementById('fhpTime').textContent = timeStr ? `⏱ ${timeStr}` : '';
+  document.getElementById('friendHeaderPopup').classList.add('show');
+};
+window.closeFriendHeaderPopup = () => {
+  document.getElementById('friendHeaderPopup').classList.remove('show');
+};
 
 function isWithinReportingPeriod() {
   if (!state.lastConfirmed) return false;
@@ -1223,7 +1289,7 @@ function updateHeaderFriendsStrip(){
     const circleInner=photo
       ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       :`<span>${s?.moodEmoji||'✓'}</span>`;
-    return `<div class="hfriend-item"><div class="hfriend-circle">${circleInner}</div><span class="hfriend-name">${firstName}</span></div>`;
+    return `<div class="hfriend-item" onclick="openFriendHeaderPopup('${w.followingUid}')" style="cursor:pointer"><div class="hfriend-circle">${circleInner}</div><span class="hfriend-name">${firstName}</span></div>`;
   }).join('');
 }
 
