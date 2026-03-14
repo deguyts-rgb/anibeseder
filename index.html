@@ -45,8 +45,8 @@
     .hfriend-circle{width:42px;height:42px;border-radius:50%;border:2px solid #4cde80;overflow:hidden;background:#0a1520;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 10px rgba(40,200,100,0.45)}
     .hfriend-circle img{width:100%;height:100%;object-fit:cover}
     .hfriend-name{font-size:8px;color:rgba(200,230,255,0.5);text-align:center;max-width:46px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1;font-weight:600}
-    .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 6px 3px;display:flex;align-items:center;justify-content:space-between;gap:0;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
-    .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 6px;border-radius:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent;flex:1}
+    .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 6px 3px;display:flex;align-items:center;justify-content:center;gap:0;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
+    .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 9px;border-radius:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent;flex:0 0 auto}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
     #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:80px 20px 40px}
     .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
@@ -219,23 +219,25 @@
 ```
 /* ── FRIEND HEADER POPUP ── */
 #friendHeaderPopup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.82);padding-top:160px}
-.fhp-blob{position:relative;width:251px;height:311px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 0 70px rgba(40,200,100,0.38),0 0 26px rgba(40,200,100,0.16),0 20px 55px rgba(0,0,0,0.65);overflow:hidden;padding:20px 18px 28px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+.fhp-blob{position:relative;width:251px;height:311px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.5);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 0 100px rgba(40,200,100,0.65),0 0 50px rgba(40,200,100,0.35),0 0 22px rgba(40,200,100,0.2),0 20px 55px rgba(0,0,0,0.65);overflow:hidden;padding:20px 18px 22px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 @keyframes blobPop{from{transform:scale(0.82) translateY(16px)}to{transform:scale(1) translateY(0)}}
 .fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(4px) brightness(0.6) saturate(1.5);transform:scale(1.06);z-index:0}
-.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.09) 0%,transparent 70%);pointer-events:none;z-index:1}
-.fhp-close{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:5;font-family:inherit;line-height:1;padding:0}
-.fhp-close:active{transform:translateX(-50%) scale(0.88)}
-.fhp-name{font-size:12px;font-weight:800;color:rgba(200,230,255,0.9);text-align:center;margin-top:4px;z-index:2;text-shadow:0 1px 8px rgba(0,0,0,0.4)}
-.fhp-circle-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:121px;height:121px;z-index:2}
+.fhp-green-overlay{position:absolute;inset:0;background:rgba(20,100,50,0.28);z-index:1;pointer-events:none}
+.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.12) 0%,transparent 70%);pointer-events:none;z-index:2}
+.fhp-close{position:absolute;top:10px;right:10px;transform:none;width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:6;font-family:inherit;line-height:1;padding:0}
+.fhp-close:active{transform:scale(0.88)}
+.fhp-name{font-size:12px;font-weight:800;color:rgba(255,255,255,0.95);text-align:center;z-index:3;text-shadow:0 1px 8px rgba(0,0,0,0.6);margin-top:2px}
+.fhp-circle-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:121px;height:121px;z-index:3}
 @keyframes fhp-ripple{0%{transform:scale(1);opacity:0.55}100%{transform:scale(1.85);opacity:0}}
 .fhp-ripple{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(76,222,128,0.28);animation:fhp-ripple 2.2s ease-out infinite}
 .fhp-ripple:nth-child(2){animation-delay:.75s}
 .fhp-ripple:nth-child(3){animation-delay:1.5s}
-.fhp-circle{width:101px;height:101px;border-radius:50%;border:3px solid rgba(255,255,255,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 0 34px rgba(40,220,100,0.7),0 0 14px rgba(40,220,100,0.4),inset 0 2px 10px rgba(255,255,255,0.15);position:relative;z-index:2;overflow:hidden}
-.fhp-emoji{font-size:38px;line-height:1}
-.fhp-status-text{font-size:16px;font-weight:900;color:#fff;text-align:center;line-height:1.35;text-shadow:0 2px 10px rgba(0,0,0,0.7);z-index:2;max-width:200px;padding:0 6px}
-.fhp-time{font-size:10px;color:rgba(76,222,128,0.7);font-weight:600;z-index:2;background:rgba(0,0,0,0.35);padding:2px 8px;border-radius:20px;margin-top:1px}
-.fhp-nudge-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:20px;color:rgba(255,220,130,0.9);font-size:12px;font-weight:700;padding:5px 16px;cursor:pointer;font-family:inherit;z-index:2;margin-top:2px}
+.fhp-circle-border{width:101px;height:101px;border-radius:50%;border:3px solid #4cde80;box-shadow:0 0 0 2px rgba(76,222,128,0.3),0 0 20px rgba(76,222,128,0.5);flex-shrink:0;padding:3px;position:relative;z-index:2}
+.fhp-circle{width:100%;height:100%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;overflow:hidden}
+.fhp-emoji{font-size:38px;line-height:1;position:relative;z-index:2}
+.fhp-status-text{font-size:16px;font-weight:900;color:#fff;text-align:center;line-height:1.35;text-shadow:0 2px 10px rgba(0,0,0,0.7);z-index:3;max-width:200px;padding:0 6px}
+.fhp-time{font-size:10px;color:rgba(76,222,128,0.85);font-weight:600;z-index:3;background:rgba(0,0,0,0.4);padding:2px 8px;border-radius:20px;margin-top:1px}
+.fhp-nudge-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:20px;color:rgba(255,220,130,0.9);font-size:12px;font-weight:700;padding:5px 16px;cursor:pointer;font-family:inherit;z-index:3;margin-top:2px}
 .fhp-nudge-btn:active{background:rgba(255,200,50,0.22)}
 ```
 
@@ -424,16 +426,19 @@
   <div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
     <div class="fhp-blob" onclick="event.stopPropagation()">
       <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
+      <div class="fhp-green-overlay"></div>
       <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
-      <div class="fhp-name" id="fhpName"></div>
       <div class="fhp-circle-wrap">
         <div class="fhp-ripple"></div>
         <div class="fhp-ripple"></div>
         <div class="fhp-ripple"></div>
-        <div class="fhp-circle" id="fhpCircle">
-          <span class="fhp-emoji" id="fhpEmoji">✓</span>
+        <div class="fhp-circle-border">
+          <div class="fhp-circle" id="fhpCircle">
+            <span class="fhp-emoji" id="fhpEmoji">✓</span>
+          </div>
         </div>
       </div>
+      <div class="fhp-name" id="fhpName"></div>
       <div class="fhp-status-text" id="fhpStatusText"></div>
       <div class="fhp-time" id="fhpTime"></div>
       <button class="fhp-nudge-btn" id="fhpNudgeBtn">👋 נדנד</button>
@@ -543,7 +548,35 @@ window.closePanel = id => document.getElementById(id).classList.remove('show');
 window.handlePanelOverlayClick = (e,id) => { if(e.target===document.getElementById(id)) closePanel(id); };
 window.showScreen = name => { if(name==='settings') openPanel('settingsPanel'); if(name==='followers') openPanel('followersPanel'); };
 
+// ── FRIEND HEADER POPUP SWIPE ─────────────────────────────────
+let fhpUids = [], fhpCurrentIdx = 0;
+
 window.openFriendHeaderPopup = (uid) => {
+  // Build ordered list of green friends for swiping
+  const now = Date.now();
+  fhpUids = state.watching.filter(w => {
+    const s = watchingStatuses[w.followingUid];
+    return s && s.isOk && s.timestamp && (now - s.timestamp.getTime()) < 24*3600000;
+  }).map(w => w.followingUid);
+  fhpCurrentIdx = fhpUids.indexOf(uid);
+  if (fhpCurrentIdx < 0) { fhpUids = [uid]; fhpCurrentIdx = 0; }
+  _showFhpByIdx(fhpCurrentIdx);
+  const popup = document.getElementById('friendHeaderPopup');
+  popup.style.position = 'fixed';
+  popup.style.top = '0'; popup.style.left = '0';
+  popup.style.right = '0'; popup.style.bottom = '0';
+  popup.style.zIndex = '9';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'flex-start';
+  popup.style.justifyContent = 'center';
+  popup.style.paddingTop = '130px';
+  popup.style.background = 'rgba(0,0,0,0.82)';
+  // Setup swipe on blob
+  _setupFhpSwipe();
+};
+
+function _showFhpByIdx(idx, dir) {
+  const uid = fhpUids[idx];
   const w = state.watching.find(x => x.followingUid === uid);
   const s = watchingStatuses[uid];
   if (!w || !s) return;
@@ -559,46 +592,76 @@ window.openFriendHeaderPopup = (uid) => {
     else statusTxt = `אני בסדר${sign}${ct ? '\n' + ct : ''}${emoji ? ' ' + emoji : ''}`;
   }
   const fullTimeStr = s.timestamp ? 'דיווח ' + formatRelativeTimeOther(s.timestamp) : '';
-  // Set bg avatar
   const bgEl = document.getElementById('fhpBgAvatar');
   if (s.photoURL) { bgEl.style.backgroundImage = `url('${s.photoURL}')`; bgEl.style.display = 'block'; }
   else { bgEl.style.backgroundImage = ''; bgEl.style.display = 'none'; }
-  // Conic timer on circle
+  // Conic timer
   const circleEl = document.getElementById('fhpCircle');
-  if (circleEl) {
-    if (isOkStatus && hrs !== null) {
-      const pct = Math.min(hrs / 24, 1);
-      const deg = pct * 360;
-      const conic = deg <= 0.5
-        ? `conic-gradient(from -90deg, #4cde80 0deg 360deg)`
-        : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
-      circleEl.style.background = conic;
-    } else {
-      circleEl.style.background = 'radial-gradient(circle at 38% 30%,#5ef5a0,#22c86a 45%,#18a858 100%)';
-    }
+  if (circleEl && isOkStatus && hrs !== null) {
+    const deg = Math.min(hrs / 24, 1) * 360;
+    circleEl.style.background = deg <= 0.5
+      ? `conic-gradient(from -90deg, #4cde80 0deg 360deg)`
+      : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
+  } else if (circleEl) {
+    circleEl.style.background = `conic-gradient(from -90deg, #4cde80 0deg 360deg)`;
   }
   document.getElementById('fhpName').textContent = name;
   document.getElementById('fhpEmoji').textContent = emoji;
   document.getElementById('fhpStatusText').innerHTML = statusTxt.replace(/\n/g, '<br>');
   document.getElementById('fhpTime').textContent = fullTimeStr;
-  // Wire nudge button
   const nudgeBtn = document.getElementById('fhpNudgeBtn');
-  if (nudgeBtn) { nudgeBtn.onclick = e => { e.stopPropagation(); sendNudge(uid, name); closeFriendHeaderPopup(); }; }
-  const popup = document.getElementById('friendHeaderPopup');
-  popup.style.position = 'fixed';
-  popup.style.top = '0';
-  popup.style.left = '0';
-  popup.style.right = '0';
-  popup.style.bottom = '0';
-  popup.style.zIndex = '9';
-  popup.style.display = 'flex';
-  popup.style.alignItems = 'flex-start';
-  popup.style.justifyContent = 'center';
-  popup.style.paddingTop = '130px';
-  popup.style.background = 'rgba(0,0,0,0.82)';
-};
+  if (nudgeBtn) nudgeBtn.onclick = e => { e.stopPropagation(); sendNudge(uid, name); closeFriendHeaderPopup(); };
+  // Animate blob slide
+  const blob = document.querySelector('.fhp-blob');
+  if (blob && dir) {
+    blob.style.transition = 'none';
+    blob.style.transform = dir === 'left' ? 'translateX(120%)' : 'translateX(-120%)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        blob.style.transition = 'transform 0.3s cubic-bezier(0.34,1.2,0.64,1)';
+        blob.style.transform = 'translateX(0)';
+      });
+    });
+  }
+  // Dot indicators
+  _updateFhpDots();
+}
+
+function _updateFhpDots() {
+  let dots = document.getElementById('fhpDots');
+  if (!dots) {
+    dots = document.createElement('div');
+    dots.id = 'fhpDots';
+    dots.style.cssText = 'display:flex;gap:5px;justify-content:center;z-index:3;margin-top:4px;';
+    document.querySelector('.fhp-nudge-btn')?.insertAdjacentElement('afterend', dots);
+  }
+  if (fhpUids.length <= 1) { dots.style.display = 'none'; return; }
+  dots.style.display = 'flex';
+  dots.innerHTML = fhpUids.map((_, i) =>
+    `<div style="width:6px;height:6px;border-radius:50%;background:${i===fhpCurrentIdx?'#4cde80':'rgba(76,222,128,0.3)'};transition:background 0.2s"></div>`
+  ).join('');
+}
+
+let _fhpSwipeX = null;
+function _setupFhpSwipe() {
+  const blob = document.querySelector('.fhp-blob');
+  if (!blob || blob._swipeSet) return;
+  blob._swipeSet = true;
+  blob.addEventListener('touchstart', e => { _fhpSwipeX = e.touches[0].clientX; }, {passive:true});
+  blob.addEventListener('touchend', e => {
+    if (_fhpSwipeX === null) return;
+    const dx = e.changedTouches[0].clientX - _fhpSwipeX;
+    _fhpSwipeX = null;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0 && fhpCurrentIdx < fhpUids.length - 1) { fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx, 'left'); }
+    else if (dx > 0 && fhpCurrentIdx > 0) { fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx, 'right'); }
+  }, {passive:true});
+}
+
 window.closeFriendHeaderPopup = () => {
   document.getElementById('friendHeaderPopup').style.display = 'none';
+  const blob = document.querySelector('.fhp-blob');
+  if (blob) { blob._swipeSet = false; blob.style.transform = ''; blob.style.transition = ''; }
 };
 
 function isWithinReportingPeriod() {
@@ -1360,7 +1423,7 @@ document.addEventListener('visibilitychange',()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v30';
+var CACHE_NAME='ani-beseder-v32';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
