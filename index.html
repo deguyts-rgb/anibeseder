@@ -218,10 +218,9 @@
 
 ```
 /* ── FRIEND HEADER POPUP ── */
-#friendHeaderPopup{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding-top:140px;background:rgba(0,0,0,0.78);transition:opacity 0.3s ease}
-#friendHeaderPopup.show{display:flex}
-.fhp-blob{position:relative;width:290px;height:360px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 80px rgba(40,200,100,0.35),0 0 30px rgba(40,200,100,0.15),0 24px 70px rgba(0,0,0,0.65);transform:scale(0.82) translateY(16px);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden;padding:24px 20px 32px}
-#friendHeaderPopup.show .fhp-blob{transform:scale(1) translateY(0)}
+#friendHeaderPopup{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding-top:140px;background:rgba(0,0,0,0.78)}
+.fhp-blob{position:relative;width:290px;height:360px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 80px rgba(40,200,100,0.35),0 0 30px rgba(40,200,100,0.15),0 24px 70px rgba(0,0,0,0.65);overflow:hidden;padding:24px 20px 32px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes blobPop{from{transform:scale(0.82) translateY(16px)}to{transform:scale(1) translateY(0)}}
 .fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(10px) brightness(0.55) saturate(1.6);transform:scale(1.12);z-index:0}
 .fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.09) 0%,transparent 70%);pointer-events:none;z-index:1}
 .fhp-close{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:5;font-family:inherit;line-height:1;padding:0}
@@ -242,7 +241,7 @@
 </head>
 <body>
 <!-- FRIEND HEADER POPUP -->
-<div id="friendHeaderPopup" onclick="closeFriendHeaderPopup()">
+<div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
   <div class="fhp-blob" onclick="event.stopPropagation()">
     <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
     <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
@@ -573,10 +572,10 @@ window.openFriendHeaderPopup = (uid) => {
   const stEl = document.getElementById('fhpStatusText');
   stEl.innerHTML = statusTxt.replace(/\n/g, '<br>');
   document.getElementById('fhpTime').textContent = fullTimeStr;
-  document.getElementById('friendHeaderPopup').classList.add('show');
+  document.getElementById('friendHeaderPopup').style.display = 'flex';
 };
 window.closeFriendHeaderPopup = () => {
-  document.getElementById('friendHeaderPopup').classList.remove('show');
+  document.getElementById('friendHeaderPopup').style.display = 'none';
 };
 
 function isWithinReportingPeriod() {
@@ -1338,7 +1337,7 @@ document.addEventListener('visibilitychange',()=>{
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v24';
+var CACHE_NAME='ani-beseder-v25';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
