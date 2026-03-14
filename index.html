@@ -218,7 +218,7 @@
 
 ```
 /* ── FRIEND HEADER POPUP ── */
-#friendHeaderPopup{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+#friendHeaderPopup{position:fixed;top:115px;left:0;right:0;bottom:0;z-index:15;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
 #friendHeaderPopup.show{opacity:1;pointer-events:all}
 .fhp-blob{position:relative;width:290px;height:340px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 80px rgba(40,200,100,0.28),0 0 30px rgba(40,200,100,0.12),0 24px 70px rgba(0,0,0,0.65);transform:scale(0.78) translateY(20px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden;padding:24px 20px 32px}
 #friendHeaderPopup.show .fhp-blob{transform:scale(1) translateY(0)}
