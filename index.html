@@ -515,17 +515,12 @@ function applyTimerGradient() {
   const lv = state.moodLevel || 2;
   const gTop = G_TOP[lv] || G_TOP[2];
   const gBase = G_BASE[lv] || G_BASE[2];
-  const darkBg = 'rgba(8,16,28,0.82)';
-  // Inner radial for depth/glow over the conic
+  // Inner radial glow for depth
   const innerGlow = `radial-gradient(circle at 50% 50%, ${gBase}55 0%, transparent 68%)`;
-  let conicBg;
-  if (deg <= 0.5) {
-    // Just started – full dark ring
-    conicBg = `conic-gradient(from -90deg, ${darkBg} 0deg 360deg)`;
-  } else {
-    // Fully green arc for elapsed time, dark for remaining – no red within 24h
-    conicBg = `conic-gradient(from -90deg, ${gTop} 0deg ${deg.toFixed(2)}deg, ${darkBg} ${deg.toFixed(2)}deg 360deg)`;
-  }
+  // Red arc from 12 o'clock (top) advancing clockwise; rest stays green
+  const conicBg = deg <= 0.5
+    ? `conic-gradient(from -90deg, ${gTop} 0deg 360deg)`
+    : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, ${gTop} ${deg.toFixed(2)}deg 360deg)`;
   btn.style.background = `${innerGlow}, ${conicBg}`;
   btn.style.boxShadow = '0 0 80px rgba(40,200,100,0.65), 0 0 32px rgba(40,200,100,0.4), 0 8px 32px rgba(0,0,0,0.4)';
 }
@@ -905,14 +900,10 @@ function renderWatchingWithStatuses(watching,statuses){
     if(!isUnknown&&isOkStatus){
       const pctVal = Math.min(hrs / 24, 1);
       const deg = pctVal * 360;
-      const darkBg = 'rgba(8,16,28,0.85)';
-      let conic;
-      if (deg <= 0.5) {
-        conic = `conic-gradient(from -90deg, ${darkBg} 0deg 360deg)`;
-      } else {
-        // Fully green arc for elapsed time – no red within 24h
-        conic = `conic-gradient(from -90deg, #4cde80 0deg ${deg.toFixed(2)}deg, ${darkBg} ${deg.toFixed(2)}deg 360deg)`;
-      }
+      // Red arc from 12 o'clock advancing clockwise; rest is green
+      const conic = deg <= 0.5
+        ? `conic-gradient(from -90deg, #4cde80 0deg 360deg)`
+        : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
       circleInlineStyle=`background:${conic};border-color:#4cde80;color:#fff;`;
       circleGlowStyle=`box-shadow:0 0 0 3px rgba(76,222,128,0.38),0 0 18px rgba(40,200,100,0.5);`;
     }else if(!isUnknown){
@@ -1144,67 +1135,57 @@ window.openFriendProfile = uid => {
   const photoURL = s?.photoURL || null;
   const name = w.followingName || 'משתמש';
   document.getElementById('friendProfileTitle').textContent = `👤 ${name}`;
-
-  // Build conic for profile circle
+  // Build conic for profile circle - red arc on green base
   let circleStyle = '';
   if (isOkStatus) {
     const pct = Math.min(hrs / 24, 1);
     const deg = pct * 360;
-    const darkBg = 'rgba(8,16,28,0.85)';
     const conic = deg <= 0.5
-      ? `conic-gradient(from -90deg, ${darkBg} 0deg 360deg)`
-      : `conic-gradient(from -90deg, #4cde80 0deg ${deg.toFixed(2)}deg, ${darkBg} ${deg.toFixed(2)}deg 360deg)`;
+      ? `conic-gradient(from -90deg, #4cde80 0deg 360deg)`
+      : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
     circleStyle = `background:${conic};border:3px solid #4cde80;box-shadow:0 0 0 4px rgba(76,222,128,0.3),0 0 24px rgba(40,200,100,0.5);`;
   } else if (s && !isOkStatus) {
     circleStyle = 'background:rgba(220,40,40,0.22);border:3px solid #ff4444;box-shadow:0 0 0 4px rgba(255,68,68,0.25);';
   } else {
     circleStyle = 'background:rgba(126,207,255,0.09);border:3px solid rgba(126,207,255,0.3);';
   }
-
   const photoInner = photoURL
     ? `<img src="${photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
     : `<span style="font-size:32px">${s?.moodEmoji || (isOkStatus ? '✓' : '?')}</span>`;
-
-  // Status text
   let statusLine = '';
   if (isOkStatus) {
     const sign = s.sign, ct = s.customText || '', emoji = s.moodEmoji || '';
-    const quoteSign = sign === '"';
-    const txt = quoteSign
-      ? `״אני בסדר״${ct ? ' ' + ct : ''}${emoji ? ' ' + emoji : ''}`
-      : `אני בסדר${sign || ''}${ct ? ' ' + ct : ''}${emoji ? ' ' + emoji : ''}`;
+    const txt = sign==='"' ? `״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}` : `אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
     statusLine = `<div style="font-size:18px;font-weight:800;color:#4cde80;text-align:center;margin-bottom:4px">${txt}</div>`;
   } else if (s) {
     statusLine = `<div style="font-size:15px;font-weight:700;color:#ff8888;text-align:center;margin-bottom:4px">⚠️ לא עדכן</div>`;
   } else {
     statusLine = `<div style="font-size:14px;color:rgba(200,230,255,0.4);text-align:center;margin-bottom:4px">טרם עדכן</div>`;
   }
-
   const timeStr = s?.timestamp ? formatRelativeTimeOther(s.timestamp) : '';
   const timeFullStr = s?.timestamp ? formatDateTime(s.timestamp) : '';
   const fUids = new Set(state.followers.map(f => f.followerUid));
   const isMutual = fUids.has(uid);
   const reqSent = localStorage.getItem('followReqSent_' + currentUser.uid + '_' + uid);
-
   document.getElementById('friendProfileContent').innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:20px">
       <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:10px;${circleStyle}">${photoInner}</div>
       <div style="font-size:20px;font-weight:800;color:#e8f4f8;margin-bottom:6px">${name}</div>
       ${statusLine}
-      ${timeStr ? `<div style="font-size:13px;color:${isOkStatus?'rgba(76,222,128,0.85)':'rgba(200,230,255,0.4)'}">⏱ ${timeStr}</div>` : ''}
+      ${timeStr?`<div style="font-size:13px;color:${isOkStatus?'rgba(76,222,128,0.85)':'rgba(200,230,255,0.4)'}">⏱ ${timeStr}</div>`:''}
     </div>
     <div style="background:rgba(126,207,255,0.05);border:1px solid rgba(126,207,255,0.12);border-radius:14px;padding:14px 16px;margin-bottom:12px">
       <div style="font-size:12px;color:rgba(200,230,255,0.4);margin-bottom:10px;font-weight:600">פרטי מעקב</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">קשר</span><span style="color:#7ecfff;font-weight:700">${isMutual ? '🤝 הדדי' : reqSent ? '⏳ בקשה ממתינה' : '➡️ חד-צדדי'}</span></div>
-      ${timeFullStr ? `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">דיווח אחרון</span><span style="color:rgba(200,230,255,0.75)">${timeFullStr}</span></div>` : ''}
-      ${s?.moodEmoji ? `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">מצב רוח</span><span style="font-size:18px">${s.moodEmoji}</span></div>` : ''}
-      ${s?.customText ? `<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:rgba(200,230,255,0.5)">טקסט</span><span style="color:#e8f4f8;font-weight:700">${s.customText}</span></div>` : ''}
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">קשר</span><span style="color:#7ecfff;font-weight:700">${isMutual?'🤝 הדדי':reqSent?'⏳ בקשה ממתינה':'➡️ חד-צדדי'}</span></div>
+      ${timeFullStr?`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">דיווח אחרון</span><span style="color:rgba(200,230,255,0.75)">${timeFullStr}</span></div>`:''}
+      ${s?.moodEmoji?`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">מצב רוח</span><span style="font-size:18px">${s.moodEmoji}</span></div>`:''}
+      ${s?.customText?`<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:rgba(200,230,255,0.5)">טקסט</span><span style="color:#e8f4f8;font-weight:700">${s.customText}</span></div>`:''}
     </div>
     <div style="display:flex;gap:8px">
       <button onclick="sendNudge('${uid}','${name.replace(/'/g,"\\'")}');closePanel('friendProfilePanel')" style="flex:1;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:12px;color:rgba(255,220,130,0.8);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">👋 נדנד</button>
       <button onclick="confirmUnfollow('${uid}','${name.replace(/'/g,"\\'")}');closePanel('friendProfilePanel')" style="flex:1;background:rgba(255,80,80,0.07);border:1px solid rgba(255,80,80,0.2);border-radius:12px;color:rgba(255,120,120,0.7);padding:11px;font-size:14px;cursor:pointer;font-family:inherit">🗑️ הסר</button>
     </div>
-    ${!isMutual && !reqSent ? `<button onclick="requestFollowBack('${uid}','${name.replace(/'/g,"\\'")}');closePanel('friendProfilePanel')" style="width:100%;margin-top:8px;background:rgba(40,200,100,0.12);border:1px solid rgba(40,200,100,0.35);border-radius:12px;color:#4cde80;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">➕ בקש שיעקוב אחריך</button>` : ''}
+    ${!isMutual&&!reqSent?`<button onclick="requestFollowBack('${uid}','${name.replace(/'/g,"\\'")}');closePanel('friendProfilePanel')" style="width:100%;margin-top:8px;background:rgba(40,200,100,0.12);border:1px solid rgba(40,200,100,0.35);border-radius:12px;color:#4cde80;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">➕ בקש שיעקוב אחריך</button>`:''}
   `;
   openPanel('friendProfilePanel');
 };
@@ -1251,7 +1232,9 @@ window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementB
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
-setInterval(()=>{
+// ── AUTO-REFRESH: runs every 60s to keep all timers and friend cards current ──
+function runPeriodicUpdate(){
+  if(!currentUser) return;
   const ltEl=document.getElementById('lastTimeAbove');
   if(ltEl&&state.lastConfirmed){
     const isOkNow=isWithinReportingPeriod();
@@ -1262,7 +1245,14 @@ setInterval(()=>{
   const wasOk=state.isOk; state.isOk=isWithinReportingPeriod();
   if(wasOk&&!state.isOk) updateMainUI();
   else if(state.isOk) applyTimerGradient();
-},60000);
+  if(state.watching.length) renderWatchingWithStatuses(state.watching,watchingStatuses);
+  updateHeaderFriendsStrip();
+}
+setInterval(runPeriodicUpdate,60000);
+// ── VISIBILITY: refresh immediately when user returns to the app/tab ──
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible') runPeriodicUpdate();
+});
 
 if('serviceWorker'in navigator){
   const sw=`
