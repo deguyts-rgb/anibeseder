@@ -641,6 +641,13 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
+// Fix old lowercase avatar paths stored in Firestore
+function _fixPhotoUrl(url){
+  if(!url) return null;
+  if(typeof url === 'string' && url.startsWith('/avatars/')) return url.replace('/avatars/','/Avatars/');
+  return url;
+}
+
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
 const AVATARS = Array.from({length:12},(_,i)=>`/Avatars/avatar-${i+1}.png`);
@@ -846,21 +853,23 @@ function _showFhpByIdx(idx, dir) {
   const uid = fhpUids[idx];
   const w = state.watching.find(x => x.followingUid === uid);
   const s = watchingStatuses[uid];
-  if (!w || !s) return;
+  if (!w) return;
+  // s can be null if status not yet loaded — show basic info anyway
   const now = Date.now();
-  const hrs = s.timestamp ? (now - s.timestamp.getTime()) / 3600000 : null;
-  const isOkStatus = s.isOk && hrs !== null && hrs < 24;
+  const hrs = s?.timestamp ? (now - s.timestamp.getTime()) / 3600000 : null;
+  const isOkStatus = s?.isOk && hrs !== null && hrs < 24;
   const name = w.followingName || 'משתמש';
-  const emoji = s.moodEmoji || (isOkStatus ? '✓' : '❓');
-  const sign = s.sign || '', ct = s.customText || '';
+  const emoji = s?.moodEmoji || (isOkStatus ? '✓' : '');
+  const sign = s?.sign || '', ct = s?.customText || '';
   let statusTxt = '';
   if (isOkStatus) {
     if (sign === '"') statusTxt = `״אני בסדר״${ct ? '\n' + ct : ''}${emoji ? ' ' + emoji : ''}`;
     else statusTxt = `אני בסדר${sign}${ct ? '\n' + ct : ''}${emoji ? ' ' + emoji : ''}`;
   }
-  const fullTimeStr = s.timestamp ? 'דיווח ' + formatRelativeTimeOther(s.timestamp) : '';
+  const fullTimeStr = s?.timestamp ? 'דיווח ' + formatRelativeTimeOther(s.timestamp) : '';
   const bgEl = document.getElementById('fhpBgAvatar');
-  if (s.photoURL) { bgEl.style.backgroundImage = `url('${s.photoURL}')`; bgEl.style.display = 'block'; }
+  const photoUrl = s?.photoURL ? _fixPhotoUrl(s.photoURL) : null;
+  if (photoUrl) { bgEl.style.backgroundImage = `url('${photoUrl}')`; bgEl.style.display = 'block'; }
   else { bgEl.style.backgroundImage = ''; bgEl.style.display = 'none'; }
   const circleEl = document.getElementById('fhpCircle');
   if (circleEl && isOkStatus && hrs !== null) {
@@ -1315,7 +1324,7 @@ async function loadWatching(){
     const unsub=onSnapshot(doc(db,'status',w.followingUid),snap=>{
       if(snap.exists()){
         const d=snap.data();
-        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null,photoURL:d.profilePhotoURL||null,soundId:(d.soundId!==undefined&&d.soundId!==null)?d.soundId:null};
+        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null,photoURL:d.profilePhotoURL?_fixPhotoUrl(d.profilePhotoURL):null,soundId:(d.soundId!==undefined&&d.soundId!==null)?d.soundId:null};
         const ts=d.timestamp?.toDate();
         if(ts&&(Date.now()-ts)/60000<2&&Notification.permission==='granted')
           new Notification(`${d.name} בסדר! 🤝`,{body:`${d.name} עדכן עכשיו שהכל בסדר`,icon:'/icon-192.png'});
@@ -1663,14 +1672,25 @@ function updateHeaderFriendsStrip(){
   if(!greenFriends.length){strip.innerHTML='';return;}
   strip.innerHTML=greenFriends.map(w=>{
     const s=watchingStatuses[w.followingUid];
-    const photo=s?.photoURL||null;
+    const photo=s?.photoURL?_fixPhotoUrl(s.photoURL):null;
     const firstName=(w.followingName||'').split(' ')[0]||'?';
     const circleInner=photo
       ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-      :`<span>${s?.moodEmoji||'✓'}</span>`;
-    return `<div class="hfriend-item" onclick="openFriendHeaderPopup('${w.followingUid}')" style="cursor:pointer"><div class="hfriend-circle">${circleInner}</div><span class="hfriend-name">${firstName}</span></div>`;
+      :`<span style="font-size:19px">${s?.moodEmoji||'✓'}</span>`;
+    return `<div class="hfriend-item" data-uid="${w.followingUid}" style="cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)"><div class="hfriend-circle">${circleInner}</div><span class="hfriend-name">${firstName}</span></div>`;
   }).join('');
+  // Attach click listeners — more reliable than inline onclick on iOS
+  strip.querySelectorAll('.hfriend-item').forEach(el=>{
+    el.addEventListener('touchend', function(e){
+      e.preventDefault();
+      openFriendHeaderPopup(this.dataset.uid);
+    }, {passive:false});
+    el.addEventListener('click', function(){
+      openFriendHeaderPopup(this.dataset.uid);
+    });
+  });
 }
+
 
 function checkInstallPrompt(){if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||localStorage.getItem('installDismissed'))return;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);setTimeout(()=>{if(deferredInstallPrompt)document.getElementById('installBanner').style.display='block';else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';},2500);}
 window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementById('installBanner').style.display='none';deferredInstallPrompt.prompt();deferredInstallPrompt=null;updateAddHomeBtn();};
@@ -1974,7 +1994,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v40';
+var CACHE_NAME='ani-beseder-v41';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
