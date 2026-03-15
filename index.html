@@ -643,7 +643,7 @@ const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
-const AVATARS = Array.from({length:12},(_,i)=>`/avatars/avatar-${i+1}.png`);
+const AVATARS = Array.from({length:12},(_,i)=>`/Avatars/avatar-${i+1}.png`);
 
 // ── ADMIN ACCOUNTS ──────────────────────────────────────────────
 // Add your Apple ID email below if it's different from Gmail
@@ -1248,13 +1248,31 @@ async function initUser(){
   if(savedSound!==null&&savedSound!==''){const sid=parseInt(savedSound);if(!isNaN(sid)){state.soundId=sid;const sBtn=document.getElementById('soundBtn');if(sBtn){sBtn.textContent=SOUND_DEFS[sid]?.emoji||'♪';sBtn.classList.add('has-sound');}}}
   await loadFollowers();
   const storedAutoP = localStorage.getItem('profilePhoto_'+currentUser.uid);
-  if (!storedAutoP) {
-    const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
-    localStorage.setItem('profilePhoto_'+currentUser.uid, randomAvatar);
-    setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true}).catch(()=>{});
-    setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true}).catch(()=>{});
-    const av = document.getElementById('userAvatar');
-    if(av){ av.innerHTML=`<img src="${randomAvatar}">`; av.classList.add('has-photo'); }
+  if(storedAutoP){
+    const _av=document.getElementById('userAvatar');
+    if(_av){_av.innerHTML=`<img src="${storedAutoP}" style="width:100%;height:100%;object-fit:cover">`;_av.classList.add('has-photo');}
+  } else {
+    try {
+      const _ss=await getDoc(doc(db,'status',currentUser.uid));
+      const _ep=_ss.exists()?_ss.data().profilePhotoURL:null;
+      if(_ep){
+        localStorage.setItem('profilePhoto_'+currentUser.uid,_ep);
+        const _av=document.getElementById('userAvatar');
+        if(_av){_av.innerHTML=`<img src="${_ep}" style="width:100%;height:100%;object-fit:cover">`;_av.classList.add('has-photo');}
+      } else {
+        const randomAvatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
+        localStorage.setItem('profilePhoto_'+currentUser.uid,randomAvatar);
+        await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true});
+        await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true});
+        const _av=document.getElementById('userAvatar');
+        if(_av){_av.innerHTML=`<img src="${randomAvatar}" style="width:100%;height:100%;object-fit:cover">`;_av.classList.add('has-photo');}
+      }
+    } catch(e){
+      const randomAvatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
+      localStorage.setItem('profilePhoto_'+currentUser.uid,randomAvatar);
+      const _av=document.getElementById('userAvatar');
+      if(_av){_av.innerHTML=`<img src="${randomAvatar}" style="width:100%;height:100%;object-fit:cover">`;_av.classList.add('has-photo');}
+    }
   }
   updateMainUI();
 }
@@ -1956,7 +1974,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v35';
+var CACHE_NAME='ani-beseder-v39';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
