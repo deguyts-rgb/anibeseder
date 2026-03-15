@@ -84,6 +84,20 @@
     .sign-btn{position:absolute;bottom:-14px;left:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:#e8f4f8;font-family:inherit}
     .sign-btn:active{transform:scale(0.88)}
     .sign-btn.visible{display:flex}
+    /* ── SOUND BUTTON ── */
+    .sound-btn{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);width:38px;height:38px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.28);cursor:pointer;font-size:17px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:rgba(200,230,255,0.4);line-height:1;font-family:inherit}
+    .sound-btn:active{transform:translateX(-50%) scale(0.88)}
+    .sound-btn.visible{display:flex}
+    .sound-btn.has-sound{border-color:rgba(255,200,100,0.6);color:rgba(255,220,130,0.95);box-shadow:0 3px 14px rgba(0,0,0,0.45),0 0 10px rgba(255,200,50,0.3)}
+    .sound-panel{position:absolute;top:-14px;left:50%;transform:translate(-50%,-100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;flex-direction:column;gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:210px}
+    .sound-panel.show{display:flex}
+    .sound-panel-title{text-align:center;font-size:12px;color:rgba(200,230,255,0.5);font-weight:600;margin-bottom:2px}
+    .sound-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .sound-cell{height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none;padding:4px 2px}
+    .sound-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
+    .sound-cell.selected{background:rgba(255,200,50,0.12);border-color:rgba(255,200,50,0.5);box-shadow:0 0 8px rgba(255,200,50,0.25)}
+    .sound-cell-label{font-size:8px;color:rgba(200,230,255,0.5);font-weight:600;text-align:center;line-height:1.2}
+    .sound-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:5px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:2px}
     .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
     .mood-panel.show{display:grid}
     .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
@@ -218,7 +232,7 @@
 
 ```
 /* ── FRIEND HEADER POPUP ── */
-#friendHeaderPopup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.82);padding-top:160px}
+#friendHeaderPopup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);overflow:hidden}
 .fhp-blob{position:relative;width:251px;height:311px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.5);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 0 100px rgba(40,200,100,0.65),0 0 50px rgba(40,200,100,0.35),0 0 22px rgba(40,200,100,0.2),0 20px 55px rgba(0,0,0,0.65);overflow:hidden;padding:20px 18px 22px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 @keyframes blobPop{from{transform:scale(0.82) translateY(16px)}to{transform:scale(1) translateY(0)}}
 .fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(4px) brightness(0.6) saturate(1.5);transform:scale(1.06);z-index:0}
@@ -239,6 +253,62 @@
 .fhp-time{font-size:10px;color:rgba(76,222,128,0.85);font-weight:600;z-index:3;background:rgba(0,0,0,0.4);padding:2px 8px;border-radius:20px;margin-top:1px}
 .fhp-nudge-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:20px;color:rgba(255,220,130,0.9);font-size:12px;font-weight:700;padding:5px 16px;cursor:pointer;font-family:inherit;z-index:3;margin-top:2px}
 .fhp-nudge-btn:active{background:rgba(255,200,50,0.22)}
+/* ── PEEK BLOBS ── */
+.fhp-peek{position:absolute;width:130px;height:178px;background:linear-gradient(170deg,#0c1b2a 0%,#112436 55%,#091824 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 0 40px rgba(40,200,100,0.22),0 10px 30px rgba(0,0,0,0.5);cursor:pointer;opacity:0;transition:opacity 0.3s;pointer-events:none;overflow:hidden;padding:14px 10px;z-index:1}
+.fhp-peek.visible{opacity:0.78;pointer-events:auto}
+.fhp-peek:active{opacity:1}
+.fhp-peek-photo{width:54px;height:54px;border-radius:50%;border:2px solid rgba(76,222,128,0.55);overflow:hidden;background:#0a1520;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.fhp-peek-photo img{width:100%;height:100%;object-fit:cover}
+.fhp-peek-name{font-size:9.5px;font-weight:800;color:rgba(255,255,255,0.8);text-align:center;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,0.7)}
+.fhp-peek-emoji{font-size:13px;line-height:1}
+#fhpPeekLeft{right:calc(50% + 130px);top:0}
+#fhpPeekRight{left:calc(50% + 130px);top:0}
+
+/* ── ADMIN PANEL ── */
+.admin-open-btn{width:100%;background:linear-gradient(135deg,rgba(255,200,50,0.1),rgba(255,150,0,0.08));border:1px solid rgba(255,200,50,0.35);border-radius:12px;color:rgba(255,220,130,0.9);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;display:none}
+.admin-open-btn:active{background:rgba(255,200,50,0.18)}
+.admin-badge{display:inline-block;background:rgba(255,200,50,0.2);border-radius:6px;padding:1px 6px;font-size:10px;color:#ffd97d;margin-right:4px;vertical-align:middle}
+.admin-stats-row{display:flex;gap:8px;margin-bottom:14px}
+.admin-stat-chip{flex:1;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.18);border-radius:12px;padding:10px 6px;text-align:center}
+.admin-stat-num{font-size:22px;font-weight:900;color:#7ecfff}
+.admin-stat-label{font-size:10px;color:rgba(200,230,255,0.45);margin-top:2px}
+.admin-select-all-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(126,207,255,0.05);border:1px solid rgba(126,207,255,0.15);border-radius:10px;margin-bottom:8px;cursor:pointer}
+.admin-select-all-row:active{background:rgba(126,207,255,0.12)}
+.admin-cb-all{width:17px;height:17px;cursor:pointer;accent-color:#4cde80;flex-shrink:0}
+.admin-select-label{font-size:13px;font-weight:700;color:rgba(200,230,255,0.7);flex:1}
+.admin-selected-count{font-size:11px;color:#4cde80;font-weight:700}
+.admin-user-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-bottom:1px solid rgba(126,207,255,0.06);cursor:pointer}
+.admin-user-row:last-child{border-bottom:none}
+.admin-user-row:active{background:rgba(126,207,255,0.05)}
+.admin-cb{width:16px;height:16px;cursor:pointer;accent-color:#4cde80;flex-shrink:0}
+.admin-user-num{font-size:10px;color:rgba(200,230,255,0.28);width:20px;text-align:center;flex-shrink:0}
+.admin-user-name{font-size:13px;font-weight:600;color:#e8f4f8;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-email{font-size:10px;color:rgba(200,230,255,0.4);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-date{font-size:10px;color:rgba(200,230,255,0.3);flex-shrink:0}
+.admin-users-box{background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.12);border-radius:12px;overflow:hidden;margin-bottom:12px;max-height:300px;overflow-y:auto}
+.admin-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,200,50,0.2),transparent);margin:14px 0}
+.admin-nudge-title{font-size:13px;font-weight:700;color:rgba(255,220,130,0.8);margin-bottom:6px}
+.admin-nudge-area{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,200,50,0.2);border-radius:10px;color:#e8f4f8;padding:10px 12px;font-size:14px;font-family:inherit;direction:rtl;resize:none;outline:none;min-height:72px;margin-bottom:8px;line-height:1.5}
+.admin-nudge-area:focus{border-color:rgba(255,200,50,0.45)}
+.admin-emoji-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.admin-emoji-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:8px;padding:4px 9px;cursor:pointer;font-size:18px;transition:background 0.12s}
+.admin-emoji-btn:active{background:rgba(126,207,255,0.2)}
+.admin-send-btn{width:100%;background:linear-gradient(135deg,#c87d00,#9a5f00);border:none;border-radius:12px;color:#fff;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px}
+.admin-send-btn:active{opacity:0.85}
+.admin-send-btn:disabled{opacity:0.4;cursor:not-allowed}
+.admin-history-btn{width:100%;background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.2);border-radius:12px;color:#7ecfff;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.admin-history-btn:active{background:rgba(126,207,255,0.14)}
+/* nudge history panel */
+.nudge-hist-empty{text-align:center;padding:24px;color:rgba(200,230,255,0.3);font-size:13px}
+.nudge-hist-row{background:rgba(126,207,255,0.04);border:1px solid rgba(126,207,255,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.nudge-hist-msg{font-size:14px;font-weight:700;color:#e8f4f8;margin-bottom:5px;line-height:1.4}
+.nudge-hist-meta{font-size:11px;color:rgba(200,230,255,0.4);margin-bottom:8px}
+.nudge-hist-stats{display:flex;gap:6px;flex-wrap:wrap}
+.nudge-stat-chip{background:rgba(40,200,100,0.08);border:1px solid rgba(40,200,100,0.2);border-radius:8px;padding:3px 10px;font-size:11px;color:rgba(76,222,128,0.8);font-weight:600}
+.nudge-stat-chip.yellow{background:rgba(255,200,50,0.08);border-color:rgba(255,200,50,0.25);color:rgba(255,220,130,0.7)}
+.nudge-stat-chip.blue{background:rgba(126,207,255,0.07);border-color:rgba(126,207,255,0.2);color:rgba(200,230,255,0.6)}
+.nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
+.nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
 ```
 
   </style>
@@ -339,6 +409,10 @@
       <div id="profileEmail" style="background:rgba(255,255,255,0.03);border:1px solid rgba(126,207,255,0.1);border-radius:10px;color:rgba(200,230,255,0.45);padding:10px 12px;font-size:13px;margin-top:4px;direction:ltr;text-align:right;word-break:break-all"></div>
       <button class="profile-save-btn" onclick="saveProfileName()">💾 שמור שינויים</button>
       <button class="profile-logout-btn" onclick="doSignOut()">🚪 יציאה מהאפליקציה</button>
+      <!-- ADMIN BUTTON – shown only for admin accounts -->
+      <button class="admin-open-btn" id="adminOpenBtn" onclick="openAdminPanel()">
+        🛡️ פאנל מנהל <span class="admin-badge">ADMIN</span>
+      </button>
     </div>
   </div>
 </div>
@@ -383,6 +457,56 @@
   </div>
 </div>
 
+<!-- ADMIN PANEL -->
+
+<div class="panel-overlay" id="adminPanel" onclick="handlePanelOverlayClick(event,'adminPanel')">
+  <div class="panel-box" style="max-height:95vh">
+    <div class="panel-header" style="background:linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05));border-bottom-color:rgba(255,200,50,0.2)">
+      <span class="panel-title" style="color:#ffd97d">🛡️ פאנל מנהל</span>
+      <button class="panel-close" onclick="closePanel('adminPanel')">סגור ✕</button>
+    </div>
+    <div class="panel-content">
+      <!-- Stats -->
+      <div class="admin-stats-row" id="adminStatsRow">
+        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminTotalUsers">–</div><div class="admin-stat-label">משתמשים</div></div>
+        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
+        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label">פעילים היום</div></div>
+      </div>
+      <!-- Select all + filter -->
+      <div class="admin-select-all-row" onclick="toggleAdminSelectAll()">
+        <input type="checkbox" class="admin-cb-all" id="adminSelectAllCb" onclick="event.stopPropagation();toggleAdminSelectAll()" />
+        <span class="admin-select-label">בחר את כולם</span>
+        <span class="admin-selected-count" id="adminSelLabelCount"></span>
+      </div>
+      <!-- User list -->
+      <div class="admin-users-box" id="adminUsersList">
+        <div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3);font-size:13px">טוען משתמשים...</div>
+      </div>
+      <!-- Nudge section -->
+      <div class="admin-divider"></div>
+      <div class="admin-nudge-title">📣 שלח נדנוד לנבחרים</div>
+      <textarea class="admin-nudge-area" id="adminNudgeText" placeholder="כתוב הודעה... (ישמר אוטומטית)"></textarea>
+      <div class="admin-emoji-row" id="adminEmojiRow"></div>
+      <button class="admin-send-btn" id="adminSendNudgeBtn" onclick="sendAdminNudge()">👋 שלח נדנוד לנבחרים</button>
+      <button class="admin-history-btn" onclick="openNudgeHistory()">📋 היסטוריית נדנודים</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUDGE HISTORY PANEL -->
+
+<div class="panel-overlay" id="nudgeHistoryPanel" onclick="handlePanelOverlayClick(event,'nudgeHistoryPanel')">
+  <div class="panel-box">
+    <div class="panel-header">
+      <span class="panel-title" style="color:#ffd97d">📋 היסטוריית נדנודים</span>
+      <button class="panel-close" onclick="closePanel('nudgeHistoryPanel')">סגור ✕</button>
+    </div>
+    <div class="panel-content" id="nudgeHistoryContent">
+      <div class="nudge-hist-empty">טוען...</div>
+    </div>
+  </div>
+</div>
+
 <div class="install-banner" id="installBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
@@ -423,8 +547,11 @@
 
   <!-- FRIEND HEADER POPUP — lives inside #app, after header -->
 
-  <div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
-    <div class="fhp-blob" onclick="event.stopPropagation()">
+  <div id="friendHeaderPopup" onclick="closeFriendHeaderPopup()">
+    <!-- Peek blobs -->
+    <div class="fhp-peek" id="fhpPeekLeft" onclick="event.stopPropagation();fhpNavigate('prev')"></div>
+    <div class="fhp-peek" id="fhpPeekRight" onclick="event.stopPropagation();fhpNavigate('next')"></div>
+    <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
       <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
       <div class="fhp-green-overlay"></div>
       <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
@@ -458,6 +585,7 @@
       <span class="add-friends-plus">+</span>הוסף חברים
     </button>
 
+```
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
@@ -470,7 +598,7 @@
   <div class="mood-panel" id="moodPanel" onclick="event.stopPropagation()">
     <div class="mood-panel-title">איזה בסדר אתה? 😊</div>
   </div>
-  <button class="sign-btn" id="signBtn" onclick="toggleSignPanel(event)">?</button>
+  <button class="sign-btn" id="signBtn" onclick="toggleSignPanel(event)">!</button>
   <div class="sign-panel" id="signPanel" onclick="event.stopPropagation()">
     <div class="sign-panel-title">הוסף סימן לדיווח</div>
     <div class="sign-options">
@@ -485,6 +613,13 @@
     </div>
     <input type="text" id="signCustomInput" class="sign-text-input" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomText(this)"/>
     <button class="sign-clear-btn" onclick="clearSign()">✕ נקה הכל</button>
+  </div>
+  <!-- SOUND BUTTON -->
+  <button class="sound-btn" id="soundBtn" onclick="toggleSoundPanel(event)">♪</button>
+  <div class="sound-panel" id="soundPanel" onclick="event.stopPropagation()">
+    <div class="sound-panel-title">🎵 בחר אפקט קולי לדיווח</div>
+    <div class="sound-grid" id="soundGrid"></div>
+    <button class="sound-clear-btn" onclick="clearSound()">✕ הסר סאונד</button>
   </div>
 </div>
 
@@ -503,6 +638,7 @@
 <div id="watchingList" style="width:100%">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
+```
 
   </div>
 </div>
@@ -523,7 +659,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot, updateDoc }
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs,
+         serverTimestamp, onSnapshot, updateDoc, orderBy, limit, getCountFromServer }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -543,6 +680,178 @@ const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
 const AVATARS = Array.from({length:12},(_,i)=>`/avatars/avatar-${i+1}.png`);
 
+// ── ADMIN ACCOUNTS ──────────────────────────────────────────────
+// Add your Apple ID email below if it's different from Gmail
+const ADMIN_EMAILS = new Set(['deguyts@gmail.com']);
+// Example: ADMIN_EMAILS.add('deguyts@icloud.com');
+
+function isAdmin(){ return currentUser && ADMIN_EMAILS.has(currentUser.email); }
+
+const ADMIN_NUDGE_EMOJIS = ['👋','✅','⚠️','🙏','❤️','🔔','💪','🌟','😊','🤝'];
+
+// ── GLOBAL STATE ─────────────────────────────────────────────────
+
+// ── SOUND DEFINITIONS ─────────────────────────────────────────
+const SOUND_DEFS = [
+  {emoji:'👏', label:'מחיאות'},
+  {emoji:'🎉', label:'פארטי'},
+  {emoji:'⭐', label:'כוכב'},
+  {emoji:'🤣', label:'בוינג'},
+  {emoji:'🎵', label:'מלודי'},
+  {emoji:'🔔', label:'פעמון'},
+  {emoji:'💥', label:'בום'},
+  {emoji:'🥁', label:'תוף'},
+  {emoji:'🎺', label:'חצוצרה'},
+];
+
+function playSoundEffect(id) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const t = ctx.currentTime;
+    switch(Number(id)) {
+      case 0: { // 👏 clap
+        for(let i=0;i<4;i++){
+          const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.09),ctx.sampleRate);
+          const d=buf.getChannelData(0);
+          for(let j=0;j<d.length;j++) d[j]=(Math.random()*2-1)*Math.exp(-j/(d.length*0.38));
+          const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+          f.type='bandpass';f.frequency.value=1200;f.Q.value=0.9;g.gain.value=0.38;
+          s.buffer=buf;s.connect(f);f.connect(g);g.connect(ctx.destination);s.start(t+i*0.21);
+        }
+        break;
+      }
+      case 1: { // 🎉 fanfare
+        [523,659,784,1047].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.type='square';o.frequency.value=f;
+          g.gain.setValueAtTime(0,t+i*0.1);g.gain.linearRampToValueAtTime(0.16,t+i*0.1+0.02);
+          g.gain.linearRampToValueAtTime(0,t+i*0.1+0.2);
+          o.connect(g);g.connect(ctx.destination);o.start(t+i*0.1);o.stop(t+i*0.1+0.22);
+        });
+        break;
+      }
+      case 2: { // ⭐ sparkle
+        [1760,2093,2637,3520,4186].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.type='sine';o.frequency.value=f;
+          g.gain.setValueAtTime(0.18,t+i*0.11);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.11+0.32);
+          o.connect(g);g.connect(ctx.destination);o.start(t+i*0.11);o.stop(t+i*0.11+0.35);
+        });
+        break;
+      }
+      case 3: { // 🤣 boing
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type='sine';
+        o.frequency.setValueAtTime(80,t);o.frequency.exponentialRampToValueAtTime(700,t+0.28);
+        o.frequency.exponentialRampToValueAtTime(180,t+0.85);
+        g.gain.setValueAtTime(0.32,t);g.gain.linearRampToValueAtTime(0,t+1.0);
+        o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+1.02);
+        break;
+      }
+      case 4: { // 🎵 melody
+        [{f:523,d:0},{f:659,d:0.18},{f:784,d:0.36},{f:1047,d:0.54},{f:784,d:0.72},{f:523,d:0.9}].forEach(n=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.type='triangle';o.frequency.value=n.f;
+          g.gain.setValueAtTime(0,t+n.d);g.gain.linearRampToValueAtTime(0.22,t+n.d+0.04);
+          g.gain.linearRampToValueAtTime(0,t+n.d+0.17);
+          o.connect(g);g.connect(ctx.destination);o.start(t+n.d);o.stop(t+n.d+0.2);
+        });
+        break;
+      }
+      case 5: { // 🔔 bell
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type='sine';o.frequency.value=880;
+        g.gain.setValueAtTime(0.38,t);g.gain.exponentialRampToValueAtTime(0.001,t+1.8);
+        o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+2.0);
+        const o2=ctx.createOscillator(),g2=ctx.createGain();
+        o2.type='sine';o2.frequency.value=2217;
+        g2.gain.setValueAtTime(0.14,t);g2.gain.exponentialRampToValueAtTime(0.001,t+0.9);
+        o2.connect(g2);g2.connect(ctx.destination);o2.start(t);o2.stop(t+1.0);
+        break;
+      }
+      case 6: { // 💥 boom
+        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.45),ctx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<d.length;j++) d[j]=(Math.random()*2-1)*Math.exp(-j/(d.length*0.22));
+        const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+        f.type='lowpass';f.frequency.value=140;g.gain.value=0.55;
+        s.buffer=buf;s.connect(f);f.connect(g);g.connect(ctx.destination);s.start(t);
+        break;
+      }
+      case 7: { // 🥁 drum
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type='sine';o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(0.001,t+0.14);
+        g.gain.setValueAtTime(0.5,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
+        o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+0.18);
+        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.13),ctx.sampleRate);
+        const dn=buf.getChannelData(0);
+        for(let j=0;j<dn.length;j++) dn[j]=(Math.random()*2-1)*Math.exp(-j/(dn.length*0.48));
+        const sn=ctx.createBufferSource(),gs=ctx.createGain();
+        gs.gain.value=0.26;sn.buffer=buf;sn.connect(gs);gs.connect(ctx.destination);sn.start(t+0.38);
+        const o2=ctx.createOscillator(),g2=ctx.createGain();
+        o2.type='sine';o2.frequency.setValueAtTime(150,t+0.62);o2.frequency.exponentialRampToValueAtTime(0.001,t+0.76);
+        g2.gain.setValueAtTime(0.4,t+0.62);g2.gain.exponentialRampToValueAtTime(0.001,t+0.76);
+        o2.connect(g2);g2.connect(ctx.destination);o2.start(t+0.62);o2.stop(t+0.8);
+        break;
+      }
+      case 8: { // 🎺 ta-da
+        [[392,0],[523,0.22],[659,0.44],[784,0.66]].forEach(([f,d])=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.type='sawtooth';o.frequency.value=f;
+          g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(0.14,t+d+0.04);
+          g.gain.linearRampToValueAtTime(0.11,t+d+0.2);g.gain.linearRampToValueAtTime(0,t+d+0.26);
+          o.connect(g);g.connect(ctx.destination);o.start(t+d);o.stop(t+d+0.28);
+        });
+        break;
+      }
+    }
+    setTimeout(()=>{ try{ctx.close();}catch(e){} },3500);
+  } catch(e){ console.log('sound:',e); }
+}
+
+function renderSoundPanel(){
+  const grid=document.getElementById('soundGrid');
+  if(!grid) return;
+  grid.innerHTML=SOUND_DEFS.map((s,i)=>
+    `<div class="sound-cell${state.soundId===i?' selected':''}" onclick="selectSound(${i})">
+      <span>${s.emoji}</span>
+      <span class="sound-cell-label">${s.label}</span>
+    </div>`
+  ).join('');
+}
+window.toggleSoundPanel=e=>{
+  e.stopPropagation();
+  document.getElementById('moodPanel').classList.remove('show');
+  document.getElementById('signPanel').classList.remove('show');
+  const p=document.getElementById('soundPanel');
+  if(!p.classList.contains('show')) renderSoundPanel();
+  p.classList.toggle('show');
+};
+window.selectSound=id=>{
+  state.soundId=id;
+  if(currentUser){
+    localStorage.setItem('soundId_'+currentUser.uid,String(id));
+    setDoc(doc(db,'status',currentUser.uid),{soundId:id},{merge:true}).catch(()=>{});
+  }
+  playSoundEffect(id);
+  document.getElementById('soundPanel').classList.remove('show');
+  const btn=document.getElementById('soundBtn');
+  if(btn){btn.textContent=SOUND_DEFS[id].emoji;btn.classList.add('has-sound');}
+  renderSoundPanel();
+};
+window.clearSound=()=>{
+  state.soundId=null;
+  if(currentUser){
+    localStorage.removeItem('soundId_'+currentUser.uid);
+    setDoc(doc(db,'status',currentUser.uid),{soundId:null},{merge:true}).catch(()=>{});
+  }
+  document.getElementById('soundPanel').classList.remove('show');
+  const btn=document.getElementById('soundBtn');
+  if(btn){btn.textContent='♪';btn.classList.remove('has-sound');}
+};
+
 window.openPanel  = id => document.getElementById(id).classList.add('show');
 window.closePanel = id => document.getElementById(id).classList.remove('show');
 window.handlePanelOverlayClick = (e,id) => { if(e.target===document.getElementById(id)) closePanel(id); };
@@ -552,7 +861,6 @@ window.showScreen = name => { if(name==='settings') openPanel('settingsPanel'); 
 let fhpUids = [], fhpCurrentIdx = 0;
 
 window.openFriendHeaderPopup = (uid) => {
-  // Build ordered list of green friends for swiping
   const now = Date.now();
   fhpUids = state.watching.filter(w => {
     const s = watchingStatuses[w.followingUid];
@@ -560,20 +868,31 @@ window.openFriendHeaderPopup = (uid) => {
   }).map(w => w.followingUid);
   fhpCurrentIdx = fhpUids.indexOf(uid);
   if (fhpCurrentIdx < 0) { fhpUids = [uid]; fhpCurrentIdx = 0; }
-  _showFhpByIdx(fhpCurrentIdx);
   const popup = document.getElementById('friendHeaderPopup');
-  popup.style.position = 'fixed';
-  popup.style.top = '0'; popup.style.left = '0';
-  popup.style.right = '0'; popup.style.bottom = '0';
-  popup.style.zIndex = '9';
   popup.style.display = 'flex';
-  popup.style.alignItems = 'flex-start';
-  popup.style.justifyContent = 'center';
-  popup.style.paddingTop = '130px';
-  popup.style.background = 'rgba(0,0,0,0.82)';
-  // Setup swipe on blob
+  popup.style.paddingTop = '185px';
+  _showFhpByIdx(fhpCurrentIdx);
   _setupFhpSwipe();
+}
+
+window.fhpNavigate = dir => {
+  if(dir==='prev' && fhpCurrentIdx>0){ fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx,'right'); }
+  else if(dir==='next' && fhpCurrentIdx<fhpUids.length-1){ fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx,'left'); }
 };
+
+function _buildPeekContent(uid){
+  const w=state.watching.find(x=>x.followingUid===uid);
+  const s=watchingStatuses[uid];
+  if(!w) return '';
+  const photo=s?.photoURL||null;
+  const emoji=s?.moodEmoji||(s?.isOk?'✓':'?');
+  const nm=(w.followingName||'').split(' ')[0]||'?';
+  const photoInner=photo
+    ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    :`<span style="font-size:22px">${emoji}</span>`;
+  return `<div class="fhp-peek-photo">${photoInner}</div><div class="fhp-peek-emoji">${emoji}</div><div class="fhp-peek-name">${nm}</div>`;
+}
+;
 
 function _showFhpByIdx(idx, dir) {
   const uid = fhpUids[idx];
@@ -595,7 +914,6 @@ function _showFhpByIdx(idx, dir) {
   const bgEl = document.getElementById('fhpBgAvatar');
   if (s.photoURL) { bgEl.style.backgroundImage = `url('${s.photoURL}')`; bgEl.style.display = 'block'; }
   else { bgEl.style.backgroundImage = ''; bgEl.style.display = 'none'; }
-  // Conic timer
   const circleEl = document.getElementById('fhpCircle');
   if (circleEl && isOkStatus && hrs !== null) {
     const deg = Math.min(hrs / 24, 1) * 360;
@@ -611,8 +929,7 @@ function _showFhpByIdx(idx, dir) {
   document.getElementById('fhpTime').textContent = fullTimeStr;
   const nudgeBtn = document.getElementById('fhpNudgeBtn');
   if (nudgeBtn) nudgeBtn.onclick = e => { e.stopPropagation(); sendNudge(uid, name); closeFriendHeaderPopup(); };
-  // Animate blob slide
-  const blob = document.querySelector('.fhp-blob');
+  const blob = document.getElementById('fhpMainBlob');
   if (blob && dir) {
     blob.style.transition = 'none';
     blob.style.transform = dir === 'left' ? 'translateX(120%)' : 'translateX(-120%)';
@@ -623,8 +940,8 @@ function _showFhpByIdx(idx, dir) {
       });
     });
   }
-  // Dot indicators
   _updateFhpDots();
+  _updatePeeks();
 }
 
 function _updateFhpDots() {
@@ -642,9 +959,24 @@ function _updateFhpDots() {
   ).join('');
 }
 
+function _updatePeeks(){
+  const peekL=document.getElementById('fhpPeekLeft');
+  const peekR=document.getElementById('fhpPeekRight');
+  const prevIdx=fhpCurrentIdx-1, nextIdx=fhpCurrentIdx+1;
+  if(peekL){
+    if(prevIdx>=0){ peekL.innerHTML=_buildPeekContent(fhpUids[prevIdx]); peekL.classList.add('visible'); }
+    else { peekL.classList.remove('visible'); peekL.innerHTML=''; }
+  }
+  if(peekR){
+    if(nextIdx<fhpUids.length){ peekR.innerHTML=_buildPeekContent(fhpUids[nextIdx]); peekR.classList.add('visible'); }
+    else { peekR.classList.remove('visible'); peekR.innerHTML=''; }
+  }
+}
+
+
 let _fhpSwipeX = null;
 function _setupFhpSwipe() {
-  const blob = document.querySelector('.fhp-blob');
+  const blob = document.getElementById('fhpMainBlob');
   if (!blob || blob._swipeSet) return;
   blob._swipeSet = true;
   blob.addEventListener('touchstart', e => { _fhpSwipeX = e.touches[0].clientX; }, {passive:true});
@@ -653,14 +985,13 @@ function _setupFhpSwipe() {
     const dx = e.changedTouches[0].clientX - _fhpSwipeX;
     _fhpSwipeX = null;
     if (Math.abs(dx) < 40) return;
-    if (dx < 0 && fhpCurrentIdx < fhpUids.length - 1) { fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx, 'left'); }
-    else if (dx > 0 && fhpCurrentIdx > 0) { fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx, 'right'); }
+    fhpNavigate(dx < 0 ? 'next' : 'prev');
   }, {passive:true});
 }
 
 window.closeFriendHeaderPopup = () => {
   document.getElementById('friendHeaderPopup').style.display = 'none';
-  const blob = document.querySelector('.fhp-blob');
+  const blob = document.getElementById('fhpMainBlob');
   if (blob) { blob._swipeSet = false; blob.style.transform = ''; blob.style.transition = ''; }
 };
 
@@ -671,7 +1002,6 @@ function isWithinReportingPeriod() {
 
 const G_TOP  = {1:'#6ef0a0', 2:'#4cde80', 3:'#3db870'};
 const G_BASE = {1:'#18c05a', 2:'#1a9e50', 3:'#137040'};
-const SHINE  = 'radial-gradient(ellipse 55% 35% at 38% 28%, rgba(255,255,255,0.14) 0%, transparent 65%)';
 
 function applyTimerGradient() {
   if (!state.isOk || !state.lastConfirmed) return;
@@ -682,9 +1012,7 @@ function applyTimerGradient() {
   const lv = state.moodLevel || 2;
   const gTop = G_TOP[lv] || G_TOP[2];
   const gBase = G_BASE[lv] || G_BASE[2];
-  // Inner radial glow for depth
   const innerGlow = `radial-gradient(circle at 50% 50%, ${gBase}55 0%, transparent 68%)`;
-  // Red arc from 12 o'clock (top) advancing clockwise; rest stays green
   const conicBg = deg <= 0.5
     ? `conic-gradient(from -90deg, ${gTop} 0deg 360deg)`
     : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, ${gTop} ${deg.toFixed(2)}deg 360deg)`;
@@ -716,7 +1044,7 @@ async function sendPushToFollowers(type='ok', message='') {
 }
 
 let currentUser = null;
-let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null };
+let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null, soundId:null };
 let statusListeners=[], watchingStatuses={};
 
 const MOOD_OPTIONS=[
@@ -733,6 +1061,7 @@ function renderMoodPanel(){
 window.toggleMoodPanel = e => {
   e.stopPropagation();
   document.getElementById('signPanel').classList.remove('show');
+  document.getElementById('soundPanel').classList.remove('show');
   const p=document.getElementById('moodPanel');
   if(!p.querySelector('.mood-cell')) renderMoodPanel();
   p.classList.toggle('show');
@@ -779,7 +1108,7 @@ window.handleCustomText = inp => {
 window.clearSign = () => {
   state.sign = null; state.customText = null;
   document.querySelectorAll('.sign-cell').forEach(el => el.classList.remove('selected'));
-  document.getElementById('signBtn').textContent = '?';
+  document.getElementById('signBtn').textContent = '!';
   const inp=document.getElementById('signCustomInput'); if(inp) inp.value='';
   if(currentUser){
     localStorage.removeItem('sign_'+currentUser.uid);
@@ -792,6 +1121,7 @@ window.clearSign = () => {
 window.toggleSignPanel = e => {
   e.stopPropagation();
   document.getElementById('moodPanel').classList.remove('show');
+  document.getElementById('soundPanel').classList.remove('show');
   document.getElementById('signPanel').classList.toggle('show');
 };
 
@@ -818,20 +1148,17 @@ window.selectAvatar = async n => {
   localStorage.setItem('profilePhoto_'+currentUser.uid, src);
   await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:src},{merge:true});
   await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:src},{merge:true});
-  // Update header avatar
   const av = document.getElementById('userAvatar');
   if(av){ av.innerHTML=`<img src="${src}">`; av.classList.add('has-photo'); }
-  // Update profile circle
   const circle = document.getElementById('profileAvatarCircle');
   if(circle){ circle.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="profile-circle-edit"></div>`; }
-  // Refresh grid selection state
   renderAvatarPicker();
-  // Close picker after a moment
   setTimeout(()=>{ const wrap=document.getElementById('avatarPickerWrap'); if(wrap) wrap.classList.remove('show'); }, 450);
 };
 document.addEventListener('click',()=>{
   document.getElementById('moodPanel')?.classList.remove('show');
   document.getElementById('signPanel')?.classList.remove('show');
+  document.getElementById('soundPanel')?.classList.remove('show');
 });
 
 const defPA=[{id:'p2h',label:'2 שעות לפני',on:true},{id:'p1h',label:'שעה לפני',on:true},{id:'p30',label:'30 דקות לפני',on:true},{id:'p10',label:'10 דקות לפני',on:true},{id:'p1',label:'דקה לפני',on:true}];
@@ -859,6 +1186,7 @@ window.signInWithApple=async()=>{
     if(e.code!=='auth/popup-closed-by-user') alert('שגיאה: '+e.message);
   }
 };
+window.doSignOut=async()=>{await signOut(auth);};
 
 onAuthStateChanged(auth,async user=>{
   document.getElementById('loading').style.display='none';
@@ -880,6 +1208,8 @@ onAuthStateChanged(auth,async user=>{
     await checkPendingFollowRequests();
     renderAlerts(); checkInstallPrompt();
     if(Notification.permission==='granted') registerFCMToken();
+    // Init admin nudge emoji bar
+    if(isAdmin()) initAdminEmojiBar();
   } else {
     currentUser=null;
     document.getElementById('login-screen').style.display='flex';
@@ -909,14 +1239,10 @@ window.handleProfilePhotoUpload=async inp=>{
   circle.style.opacity='0.5';
   try{
     const base64=await compressToBase64(file);
-    // Save to Firestore (both users and status docs)
     await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:base64},{merge:true});
     await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:base64},{merge:true});
-    // Save locally
     localStorage.setItem('profilePhoto_'+currentUser.uid,base64);
-    // Update profile circle
     circle.innerHTML=`<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="profile-circle-edit"></div>`;
-    // Update header avatar
     const av=document.getElementById('userAvatar');
     if(av){ av.innerHTML=`<img src="${base64}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
   }catch(e){ alert('שגיאה בהעלאת תמונה: '+e.message); }
@@ -926,7 +1252,6 @@ window.handleProfilePhotoUpload=async inp=>{
 
 window.openProfilePanel = () => {
   if(!currentUser) return;
-  // Close avatar picker if open
   const wrap = document.getElementById('avatarPickerWrap');
   if(wrap) wrap.classList.remove('show');
   const displayName = currentUser.displayName || '';
@@ -950,6 +1275,9 @@ window.openProfilePanel = () => {
   } else {
     circle.innerHTML=`<span style="position:relative;z-index:1">${(displayName[0]||'?').toUpperCase()}</span><div class="profile-circle-edit"></div>`;
   }
+  // Show admin button only for admin accounts
+  const adminBtn = document.getElementById('adminOpenBtn');
+  if(adminBtn) adminBtn.style.display = isAdmin() ? 'block' : 'none';
   openPanel('profilePanel');
 };
 window.saveProfileName = async () => {
@@ -981,8 +1309,9 @@ async function initUser(){
   if(ss){ state.sign=ss; document.getElementById('signBtn').textContent=(ss==='"'?'״':ss); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===ss)); }
   const sct=localStorage.getItem('customText_'+currentUser.uid);
   if(sct){ state.customText=sct||null; const inp=document.getElementById('signCustomInput'); if(inp) inp.value=sct; }
+  const savedSound=localStorage.getItem('soundId_'+currentUser.uid);
+  if(savedSound!==null&&savedSound!==''){const sid=parseInt(savedSound);if(!isNaN(sid)){state.soundId=sid;const sBtn=document.getElementById('soundBtn');if(sBtn){sBtn.textContent=SOUND_DEFS[sid]?.emoji||'♪';sBtn.classList.add('has-sound');}}}
   await loadFollowers();
-  // Auto-assign avatar if user has no stored photo
   const storedAutoP = localStorage.getItem('profilePhoto_'+currentUser.uid);
   if (!storedAutoP) {
     const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
@@ -1033,7 +1362,7 @@ async function loadWatching(){
     const unsub=onSnapshot(doc(db,'status',w.followingUid),snap=>{
       if(snap.exists()){
         const d=snap.data();
-        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null,photoURL:d.profilePhotoURL||null};
+        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null,photoURL:d.profilePhotoURL||null,soundId:(d.soundId!==undefined&&d.soundId!==null)?d.soundId:null};
         const ts=d.timestamp?.toDate();
         if(ts&&(Date.now()-ts)/60000<2&&Notification.permission==='granted')
           new Notification(`${d.name} בסדר! 🤝`,{body:`${d.name} עדכן עכשיו שהכל בסדר`,icon:'/icon-192.png'});
@@ -1048,7 +1377,6 @@ async function loadWatching(){
 function sortWatchingEntries(w,s){
   const now=Date.now();
   const hrs=uid=>{const st=s[uid];return st?.timestamp?(now-st.timestamp.getTime())/3600000:9999;};
-  // Sort: most recently reported first, never-reported last
   return[...w].sort((a,b)=>hrs(a.followingUid)-hrs(b.followingUid));
 }
 function renderWatchingList(w){renderWatchingWithStatuses(w,{});}
@@ -1067,7 +1395,6 @@ function renderWatchingWithStatuses(watching,statuses){
     if(!isUnknown&&isOkStatus){
       const pctVal = Math.min(hrs / 24, 1);
       const deg = pctVal * 360;
-      // Red arc from 12 o'clock advancing clockwise; rest is green
       const conic = deg <= 0.5
         ? `conic-gradient(from -90deg, #4cde80 0deg 360deg)`
         : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
@@ -1201,7 +1528,7 @@ window.handleOkPress=async()=>{
   localStorage.setItem('lastConfirmed_'+currentUser.uid,state.lastConfirmed.toISOString());
   localStorage.setItem('okCount_'+currentUser.uid,state.okCount);
   await setDoc(doc(db,'users',currentUser.uid),{lastConfirmed:serverTimestamp(),okCount:state.okCount},{merge:true});
-  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null},{merge:true});
+  await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null,soundId:state.soundId!==null?state.soundId:null},{merge:true});
   updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
@@ -1237,13 +1564,12 @@ function updateMainUI(){
   const ltEl=document.getElementById('lastTimeAbove');
   const moodBtn=document.getElementById('moodBtn');
   const signBtn=document.getElementById('signBtn');
+  const soundBtn=document.getElementById('soundBtn');
   const addFriendsBtn=document.getElementById('addFriendsInlineBtn');
   const ok=isWithinReportingPeriod();
   state.isOk=ok;
-  // followers = people who get notified; watching = people we follow
   const followerCnt=state.followers.length;
 
-  // Relative time above button — only show when there's a timestamp
   if(ltEl){
     if(state.lastConfirmed){
       const prefix = ok ? '✅ ' : '❌ ';
@@ -1262,13 +1588,13 @@ function updateMainUI(){
     if(state.customText){ btnCustom.textContent=state.customText; btnCustom.style.display='block'; }
     else { btnCustom.style.display='none'; }
     applyTimerGradient();
-    // Hide status text when ok; show add-friends above button
     st.className='status-text-inline'; st.textContent='';
     if(state.okCount>=100){ btn.style.cursor='not-allowed'; }
     else { btn.style.cursor='pointer'; }
     if(addFriendsBtn) addFriendsBtn.style.display='flex';
     moodBtn.classList.add('visible'); moodBtn.textContent=emoji||'😊';
     signBtn.classList.add('visible');
+    soundBtn.classList.add('visible');
   } else if(state.lastConfirmed){
     btn.style.background='radial-gradient(circle at 40% 35%,#ff8c42,#c04a00)';
     btn.style.boxShadow='0 0 60px rgba(220,100,40,0.45),0 8px 32px rgba(0,0,0,0.4)';
@@ -1277,7 +1603,7 @@ function updateMainUI(){
     st.textContent=followerCnt>0?`✕ ${followerCnt} החברים שלך לא יודעים אם את/ה בסדר!`:'⚠️ לא דיווחת בזמן! לחץ לעדכן';
     btn.style.cursor='pointer'; state.okCount=0;
     if(addFriendsBtn) addFriendsBtn.style.display='none';
-    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
+    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible'); soundBtn.classList.remove('visible');
     state.moodEmoji=null; state.moodLevel=2;
   } else {
     btn.style.background='radial-gradient(circle at 40% 35%,#ff5a5a,#c0152a)';
@@ -1287,7 +1613,7 @@ function updateMainUI(){
     st.textContent='לחץ לעדכן שהכל בסדר';
     btn.style.cursor='pointer';
     if(addFriendsBtn) addFriendsBtn.style.display='none';
-    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible');
+    moodBtn.classList.remove('visible'); signBtn.classList.remove('visible'); soundBtn.classList.remove('visible');
   }
   updateChips();
 }
@@ -1302,7 +1628,6 @@ window.openFriendProfile = uid => {
   const photoURL = s?.photoURL || null;
   const name = w.followingName || 'משתמש';
   document.getElementById('friendProfileTitle').textContent = `👤 ${name}`;
-  // Build conic for profile circle - red arc on green base
   let circleStyle = '';
   if (isOkStatus) {
     const pct = Math.min(hrs / 24, 1);
@@ -1399,7 +1724,7 @@ window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementB
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
-// ── AUTO-REFRESH: runs every 60s to keep all timers and friend cards current ──
+// ── AUTO-REFRESH ──────────────────────────────────────────────
 function runPeriodicUpdate(){
   if(!currentUser) return;
   const ltEl=document.getElementById('lastTimeAbove');
@@ -1416,14 +1741,263 @@ function runPeriodicUpdate(){
   updateHeaderFriendsStrip();
 }
 setInterval(runPeriodicUpdate,60000);
-// ── VISIBILITY: refresh immediately when user returns to the app/tab ──
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible') runPeriodicUpdate();
 });
 
+// ══════════════════════════════════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════════════════════════════════
+
+let adminAllUsers = [];        // full list fetched from Firestore
+let adminSelectedUids = new Set();
+
+// ── Init emoji bar ─────────────────────────────────────────────
+function initAdminEmojiBar(){
+  const row = document.getElementById('adminEmojiRow');
+  if(!row) return;
+  row.innerHTML = ADMIN_NUDGE_EMOJIS.map(e =>
+    `<button class="admin-emoji-btn" onclick="insertAdminEmoji('${e}')">${e}</button>`
+  ).join('');
+  // Restore last message
+  const saved = localStorage.getItem('adminNudgeText');
+  const ta = document.getElementById('adminNudgeText');
+  if(saved && ta) ta.value = saved;
+  // Auto-save on input
+  if(ta) ta.addEventListener('input', ()=> localStorage.setItem('adminNudgeText', ta.value));
+}
+
+window.insertAdminEmoji = emoji => {
+  const ta = document.getElementById('adminNudgeText');
+  if(!ta) return;
+  const pos = ta.selectionStart || ta.value.length;
+  ta.value = ta.value.slice(0,pos) + emoji + ta.value.slice(pos);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = pos + emoji.length;
+  localStorage.setItem('adminNudgeText', ta.value);
+};
+
+// ── Open Admin Panel ───────────────────────────────────────────
+window.openAdminPanel = async () => {
+  if(!isAdmin()){ alert('גישה נדחתה'); return; }
+  closePanel('profilePanel');
+  openPanel('adminPanel');
+  await loadAllUsersForAdmin();
+};
+
+async function loadAllUsersForAdmin(){
+  const listEl = document.getElementById('adminUsersList');
+  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3);font-size:13px">טוען משתמשים...</div>';
+  try {
+    // Fetch all users sorted by createdAt descending (newest first)
+    const q = query(collection(db,'users'), orderBy('createdAt','desc'));
+    const snaps = await getDocs(q);
+    adminAllUsers = [];
+    snaps.forEach((d,i)=>{
+      adminAllUsers.push({uid:d.id, ...d.data()});
+    });
+    // Stats
+    const now = Date.now();
+    let activeToday = 0;
+    // Fetch status docs for active count
+    const statusSnaps = await getDocs(collection(db,'status'));
+    statusSnaps.forEach(d=>{
+      const ts = d.data().timestamp?.toDate();
+      if(ts && (now - ts.getTime()) < 24*3600000) activeToday++;
+    });
+    document.getElementById('adminTotalUsers').textContent = adminAllUsers.length;
+    document.getElementById('adminActiveToday').textContent = activeToday;
+    adminSelectedUids.clear();
+    updateAdminSelectedCount();
+    renderAdminUsersList();
+  } catch(e){
+    listEl.innerHTML = `<div style="text-align:center;padding:20px;color:#ff8888;font-size:13px">שגיאה: ${e.message}</div>`;
+  }
+}
+
+function renderAdminUsersList(){
+  const listEl = document.getElementById('adminUsersList');
+  if(!adminAllUsers.length){
+    listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין משתמשים</div>';
+    return;
+  }
+  listEl.innerHTML = adminAllUsers.map((u,i)=>{
+    const checked = adminSelectedUids.has(u.uid) ? 'checked' : '';
+    const dateStr = u.createdAt ? u.createdAt.toDate().toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '–';
+    const nameSafe = (u.name||'ללא שם').replace(/</g,'&lt;');
+    const emailSafe = (u.email||'').replace(/</g,'&lt;');
+    const num = adminAllUsers.length - i; // reverse number (oldest = 1)
+    return `<div class="admin-user-row" onclick="toggleAdminUser('${u.uid}')">
+      <input type="checkbox" class="admin-cb" ${checked} onclick="event.stopPropagation();toggleAdminUser('${u.uid}')"/>
+      <span class="admin-user-num">${num}</span>
+      <span class="admin-user-name">${nameSafe}</span>
+      <span class="admin-user-email">${emailSafe}</span>
+      <span class="admin-user-date">${dateStr}</span>
+    </div>`;
+  }).join('');
+}
+
+window.toggleAdminUser = uid => {
+  if(adminSelectedUids.has(uid)) adminSelectedUids.delete(uid);
+  else adminSelectedUids.add(uid);
+  updateAdminSelectedCount();
+  // Update checkbox state in DOM
+  const rows = document.querySelectorAll('#adminUsersList .admin-user-row');
+  adminAllUsers.forEach((u,i)=>{
+    const cb = rows[i]?.querySelector('.admin-cb');
+    if(cb) cb.checked = adminSelectedUids.has(u.uid);
+  });
+};
+
+window.toggleAdminSelectAll = () => {
+  const allCb = document.getElementById('adminSelectAllCb');
+  const allSelected = adminSelectedUids.size === adminAllUsers.length;
+  if(allSelected){
+    adminSelectedUids.clear();
+    if(allCb) allCb.checked = false;
+  } else {
+    adminAllUsers.forEach(u => adminSelectedUids.add(u.uid));
+    if(allCb) allCb.checked = true;
+  }
+  updateAdminSelectedCount();
+  renderAdminUsersList();
+};
+
+function updateAdminSelectedCount(){
+  const n = adminSelectedUids.size;
+  document.getElementById('adminSelectedCount').textContent = n;
+  const lbl = document.getElementById('adminSelLabelCount');
+  if(lbl) lbl.textContent = n > 0 ? `${n} נבחרו` : '';
+  const sendBtn = document.getElementById('adminSendNudgeBtn');
+  if(sendBtn) sendBtn.disabled = n === 0;
+  // Sync select-all checkbox
+  const allCb = document.getElementById('adminSelectAllCb');
+  if(allCb) allCb.checked = adminAllUsers.length > 0 && n === adminAllUsers.length;
+}
+
+window.sendAdminNudge = async () => {
+  if(!isAdmin()) return;
+  if(adminSelectedUids.size === 0){ alert('בחר לפחות משתמש אחד'); return; }
+  const ta = document.getElementById('adminNudgeText');
+  const msg = ta ? ta.value.trim() : '';
+  if(!msg){ alert('כתוב הודעה לפני השליחה'); return; }
+
+  const selectedArr = [...adminSelectedUids];
+  const sendBtn = document.getElementById('adminSendNudgeBtn');
+  sendBtn.disabled = true;
+  sendBtn.textContent = '⏳ שולח...';
+
+  try {
+    // Send push notifications
+    await fetch('/.netlify/functions/send-push',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        senderUid: currentUser.uid,
+        senderName: 'אדמין',
+        followerUids: selectedArr,
+        type: 'adminNudge',
+        message: msg
+      })
+    });
+
+    // Save nudge record to Firestore for history
+    const nudgeRef = doc(collection(db,'adminNudges'));
+    await setDoc(nudgeRef,{
+      sentByUid: currentUser.uid,
+      message: msg,
+      recipientUids: selectedArr,
+      recipientCount: selectedArr.length,
+      sentAt: serverTimestamp()
+    });
+
+    alert(`✅ נדנוד נשלח ל-${selectedArr.length} משתמשים!`);
+    sendBtn.textContent = '✅ נשלח!';
+    setTimeout(()=>{ sendBtn.textContent = '👋 שלח נדנוד לנבחרים'; sendBtn.disabled = adminSelectedUids.size===0; },2500);
+  } catch(e){
+    alert('שגיאה בשליחה: ' + e.message);
+    sendBtn.textContent = '👋 שלח נדנוד לנבחרים';
+    sendBtn.disabled = false;
+  }
+};
+
+// ── Nudge History ──────────────────────────────────────────────
+window.openNudgeHistory = async () => {
+  openPanel('nudgeHistoryPanel');
+  await loadNudgeHistory();
+};
+
+async function loadNudgeHistory(){
+  const content = document.getElementById('nudgeHistoryContent');
+  content.innerHTML = '<div class="nudge-hist-empty">טוען...</div>';
+  try {
+    const q = query(collection(db,'adminNudges'), orderBy('sentAt','desc'), limit(50));
+    const snaps = await getDocs(q);
+    if(snaps.empty){ content.innerHTML='<div class="nudge-hist-empty">אין נדנודים עדיין</div>'; return; }
+    let html = '';
+    snaps.forEach(d=>{
+      const data = d.data();
+      const nudgeId = d.id;
+      const dateStr = data.sentAt ? data.sentAt.toDate().toLocaleString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '–';
+      const cnt = data.recipientCount || data.recipientUids?.length || 0;
+      html += `<div class="nudge-hist-row">
+        <div class="nudge-hist-msg">${(data.message||'').replace(/</g,'&lt;')}</div>
+        <div class="nudge-hist-meta">📅 ${dateStr}</div>
+        <div class="nudge-hist-stats">
+          <span class="nudge-stat-chip blue">📤 נשלח ל-${cnt}</span>
+          <span class="nudge-stat-chip yellow" id="resp-${nudgeId}">↩️ בודק...</span>
+        </div>
+        <button class="nudge-hist-check-btn" onclick="checkNudgeResponses('${nudgeId}')">🔄 בדוק מי עדכן</button>
+      </div>`;
+    });
+    content.innerHTML = html;
+    // Auto-check responses for each nudge
+    snaps.forEach(d => checkNudgeResponses(d.id, d.data()));
+  } catch(e){
+    content.innerHTML = `<div class="nudge-hist-empty">שגיאה: ${e.message}</div>`;
+  }
+}
+
+window.checkNudgeResponses = async (nudgeId, preloadedData) => {
+  const chip = document.getElementById('resp-'+nudgeId);
+  if(!chip) return;
+  chip.textContent = '⏳ בודק...';
+  try {
+    let data = preloadedData;
+    if(!data){
+      const snap = await getDoc(doc(db,'adminNudges',nudgeId));
+      if(!snap.exists()){ chip.textContent='–'; return; }
+      data = snap.data();
+    }
+    const uids = data.recipientUids || [];
+    const sentAt = data.sentAt?.toDate();
+    if(!sentAt || !uids.length){ chip.textContent='0 עדכנו'; return; }
+    let responded = 0;
+    // Batch check: get status for each recipient
+    const batchSize = 10;
+    for(let i=0; i<uids.length; i+=batchSize){
+      const batch = uids.slice(i,i+batchSize);
+      const promises = batch.map(uid => getDoc(doc(db,'status',uid)));
+      const results = await Promise.all(promises);
+      results.forEach(s=>{
+        if(s.exists()){
+          const ts = s.data().timestamp?.toDate();
+          if(ts && ts > sentAt) responded++;
+        }
+      });
+    }
+    chip.textContent = `✅ ${responded} עדכנו`;
+    chip.className = 'nudge-stat-chip'; // green
+  } catch(e){
+    chip.textContent = 'שגיאה';
+  }
+};
+
+// ══════════════════════════════════════════════════════════════
+
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v32';
+var CACHE_NAME='ani-beseder-v34';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
