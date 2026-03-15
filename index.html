@@ -1487,7 +1487,7 @@ function renderWatchingWithStatuses(watching,statuses){
         </div>
       </div>
       <div class="wcard-actions-row" onclick="event.stopPropagation()">
-        <div style="flex:1;min-width:0;display:flex;align-items:center;padding:0 2px"><span style="font-size:13px;font-weight:700;color:#e8f4f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.followingName||'משתמש'}${soundIndicator}</span></div>
+        <div style="flex:1;min-width:0;display:flex;align-items:center;padding:0 2px"><span style="font-size:13px;font-weight:700;color:#e8f4f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.followingName||'משתמש'}</span></div>
         
         <button class="wcard-action-btn wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋 <span style="font-size:8px">נדנד</span></button>
         <button class="wcard-action-btn wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️ <span style="font-size:8px">הסר</span></button>
@@ -2114,7 +2114,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v46';
+var CACHE_NAME='ani-beseder-v47';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
