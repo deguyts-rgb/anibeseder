@@ -1071,7 +1071,7 @@ async function registerFCMToken() {
 async function sendPushToFollowers(type='ok', message='') {
   if (!currentUser||!state.followers.length) return;
   try {
-    await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},
+    await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:state.followers.map(f=>f.followerUid),type,message})});
   } catch(e){}
 }
@@ -1503,7 +1503,7 @@ function renderWatchingWithStatuses(watching,statuses){
 window.requestFollowBack=async(uid,name)=>{
   await setDoc(doc(db,'followRequests',`${currentUser.uid}_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',fromEmail:currentUser.email||'',toUid:uid,status:'pending',createdAt:serverTimestamp()});
   localStorage.setItem('followReqSent_'+currentUser.uid+'_'+uid,'1');
-  try{await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'followRequest',message:`${currentUser.displayName||'מישהו'} מבקש שתעקוב אחריו`})});}catch(e){}
+  try{await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'followRequest',message:`${currentUser.displayName||'מישהו'} מבקש שתעקוב אחריו`})});}catch(e){}
   renderWatchingWithStatuses(state.watching,watchingStatuses);
 };
 async function checkPendingFollowRequests(){
@@ -1529,7 +1529,7 @@ window.followBack=async(uid,name)=>{
 };
 window.sendNudge=async(uid,name)=>{
   await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
-  try{await fetch('/.netlify/functions/send-push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'nudge'})});}catch(e){}
+  try{await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'nudge'})});}catch(e){}
   alert(`נדנוד נשלח ל-${name}! 👋`);
 };
 
@@ -2008,7 +2008,7 @@ window.sendAdminNudge = async () => {
 
   try {
     // Send push notifications
-    await fetch('/.netlify/functions/send-push',{
+    await fetch('https://send-push.deguyts.workers.dev',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
