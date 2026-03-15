@@ -12,6 +12,7 @@
   <link rel="manifest" href="/manifest.json">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{max-width:100vw;overflow-x:hidden}
     body{min-height:100vh;background:#060c14;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;color:#e8f4f8;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
     #loading{position:fixed;inset:0;background:linear-gradient(160deg,#0f1923 0%,#1a2a3a 60%,#0d1f2d 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999}
     .spinner{width:48px;height:48px;border:3px solid rgba(126,207,255,0.2);border-top-color:#7ecfff;border-radius:50%;animation:spin 0.8s linear infinite}
@@ -152,9 +153,9 @@
     .trash-label{font-size:8px;color:rgba(255,120,120,0.5)}
     .nudge-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.25);border-radius:8px;padding:4px 6px;cursor:pointer;color:rgba(255,220,130,0.7);font-size:14px;flex-shrink:0}
     .nudge-label{font-size:8px;color:rgba(255,200,50,0.5)}
-    .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+    .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;align-items:flex-end;justify-content:center;overflow:hidden}
     .panel-overlay.show{display:flex}
-    .panel-box{background:#111e2b;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18)}
+    .panel-box{background:#111e2b;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;border-top:1px solid rgba(126,207,255,0.18);overflow-x:hidden}
     .panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(126,207,255,0.1);flex-shrink:0}
     .panel-title{font-size:17px;font-weight:800;color:#7ecfff}
     .panel-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
@@ -253,17 +254,7 @@
 .fhp-time{font-size:10px;color:rgba(76,222,128,0.85);font-weight:600;z-index:3;background:rgba(0,0,0,0.4);padding:2px 8px;border-radius:20px;margin-top:1px}
 .fhp-nudge-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:20px;color:rgba(255,220,130,0.9);font-size:12px;font-weight:700;padding:5px 16px;cursor:pointer;font-family:inherit;z-index:3;margin-top:2px}
 .fhp-nudge-btn:active{background:rgba(255,200,50,0.22)}
-/* ── PEEK BLOBS ── */
-.fhp-row{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;width:100%;gap:0;overflow:hidden}
-.fhp-peek{width:100px;height:170px;background:linear-gradient(170deg,#0c1b2a 0%,#112436 55%,#091824 100%);border:1.5px solid rgba(76,222,128,0.32);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 30px rgba(40,200,100,0.18),0 8px 24px rgba(0,0,0,0.5);cursor:pointer;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;overflow:hidden;padding:12px 8px;flex-shrink:0;margin-top:28px}
-.fhp-peek.visible{opacity:0.75;pointer-events:auto}
-.fhp-peek:active{opacity:1}
-#fhpPeekLeft{transform:translateX(18px)}
-#fhpPeekRight{transform:translateX(-18px)}
-.fhp-peek-photo{width:48px;height:48px;border-radius:50%;border:2px solid rgba(76,222,128,0.55);overflow:hidden;background:#0a1520;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.fhp-peek-photo img{width:100%;height:100%;object-fit:cover}
-.fhp-peek-name{font-size:9px;font-weight:800;color:rgba(255,255,255,0.8);text-align:center;max-width:88px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,0.7)}
-.fhp-peek-emoji{font-size:12px;line-height:1}
+
 
 /* ── ADMIN PANEL ── */
 .admin-open-btn{width:100%;background:linear-gradient(135deg,rgba(255,200,50,0.1),rgba(255,150,0,0.08));border:1px solid rgba(255,200,50,0.35);border-radius:12px;color:rgba(255,220,130,0.9);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;display:none}
@@ -283,10 +274,10 @@
 .admin-user-row:active{background:rgba(126,207,255,0.05)}
 .admin-cb{width:16px;height:16px;cursor:pointer;accent-color:#4cde80;flex-shrink:0}
 .admin-user-num{font-size:9px;color:rgba(200,230,255,0.28);width:16px;text-align:center;flex-shrink:0}
-.admin-user-name{font-size:12px;font-weight:600;color:#e8f4f8;flex:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.admin-user-email{font-size:9px;color:rgba(200,230,255,0.4);flex:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-name{font-size:11px;font-weight:600;color:#e8f4f8;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-email{font-size:9px;color:rgba(200,230,255,0.4);flex:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-user-date{font-size:9px;color:rgba(200,230,255,0.3);flex-shrink:0;white-space:nowrap}
-.admin-users-box{background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.12);border-radius:12px;overflow-x:hidden;overflow-y:auto;margin-bottom:12px;max-height:300px}
+.admin-users-box{background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.12);border-radius:12px;overflow-x:hidden;overflow-y:auto;margin-bottom:12px;max-height:35vh}
 .admin-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,200,50,0.2),transparent);margin:14px 0}
 .admin-nudge-title{font-size:13px;font-weight:700;color:rgba(255,220,130,0.8);margin-bottom:6px}
 .admin-nudge-area{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,200,50,0.2);border-radius:10px;color:#e8f4f8;padding:10px 12px;font-size:14px;font-family:inherit;direction:rtl;resize:none;outline:none;min-height:72px;margin-bottom:8px;line-height:1.5}
@@ -461,7 +452,7 @@
 <!-- ADMIN PANEL -->
 
 <div class="panel-overlay" id="adminPanel" onclick="handlePanelOverlayClick(event,'adminPanel')">
-  <div class="panel-box" style="max-height:95vh">
+  <div class="panel-box" style="max-height:96vh">
     <div class="panel-header" style="background:linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05));border-bottom-color:rgba(255,200,50,0.2)">
       <span class="panel-title" style="color:#ffd97d">🛡️ פאנל מנהל</span>
       <button class="panel-close" onclick="closePanel('adminPanel')">סגור ✕</button>
@@ -549,9 +540,7 @@
   <!-- FRIEND HEADER POPUP — lives inside #app, after header -->
 
   <div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
-    <div class="fhp-row">
-      <div class="fhp-peek" id="fhpPeekLeft" onclick="event.stopPropagation();fhpNavigate('prev')"></div>
-      <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
+    <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
       <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
       <div class="fhp-green-overlay"></div>
       <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
@@ -569,10 +558,8 @@
       <div class="fhp-status-text" id="fhpStatusText"></div>
       <div class="fhp-time" id="fhpTime"></div>
       <button class="fhp-nudge-btn" id="fhpNudgeBtn">👋 נדנד</button>
-      </div><!-- end fhp-blob -->
-      <div class="fhp-peek" id="fhpPeekRight" onclick="event.stopPropagation();fhpNavigate('next')"></div>
-    </div><!-- end fhp-row -->
-  </div><!-- end friendHeaderPopup -->
+    </div>
+  </div>
 
   <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
   <div class="follow-banner" id="followBanner">
@@ -680,7 +667,8 @@ const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
-const AVATARS = Array.from({length:12},(_,i)=>`/avatars/avatar-${i+1}.png`);
+const AVATARS = Array.from({length:12},(_,i)=>`/Avatars/avatar-${i+1}.png`);
+const isEmojiAvatar = a => a && !a.startsWith('/') && !a.startsWith('http') && !a.startsWith('data:');
 
 // ── ADMIN ACCOUNTS ──────────────────────────────────────────────
 // Add your Apple ID email below if it's different from Gmail
@@ -877,23 +865,6 @@ window.openFriendHeaderPopup = (uid) => {
   _setupFhpSwipe();
 }
 
-window.fhpNavigate = dir => {
-  if(dir==='prev' && fhpCurrentIdx>0){ fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx,'right'); }
-  else if(dir==='next' && fhpCurrentIdx<fhpUids.length-1){ fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx,'left'); }
-};
-
-function _buildPeekContent(uid){
-  const w=state.watching.find(x=>x.followingUid===uid);
-  const s=watchingStatuses[uid];
-  if(!w) return '';
-  const photo=s?.photoURL||null;
-  const emoji=s?.moodEmoji||(s?.isOk?'✓':'?');
-  const nm=(w.followingName||'').split(' ')[0]||'?';
-  const photoInner=photo
-    ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-    :`<span style="font-size:22px">${emoji}</span>`;
-  return `<div class="fhp-peek-photo">${photoInner}</div><div class="fhp-peek-emoji">${emoji}</div><div class="fhp-peek-name">${nm}</div>`;
-}
 ;
 
 function _showFhpByIdx(idx, dir) {
@@ -943,7 +914,6 @@ function _showFhpByIdx(idx, dir) {
     });
   }
   _updateFhpDots();
-  _updatePeeks();
 }
 
 function _updateFhpDots() {
@@ -961,19 +931,6 @@ function _updateFhpDots() {
   ).join('');
 }
 
-function _updatePeeks(){
-  const peekL=document.getElementById('fhpPeekLeft');
-  const peekR=document.getElementById('fhpPeekRight');
-  const prevIdx=fhpCurrentIdx-1, nextIdx=fhpCurrentIdx+1;
-  if(peekL){
-    if(prevIdx>=0){ peekL.innerHTML=_buildPeekContent(fhpUids[prevIdx]); peekL.classList.add('visible'); }
-    else { peekL.classList.remove('visible'); peekL.innerHTML=''; }
-  }
-  if(peekR){
-    if(nextIdx<fhpUids.length){ peekR.innerHTML=_buildPeekContent(fhpUids[nextIdx]); peekR.classList.add('visible'); }
-    else { peekR.classList.remove('visible'); peekR.innerHTML=''; }
-  }
-}
 
 
 let _fhpSwipeX = null;
@@ -987,7 +944,8 @@ function _setupFhpSwipe() {
     const dx = e.changedTouches[0].clientX - _fhpSwipeX;
     _fhpSwipeX = null;
     if (Math.abs(dx) < 40) return;
-    fhpNavigate(dx < 0 ? 'next' : 'prev');
+    if(dx < 0 && fhpCurrentIdx < fhpUids.length-1){ fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx,'left'); }
+    else if(dx > 0 && fhpCurrentIdx > 0){ fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx,'right'); }
   }, {passive:true});
 }
 
@@ -1132,9 +1090,9 @@ function renderAvatarPicker(){
   const grid = document.getElementById('avatarPickerGrid');
   if(!grid) return;
   const current = localStorage.getItem('profilePhoto_'+currentUser.uid);
-  grid.innerHTML = AVATARS.map((src,i)=>
-    `<button class="avatar-opt${current===src?' av-selected':''}" onclick="selectAvatar(${i+1})" title="אווטאר ${i+1}">
-      <img src="${src}" alt="אווטאר ${i+1}" loading="lazy"/>
+  grid.innerHTML = AVATARS.map((av,i)=>
+    `<button class="avatar-opt${current===av?' av-selected':''}" onclick="selectAvatar(${i+1})" title="אווטאר ${i+1}">
+      <img src="${av}" alt="אווטאר ${i+1}" loading="lazy"/>
     </button>`
   ).join('');
 }
@@ -1198,7 +1156,7 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('app').style.display='flex';
     const av=document.getElementById('userAvatar');
     const storedPhoto=localStorage.getItem('profilePhoto_'+user.uid);
-    if(storedPhoto){ av.innerHTML=`<img src="${storedPhoto}">`; av.classList.add('has-photo'); }
+    if(storedPhoto){ av.innerHTML=`<img src="${storedPhoto}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
     else if(user.photoURL){ av.innerHTML=`<img src="${user.photoURL}">`; }
     else av.textContent=(user.displayName||'U')[0];
     document.getElementById('myShareLink').textContent=`https://anibeseder.com/?follow=${user.uid}`;
@@ -1999,7 +1957,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v35';
+var CACHE_NAME='ani-beseder-v37';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
