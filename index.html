@@ -459,9 +459,9 @@
       <!-- Stats -->
       <div class="admin-stats-row" id="adminStatsRow">
         <div class="admin-stat-chip"><div class="admin-stat-num" id="adminTotalUsers">–</div><div class="admin-stat-label">משתמשים</div></div>
-        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
-        <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" style="cursor:pointer;transition:all 0.2s"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label" style="display:flex;align-items:center;gap:3px">פעילים היום<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0;margin-right:2px"></span></div></div>
         <div class="admin-stat-chip"><div class="admin-stat-num" id="adminReportsToday">–</div><div class="admin-stat-label">דיווחים היום</div></div>
+        <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label" style="display:flex;align-items:center;gap:3px">פעילים<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0"></span></div></div>
+        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
       </div>
       <!-- Select all + filter -->
       <div class="admin-select-all-row" onclick="toggleAdminSelectAll()">
@@ -535,8 +535,7 @@
       <button class="submenu-btn" onclick="doShare()"><span style="font-weight:900;color:#fff;font-size:14px">+</span>&nbsp;הוסף חברים</button>
     </div>
   </div>
-
-  </div>
+<!-- end friendHeaderPopup -->
 
   <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
   <div class="follow-banner" id="followBanner">
@@ -644,7 +643,7 @@ const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
 const WINDOW_MS = 24 * 3600000;
-const AVATARS = Array.from({length:12},(_,i)=>`/Avatars/avatar-${i+1}.png`);
+const AVATARS = Array.from({length:12},(_,i)=>`/avatars/avatar-${i+1}.png`);
 
 // ── ADMIN ACCOUNTS ──────────────────────────────────────────────
 // Add your Apple ID email below if it's different from Gmail
@@ -840,6 +839,9 @@ window.openFriendHeaderPopup = (uid) => {
   _showFhpByIdx(fhpCurrentIdx);
   _setupFhpSwipe();
 }
+
+;
+
 function _showFhpByIdx(idx, dir) {
   const uid = fhpUids[idx];
   const w = state.watching.find(x => x.followingUid === uid);
@@ -917,8 +919,8 @@ function _setupFhpSwipe() {
     const dx = e.changedTouches[0].clientX - _fhpSwipeX;
     _fhpSwipeX = null;
     if (Math.abs(dx) < 40) return;
-    if(dx < 0 && fhpCurrentIdx < fhpUids.length-1){ fhpCurrentIdx++; _showFhpByIdx(fhpCurrentIdx,'left'); }
-    else if(dx > 0 && fhpCurrentIdx > 0){ fhpCurrentIdx--; _showFhpByIdx(fhpCurrentIdx,'right'); }
+    if(dx<0 && fhpCurrentIdx<fhpUids.length-1){fhpCurrentIdx++;_showFhpByIdx(fhpCurrentIdx,'left');}
+    else if(dx>0 && fhpCurrentIdx>0){fhpCurrentIdx--;_showFhpByIdx(fhpCurrentIdx,'right');}
   }, {passive:true});
 }
 
@@ -1245,38 +1247,14 @@ async function initUser(){
   const savedSound=localStorage.getItem('soundId_'+currentUser.uid);
   if(savedSound!==null&&savedSound!==''){const sid=parseInt(savedSound);if(!isNaN(sid)){state.soundId=sid;const sBtn=document.getElementById('soundBtn');if(sBtn){sBtn.textContent=SOUND_DEFS[sid]?.emoji||'♪';sBtn.classList.add('has-sound');}}}
   await loadFollowers();
-  // Avatar: load from localStorage, then Firestore, then assign random (once only)
   const storedAutoP = localStorage.getItem('profilePhoto_'+currentUser.uid);
-  if (storedAutoP) {
-    // Already have avatar locally - refresh UI
+  if (!storedAutoP) {
+    const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    localStorage.setItem('profilePhoto_'+currentUser.uid, randomAvatar);
+    setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true}).catch(()=>{});
+    setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true}).catch(()=>{});
     const av = document.getElementById('userAvatar');
-    if(av){ av.innerHTML=`<img src="${storedAutoP}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
-  } else {
-    // Check Firestore for existing photo
-    try {
-      const statusSnap = await getDoc(doc(db,'status',currentUser.uid));
-      const existingPhoto = statusSnap.exists() ? statusSnap.data().profilePhotoURL : null;
-      if (existingPhoto) {
-        // Found in Firestore — save locally and display
-        localStorage.setItem('profilePhoto_'+currentUser.uid, existingPhoto);
-        const av = document.getElementById('userAvatar');
-        if(av){ av.innerHTML=`<img src="${existingPhoto}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
-      } else {
-        // Truly new user — assign random avatar
-        const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
-        localStorage.setItem('profilePhoto_'+currentUser.uid, randomAvatar);
-        await setDoc(doc(db,'status',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true});
-        await setDoc(doc(db,'users',currentUser.uid),{profilePhotoURL:randomAvatar},{merge:true});
-        const av = document.getElementById('userAvatar');
-        if(av){ av.innerHTML=`<img src="${randomAvatar}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
-      }
-    } catch(e) {
-      // Firestore unreachable — assign random locally
-      const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
-      localStorage.setItem('profilePhoto_'+currentUser.uid, randomAvatar);
-      const av = document.getElementById('userAvatar');
-      if(av){ av.innerHTML=`<img src="${randomAvatar}" style="width:100%;height:100%;object-fit:cover">`; av.classList.add('has-photo'); }
-    }
+    if(av){ av.innerHTML=`<img src="${randomAvatar}">`; av.classList.add('has-photo'); }
   }
   updateMainUI();
 }
@@ -1706,8 +1684,7 @@ document.addEventListener('visibilitychange',()=>{
 // ADMIN PANEL
 // ══════════════════════════════════════════════════════════════
 
-let adminAllUsers = [];        // full list fetched from Firestore
-let adminSelectedUids = new Set();
+let adminAllUsers = [], adminSelectedUids = new Set(), adminFilterActive = false, adminStatusCache = {};
 
 // ── Init emoji bar ─────────────────────────────────────────────
 function initAdminEmojiBar(){
@@ -1766,8 +1743,8 @@ async function loadAllUsersForAdmin(){
     });
     document.getElementById('adminTotalUsers').textContent = adminAllUsers.length;
     document.getElementById('adminActiveToday').textContent = activeToday;
-    const rtEl = document.getElementById('adminReportsToday');
-    if(rtEl) rtEl.textContent = reportsToday;
+    const _rtEl = document.getElementById('adminReportsToday');
+    if(_rtEl) _rtEl.textContent = reportsToday;
     adminSelectedUids.clear();
     updateAdminSelectedCount();
     renderAdminUsersList(adminFilterActive);
@@ -1782,16 +1759,13 @@ function renderAdminUsersList(filterActive){
     listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין משתמשים</div>';
     return;
   }
-  const _now2 = Date.now();
+  const _dnow = Date.now();
   const displayUsers = filterActive
     ? [...adminAllUsers]
-        .filter(u => { const s=adminStatusCache[u.uid]; return s&&s.ts&&(_now2-s.ts.getTime())<86400000; })
-        .sort((a,b) => { const sa=adminStatusCache[a.uid],sb=adminStatusCache[b.uid]; return (sb&&sb.ts?sb.ts.getTime():0)-(sa&&sa.ts?sa.ts.getTime():0); })
+        .filter(u=>{const s=adminStatusCache[u.uid];return s&&s.ts&&(_dnow-s.ts.getTime())<86400000;})
+        .sort((a,b)=>{const sa=adminStatusCache[a.uid]||{},sb=adminStatusCache[b.uid]||{};return (sb.ts?sb.ts.getTime():0)-(sa.ts?sa.ts.getTime():0);})
     : adminAllUsers;
-  if(filterActive && !displayUsers.length){
-    listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים ב-24 שעות האחרונות</div>';
-    return;
-  }
+  if(filterActive && !displayUsers.length){listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים ב-24 שעות האחרונות</div>';return;}
   listEl.innerHTML = displayUsers.map((u,i)=>{
     const checked = adminSelectedUids.has(u.uid) ? 'checked' : '';
     const dateStr = u.createdAt ? u.createdAt.toDate().toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '–';
@@ -1809,16 +1783,16 @@ function renderAdminUsersList(filterActive){
 }
 
 
-window.toggleActiveFilter=()=>{
-  adminFilterActive=!adminFilterActive;
-  const dot=document.getElementById('adminFilterDot');
-  const chip=document.getElementById('adminActiveTodayChip');
+window.toggleActiveFilter = () => {
+  adminFilterActive = !adminFilterActive;
+  const dot = document.getElementById('adminFilterDot');
+  const chip = document.getElementById('adminActiveTodayChip');
   if(adminFilterActive){
-    if(dot)dot.style.display='inline-block';
-    if(chip){chip.style.background='rgba(76,222,128,0.12)';chip.style.outline='1px solid rgba(76,222,128,0.4)';}
+    if(dot) dot.style.display='inline-block';
+    if(chip){ chip.style.background='rgba(76,222,128,0.12)'; chip.style.outline='1px solid rgba(76,222,128,0.4)'; }
   } else {
-    if(dot)dot.style.display='none';
-    if(chip){chip.style.background='';chip.style.outline='';}
+    if(dot) dot.style.display='none';
+    if(chip){ chip.style.background=''; chip.style.outline=''; }
   }
   renderAdminUsersList(adminFilterActive);
 };
@@ -1995,7 +1969,9 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 }
 </script>
 
-<!-- FRIEND HEADER POPUP — lives inside #app, after header -->
+  <!-- FRIEND HEADER POPUP - fixed overlay -->
+
+  <!-- FRIEND HEADER POPUP — lives inside #app, after header -->
 
   <div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
     <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
@@ -2017,7 +1993,8 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
       <div class="fhp-time" id="fhpTime"></div>
       <button class="fhp-nudge-btn" id="fhpNudgeBtn">👋 נדנד</button>
     </div>
-</div>
+    </div>
+  </div>
 
 </body>
 </html>
