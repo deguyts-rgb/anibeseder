@@ -523,12 +523,13 @@
     <div class="header">
       <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="location.reload()"/>
       <div class="header-friends-strip" id="headerFriendsStrip"></div>
-      <div class="header-user-container" onclick="openProfilePanel()">
+      <div class="header-user-container" onclick="openSelfBubble()">
         <div class="avatar" id="userAvatar">👤</div>
         <span class="header-user-name" id="headerUserName"></span>
       </div>
     </div>
     <div class="submenu-bar">
+      <button class="submenu-btn" onclick="openProfilePanel()">👤 פרופיל</button>
       <button class="submenu-btn" onclick="openPolicyModal()">📋 מדיניות</button>
       <button class="submenu-btn" onclick="openPanel('settingsPanel')">⚙️ הגדרות</button>
       <button class="submenu-btn" onclick="location.reload()">🔄 רענון</button>
@@ -851,6 +852,7 @@ window.openFriendHeaderPopup = (uid) => {
 
 function _showFhpByIdx(idx, dir) {
   const uid = fhpUids[idx];
+  if(uid === '__self__'){ _showSelfFhp(dir); return; }
   const w = state.watching.find(x => x.followingUid === uid);
   const s = watchingStatuses[uid];
   if (!w) return;
@@ -931,6 +933,89 @@ function _setupFhpSwipe() {
     if(dx<0 && fhpCurrentIdx<fhpUids.length-1){fhpCurrentIdx++;_showFhpByIdx(fhpCurrentIdx,'left');}
     else if(dx>0 && fhpCurrentIdx>0){fhpCurrentIdx--;_showFhpByIdx(fhpCurrentIdx,'right');}
   }, {passive:true});
+}
+
+
+window.openSelfBubble = () => {
+  if(!currentUser) return;
+  const now = Date.now();
+  const greenFriends = state.watching
+    .filter(w=>{ const s=watchingStatuses[w.followingUid]; return s&&s.isOk&&s.timestamp&&(now-s.timestamp.getTime())<24*3600000; })
+    .map(w=>w.followingUid);
+  fhpUids = ['__self__', ...greenFriends];
+  fhpCurrentIdx = 0;
+  const _p = document.getElementById('friendHeaderPopup');
+  if(_p.parentNode !== document.body) document.body.appendChild(_p);
+  _p.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);overflow:hidden;padding-top:125px;-webkit-transform:translateZ(0);transform:translateZ(0)';
+  _showSelfFhp();
+  _setupFhpSwipe();
+};
+
+function _showSelfFhp(dir) {
+  const now = Date.now();
+  const isOk = state.isOk && state.lastConfirmed && (now - state.lastConfirmed.getTime()) < 24*3600000;
+  const hrs = state.lastConfirmed ? (now - state.lastConfirmed.getTime()) / 3600000 : null;
+  const name = currentUser.displayName || 'אני';
+  const emoji = state.moodEmoji || (isOk ? '✓' : '');
+  const sign = state.sign || '', ct = state.customText || '';
+  const storedPhoto = localStorage.getItem('profilePhoto_' + currentUser.uid);
+
+  // Background
+  const bgEl = document.getElementById('fhpBgAvatar');
+  if(storedPhoto){ bgEl.style.backgroundImage=`url('${storedPhoto}')`;bgEl.style.display='block'; }
+  else { bgEl.style.backgroundImage='';bgEl.style.display='none'; }
+
+  // Circle color
+  const circleEl = document.getElementById('fhpCircle');
+  const borderEl = circleEl?.closest('.fhp-circle-border');
+  if(isOk && hrs !== null){
+    const deg = Math.min(hrs/24,1)*360;
+    if(circleEl) circleEl.style.background = deg<=0.5
+      ? 'conic-gradient(from -90deg, #4cde80 0deg 360deg)'
+      : `conic-gradient(from -90deg, #e03030 0deg ${deg.toFixed(2)}deg, #4cde80 ${deg.toFixed(2)}deg 360deg)`;
+    if(borderEl){ borderEl.style.borderColor='#4cde80'; borderEl.style.boxShadow='0 0 0 2px rgba(76,222,128,0.3),0 0 20px rgba(76,222,128,0.5)'; }
+  } else {
+    if(circleEl) circleEl.style.background = '#c01515';
+    if(borderEl){ borderEl.style.borderColor='#ff4444'; borderEl.style.boxShadow='0 0 0 2px rgba(255,68,68,0.3),0 0 20px rgba(255,68,68,0.5)'; }
+  }
+
+  // Text
+  document.getElementById('fhpEmoji').textContent = isOk ? emoji : '☹️';
+  document.getElementById('fhpName').textContent = name + ' (אני)';
+  let statusTxt = '';
+  if(isOk){
+    statusTxt = sign==='"' ? `״אני בסדר״${ct?'\n'+ct:''}${emoji?' '+emoji:''}` : `אני בסדר${sign}${ct?'\n'+ct:''}${emoji?' '+emoji:''}`;
+  } else {
+    statusTxt = 'אני לא בסדר';
+  }
+  const statusEl = document.getElementById('fhpStatusText');
+  statusEl.innerHTML = statusTxt.replace(/\n/g,'<br>');
+  statusEl.style.color = isOk ? '#4cde80' : '#ff6666';
+  document.getElementById('fhpTime').textContent = state.lastConfirmed ? 'דיווח ' + formatRelativeTimeOther(state.lastConfirmed) : 'טרם דיווחת';
+
+  // Button
+  const nudgeBtn = document.getElementById('fhpNudgeBtn');
+  if(nudgeBtn){
+    if(!isOk){
+      nudgeBtn.textContent = '✅ תהיה בסדר';
+      nudgeBtn.style.display = 'block';
+      nudgeBtn.onclick = async e => { e.stopPropagation(); await handleOkPress(); _showSelfFhp(); };
+    } else {
+      nudgeBtn.style.display = 'none';
+    }
+  }
+
+  // Slide animation
+  const blob = document.getElementById('fhpMainBlob');
+  if(blob && dir){
+    blob.style.transition = 'none';
+    blob.style.transform = dir==='left' ? 'translateX(120%)' : 'translateX(-120%)';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      blob.style.transition = 'transform 0.3s cubic-bezier(0.34,1.2,0.64,1)';
+      blob.style.transform = 'translateX(0)';
+    }));
+  }
+  _updateFhpDots();
 }
 
 window.closeFriendHeaderPopup = () => {
@@ -1402,9 +1487,8 @@ function renderWatchingWithStatuses(watching,statuses){
         </div>
       </div>
       <div class="wcard-actions-row" onclick="event.stopPropagation()">
-        <div class="wcard-action-btn wcard-badge-cell ${isMutual?'wcard-badge-mutual':reqSent?'wcard-badge-pending':'wcard-badge-req'}"
-          ${!isMutual&&!reqSent?`onclick="requestFollowBack('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')"`:''}
-        >${isMutual?'🤝 הדדי':reqSent?'⏳ ממתין':'➕ בקש'}</div>
+        <div style="flex:1;min-width:0;display:flex;align-items:center;padding:0 2px"><span style="font-size:13px;font-weight:700;color:#e8f4f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.followingName||'משתמש'}${soundIndicator}</span></div>
+        
         <button class="wcard-action-btn wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋 <span style="font-size:8px">נדנד</span></button>
         <button class="wcard-action-btn wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️ <span style="font-size:8px">הסר</span></button>
       </div>
@@ -1675,7 +1759,7 @@ window.openFriendProfile = uid => {
     </div>
     <div style="background:rgba(126,207,255,0.05);border:1px solid rgba(126,207,255,0.12);border-radius:14px;padding:14px 16px;margin-bottom:12px">
       <div style="font-size:12px;color:rgba(200,230,255,0.4);margin-bottom:10px;font-weight:600">פרטי מעקב</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">קשר</span><span style="color:#7ecfff;font-weight:700">${isMutual?'🤝 הדדי':reqSent?'⏳ בקשה ממתינה':'➡️ חד-צדדי'}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">קשר</span><span style="color:#7ecfff;font-weight:700">🤝 חברים</span></div>
       ${timeFullStr?`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">דיווח אחרון</span><span style="color:rgba(200,230,255,0.75)">${timeFullStr}</span></div>`:''}
       ${s?.moodEmoji?`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:rgba(200,230,255,0.5)">מצב רוח</span><span style="font-size:18px">${s.moodEmoji}</span></div>`:''}
       ${s?.customText?`<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:rgba(200,230,255,0.5)">טקסט</span><span style="color:#e8f4f8;font-weight:700">${s.customText}</span></div>`:''}
@@ -2030,7 +2114,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v44';
+var CACHE_NAME='ani-beseder-v46';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
