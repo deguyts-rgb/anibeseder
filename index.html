@@ -232,7 +232,7 @@
 
 ```
 /* ── FRIEND HEADER POPUP ── */
-#friendHeaderPopup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);overflow:hidden}
+#friendHeaderPopup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:flex-start;background:rgba(0,0,0,0.82);overflow:hidden}
 .fhp-blob{position:relative;width:251px;height:311px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.5);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 0 100px rgba(40,200,100,0.65),0 0 50px rgba(40,200,100,0.35),0 0 22px rgba(40,200,100,0.2),0 20px 55px rgba(0,0,0,0.65);overflow:hidden;padding:20px 18px 22px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 @keyframes blobPop{from{transform:scale(0.82) translateY(16px)}to{transform:scale(1) translateY(0)}}
 .fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(4px) brightness(0.6) saturate(1.5);transform:scale(1.06);z-index:0}
@@ -254,15 +254,16 @@
 .fhp-nudge-btn{background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:20px;color:rgba(255,220,130,0.9);font-size:12px;font-weight:700;padding:5px 16px;cursor:pointer;font-family:inherit;z-index:3;margin-top:2px}
 .fhp-nudge-btn:active{background:rgba(255,200,50,0.22)}
 /* ── PEEK BLOBS ── */
-.fhp-peek{position:absolute;width:130px;height:178px;background:linear-gradient(170deg,#0c1b2a 0%,#112436 55%,#091824 100%);border:1.5px solid rgba(76,222,128,0.35);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 0 40px rgba(40,200,100,0.22),0 10px 30px rgba(0,0,0,0.5);cursor:pointer;opacity:0;transition:opacity 0.3s;pointer-events:none;overflow:hidden;padding:14px 10px;z-index:1}
-.fhp-peek.visible{opacity:0.78;pointer-events:auto}
+.fhp-row{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;width:100%;gap:0;overflow:hidden}
+.fhp-peek{width:100px;height:170px;background:linear-gradient(170deg,#0c1b2a 0%,#112436 55%,#091824 100%);border:1.5px solid rgba(76,222,128,0.32);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 30px rgba(40,200,100,0.18),0 8px 24px rgba(0,0,0,0.5);cursor:pointer;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;overflow:hidden;padding:12px 8px;flex-shrink:0;margin-top:28px}
+.fhp-peek.visible{opacity:0.75;pointer-events:auto}
 .fhp-peek:active{opacity:1}
-.fhp-peek-photo{width:54px;height:54px;border-radius:50%;border:2px solid rgba(76,222,128,0.55);overflow:hidden;background:#0a1520;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+#fhpPeekLeft{transform:translateX(18px)}
+#fhpPeekRight{transform:translateX(-18px)}
+.fhp-peek-photo{width:48px;height:48px;border-radius:50%;border:2px solid rgba(76,222,128,0.55);overflow:hidden;background:#0a1520;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .fhp-peek-photo img{width:100%;height:100%;object-fit:cover}
-.fhp-peek-name{font-size:9.5px;font-weight:800;color:rgba(255,255,255,0.8);text-align:center;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,0.7)}
-.fhp-peek-emoji{font-size:13px;line-height:1}
-#fhpPeekLeft{right:calc(50% + 130px);top:0}
-#fhpPeekRight{left:calc(50% + 130px);top:0}
+.fhp-peek-name{font-size:9px;font-weight:800;color:rgba(255,255,255,0.8);text-align:center;max-width:88px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,0.7)}
+.fhp-peek-emoji{font-size:12px;line-height:1}
 
 /* ── ADMIN PANEL ── */
 .admin-open-btn{width:100%;background:linear-gradient(135deg,rgba(255,200,50,0.1),rgba(255,150,0,0.08));border:1px solid rgba(255,200,50,0.35);border-radius:12px;color:rgba(255,220,130,0.9);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;display:none}
@@ -277,15 +278,15 @@
 .admin-cb-all{width:17px;height:17px;cursor:pointer;accent-color:#4cde80;flex-shrink:0}
 .admin-select-label{font-size:13px;font-weight:700;color:rgba(200,230,255,0.7);flex:1}
 .admin-selected-count{font-size:11px;color:#4cde80;font-weight:700}
-.admin-user-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-bottom:1px solid rgba(126,207,255,0.06);cursor:pointer}
+.admin-user-row{display:flex;align-items:center;gap:6px;padding:8px 8px;border-bottom:1px solid rgba(126,207,255,0.06);cursor:pointer;min-width:0}
 .admin-user-row:last-child{border-bottom:none}
 .admin-user-row:active{background:rgba(126,207,255,0.05)}
 .admin-cb{width:16px;height:16px;cursor:pointer;accent-color:#4cde80;flex-shrink:0}
-.admin-user-num{font-size:10px;color:rgba(200,230,255,0.28);width:20px;text-align:center;flex-shrink:0}
-.admin-user-name{font-size:13px;font-weight:600;color:#e8f4f8;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.admin-user-email{font-size:10px;color:rgba(200,230,255,0.4);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.admin-user-date{font-size:10px;color:rgba(200,230,255,0.3);flex-shrink:0}
-.admin-users-box{background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.12);border-radius:12px;overflow:hidden;margin-bottom:12px;max-height:300px;overflow-y:auto}
+.admin-user-num{font-size:9px;color:rgba(200,230,255,0.28);width:16px;text-align:center;flex-shrink:0}
+.admin-user-name{font-size:12px;font-weight:600;color:#e8f4f8;flex:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-email{font-size:9px;color:rgba(200,230,255,0.4);flex:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-user-date{font-size:9px;color:rgba(200,230,255,0.3);flex-shrink:0;white-space:nowrap}
+.admin-users-box{background:rgba(0,0,0,0.2);border:1px solid rgba(126,207,255,0.12);border-radius:12px;overflow-x:hidden;overflow-y:auto;margin-bottom:12px;max-height:300px}
 .admin-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,200,50,0.2),transparent);margin:14px 0}
 .admin-nudge-title{font-size:13px;font-weight:700;color:rgba(255,220,130,0.8);margin-bottom:6px}
 .admin-nudge-area{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,200,50,0.2);border-radius:10px;color:#e8f4f8;padding:10px 12px;font-size:14px;font-family:inherit;direction:rtl;resize:none;outline:none;min-height:72px;margin-bottom:8px;line-height:1.5}
@@ -547,11 +548,10 @@
 
   <!-- FRIEND HEADER POPUP — lives inside #app, after header -->
 
-  <div id="friendHeaderPopup" onclick="closeFriendHeaderPopup()">
-    <!-- Peek blobs -->
-    <div class="fhp-peek" id="fhpPeekLeft" onclick="event.stopPropagation();fhpNavigate('prev')"></div>
-    <div class="fhp-peek" id="fhpPeekRight" onclick="event.stopPropagation();fhpNavigate('next')"></div>
-    <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
+  <div id="friendHeaderPopup" style="display:none" onclick="closeFriendHeaderPopup()">
+    <div class="fhp-row">
+      <div class="fhp-peek" id="fhpPeekLeft" onclick="event.stopPropagation();fhpNavigate('prev')"></div>
+      <div class="fhp-blob" id="fhpMainBlob" onclick="event.stopPropagation()">
       <div class="fhp-bg-avatar" id="fhpBgAvatar"></div>
       <div class="fhp-green-overlay"></div>
       <button class="fhp-close" onclick="closeFriendHeaderPopup()">✕</button>
@@ -569,8 +569,10 @@
       <div class="fhp-status-text" id="fhpStatusText"></div>
       <div class="fhp-time" id="fhpTime"></div>
       <button class="fhp-nudge-btn" id="fhpNudgeBtn">👋 נדנד</button>
-    </div>
-  </div>
+      </div><!-- end fhp-blob -->
+      <div class="fhp-peek" id="fhpPeekRight" onclick="event.stopPropagation();fhpNavigate('next')"></div>
+    </div><!-- end fhp-row -->
+  </div><!-- end friendHeaderPopup -->
 
   <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
   <div class="follow-banner" id="followBanner">
@@ -870,7 +872,7 @@ window.openFriendHeaderPopup = (uid) => {
   if (fhpCurrentIdx < 0) { fhpUids = [uid]; fhpCurrentIdx = 0; }
   const popup = document.getElementById('friendHeaderPopup');
   popup.style.display = 'flex';
-  popup.style.paddingTop = '185px';
+  popup.style.paddingTop = '170px';
   _showFhpByIdx(fhpCurrentIdx);
   _setupFhpSwipe();
 }
@@ -1199,7 +1201,7 @@ onAuthStateChanged(auth,async user=>{
     if(storedPhoto){ av.innerHTML=`<img src="${storedPhoto}">`; av.classList.add('has-photo'); }
     else if(user.photoURL){ av.innerHTML=`<img src="${user.photoURL}">`; }
     else av.textContent=(user.displayName||'U')[0];
-    document.getElementById('myShareLink').textContent=`https://anibeseder.netlify.app/?follow=${user.uid}`;
+    document.getElementById('myShareLink').textContent=`https://anibeseder.com/?follow=${user.uid}`;
     await initUser();
     updateHeaderUserInfo();
     await checkFollowParam();
@@ -1536,7 +1538,7 @@ window.handleOkPress=async()=>{
 };
 
 window.doShare=()=>{
-  const link=`https://anibeseder.netlify.app/?follow=${currentUser.uid}`;
+  const link=`https://anibeseder.com/?follow=${currentUser.uid}`;
   const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך לעקוב ב״אני בסדר״.\nתקבל התראה כשאני בסדר:\n${link}`;
   if(navigator.share)navigator.share({title:'אני בסדר',text,url:link});
   else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
@@ -1997,12 +1999,12 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v34';
+var CACHE_NAME='ani-beseder-v35';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
-self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.netlify.app'}}));});
-self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.netlify.app');}));});`;
+self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.com'}}));});
+self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.com');}));});`;
   var blob=new Blob([sw],{type:'text/javascript'});
   var swUrl=URL.createObjectURL(blob);
   navigator.serviceWorker.register(swUrl,{scope:'/'}).catch(function(){});
