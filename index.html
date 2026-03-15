@@ -841,11 +841,8 @@ window.openFriendHeaderPopup = (uid) => {
   fhpCurrentIdx = fhpUids.indexOf(uid);
   if (fhpCurrentIdx < 0) { fhpUids = [uid]; fhpCurrentIdx = 0; }
   const popup = document.getElementById('friendHeaderPopup');
-  // Force move popup to body level (iOS fix)
   if(popup.parentNode !== document.body) document.body.appendChild(popup);
-  popup.style.display = 'flex';
-  popup.style.paddingTop = '125px';
-  void popup.offsetHeight; // force reflow
+  popup.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);overflow:hidden;padding-top:125px;-webkit-transform:translateZ(0);transform:translateZ(0)';
   _showFhpByIdx(fhpCurrentIdx);
   _setupFhpSwipe();
 }
@@ -1152,6 +1149,7 @@ onAuthStateChanged(auth,async user=>{
     await checkFollowParam();
     checkNotifPermission(); updateNotifToggleBtn(); updateAddHomeBtn();
     await loadWatching();
+    await ensureMutualFollows();
     await checkPendingFollowRequests();
     renderAlerts(); checkInstallPrompt();
     if(Notification.permission==='granted') registerFCMToken();
@@ -1467,18 +1465,62 @@ window.confirmUnfollow=(uid,name)=>{
 window.closeConfirm=()=>document.getElementById('confirmModal').classList.remove('show');
 document.getElementById('confirmOkBtn').addEventListener('click',async()=>{if(pendingAction){await pendingAction();pendingAction=null;}closeConfirm();});
 
+
+async function ensureMutualFollows(){
+  if(!currentUser) return;
+  try {
+    // Get everyone who follows ME
+    const qFollowers=query(collection(db,'follows'),where('followingUid','==',currentUser.uid));
+    const followerSnaps=await getDocs(qFollowers);
+    // Get everyone I follow
+    const qFollowing=query(collection(db,'follows'),where('followerUid','==',currentUser.uid));
+    const followingSnaps=await getDocs(qFollowing);
+    const iFollow=new Set();
+    followingSnaps.forEach(d=>iFollow.add(d.data().followingUid));
+    // For each person who follows me but I don't follow back → create reverse
+    const promises=[];
+    followerSnaps.forEach(d=>{
+      const data=d.data();
+      if(!iFollow.has(data.followerUid)){
+        const fid=`${currentUser.uid}_${data.followerUid}`;
+        promises.push(setDoc(doc(db,'follows',fid),{
+          followerUid:currentUser.uid,
+          followerName:currentUser.displayName||'',
+          followerEmail:currentUser.email||'',
+          followingUid:data.followerUid,
+          followingName:data.followerName||'',
+          createdAt:serverTimestamp()
+        }));
+      }
+    });
+    if(promises.length>0){
+      await Promise.all(promises);
+      console.log(`Created ${promises.length} mutual follow(s)`);
+    }
+  } catch(e){ console.log('ensureMutualFollows:',e); }
+}
 async function checkFollowParam(){
   const p=new URLSearchParams(window.location.search);
   const uid=p.get('follow');
   if(!uid||uid===currentUser.uid)return;
-  const fid=`${currentUser.uid}_${uid}`;
-  const snap=await getDoc(doc(db,'follows',fid));
   const us=await getDoc(doc(db,'users',uid));
-  const name=us.exists()?(us.data().name||'המשתמש'):'המשתמש';
-  if(!snap.exists()){
-    await setDoc(doc(db,'follows',fid),{followerUid:currentUser.uid,followerName:currentUser.displayName,followerEmail:currentUser.email,followingUid:uid,followingName:name,createdAt:serverTimestamp()});
-    document.getElementById('followBannerTitle').textContent=`✅ עכשיו אתה עוקב אחרי ${name}`;
-    document.getElementById('followBannerText').textContent=`תקבל התראה כשהכל בסדר עם ${name}.`;
+  const name=us.exists()?(us.data().name||'החבר'):'החבר';
+  const myName=currentUser.displayName||'חבר';
+  // A→B follow (visitor follows link sender)
+  const fidAB=`${currentUser.uid}_${uid}`;
+  const snapAB=await getDoc(doc(db,'follows',fidAB));
+  if(!snapAB.exists()){
+    await setDoc(doc(db,'follows',fidAB),{followerUid:currentUser.uid,followerName:myName,followerEmail:currentUser.email||'',followingUid:uid,followingName:name,createdAt:serverTimestamp()});
+  }
+  // B→A follow (link sender follows visitor back — mutual)
+  const fidBA=`${uid}_${currentUser.uid}`;
+  const snapBA=await getDoc(doc(db,'follows',fidBA));
+  if(!snapBA.exists()){
+    await setDoc(doc(db,'follows',fidBA),{followerUid:uid,followerName:name,followerEmail:us.exists()?us.data().email||'':'',followingUid:currentUser.uid,followingName:myName,createdAt:serverTimestamp()});
+  }
+  if(!snapAB.exists()||!snapBA.exists()){
+    document.getElementById('followBannerTitle').textContent=`🤝 אתה וחבר ${name} כעת חברים!`;
+    document.getElementById('followBannerText').textContent=`תקבלו התראות כשכל אחד מכם בסדר.`;
     document.getElementById('followBanner').classList.add('show');
     setTimeout(()=>document.getElementById('followBanner').classList.remove('show'),6000);
   }
@@ -1502,7 +1544,7 @@ window.handleOkPress=async()=>{
 
 window.doShare=()=>{
   const link=`https://anibeseder.com/?follow=${currentUser.uid}`;
-  const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך לעקוב ב״אני בסדר״.\nתקבל התראה כשאני בסדר:\n${link}`;
+  const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך להיות חברים ב״אני בסדר״.\nלחץ על הלינק — ונהיה חברים שמקבלים עדכונים אחד מהשני:\n${link}`;
   if(navigator.share)navigator.share({title:'אני בסדר',text,url:link});
   else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
@@ -1680,18 +1722,9 @@ function updateHeaderFriendsStrip(){
     const circleInner=photo
       ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       :`<span style="font-size:19px">${s?.moodEmoji||'✓'}</span>`;
-    return `<div class="hfriend-item" data-uid="${w.followingUid}" style="cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)"><div class="hfriend-circle">${circleInner}</div><span class="hfriend-name">${firstName}</span></div>`;
+    // Use onclick directly — most reliable cross-platform
+    return `<div class="hfriend-item" onclick="window.openFriendHeaderPopup('${w.followingUid}')" style="cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0);user-select:none;-webkit-user-select:none"><div class="hfriend-circle" style="pointer-events:none">${circleInner}</div><span class="hfriend-name" style="pointer-events:none">${firstName}</span></div>`;
   }).join('');
-  // Attach listeners — touchstart for instant iOS response
-  strip.querySelectorAll('.hfriend-item').forEach(el=>{
-    el.addEventListener('touchstart', function(e){
-      const uid = this.dataset.uid;
-      setTimeout(()=>openFriendHeaderPopup(uid), 10);
-    }, {passive:true});
-    el.addEventListener('click', function(e){
-      openFriendHeaderPopup(this.dataset.uid);
-    });
-  });
 }
 
 
@@ -1997,7 +2030,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v42';
+var CACHE_NAME='ani-beseder-v43';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
