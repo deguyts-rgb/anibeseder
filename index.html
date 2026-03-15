@@ -887,7 +887,11 @@ function _showFhpByIdx(idx, dir) {
   document.getElementById('fhpStatusText').innerHTML = statusTxt.replace(/\n/g, '<br>');
   document.getElementById('fhpTime').textContent = fullTimeStr;
   const nudgeBtn = document.getElementById('fhpNudgeBtn');
-  if (nudgeBtn) nudgeBtn.onclick = e => { e.stopPropagation(); sendNudge(uid, name); };
+  if (nudgeBtn) {
+    nudgeBtn.textContent = '👋 נדנד';
+    nudgeBtn.style.display = 'block';
+    nudgeBtn.onclick = e => { e.stopPropagation(); sendNudge(uid, name); };
+  }
   const blob = document.getElementById('fhpMainBlob');
   if (blob && dir) {
     blob.style.transition = 'none';
@@ -907,7 +911,7 @@ function _updateFhpDots() {
   if (!dots) {
     dots = document.createElement('div');
     dots.id = 'fhpDots';
-    dots.style.cssText = 'display:flex;gap:5px;justify-content:center;z-index:3;margin-top:4px;';
+    dots.style.cssText = 'display:flex;gap:5px;justify-content:center;z-index:3;margin-top:4px;direction:ltr;';
     document.querySelector('.fhp-nudge-btn')?.insertAdjacentElement('afterend', dots);
   }
   if (fhpUids.length <= 1) { dots.style.display = 'none'; return; }
@@ -1475,7 +1479,6 @@ function renderWatchingWithStatuses(watching,statuses){
         <div class="wcard-identity" ${identityStyle}>
           ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
           <div class="wcard-identity-content">
-            <div class="wcard-iname">${w.followingName||'משתמש'}</div>
           </div>
         </div>
         <div class="wcard-status-wrap">
@@ -1487,8 +1490,7 @@ function renderWatchingWithStatuses(watching,statuses){
         </div>
       </div>
       <div class="wcard-actions-row" onclick="event.stopPropagation()">
-        <div style="flex:1;min-width:0;display:flex;align-items:center;padding:0 2px"><span style="font-size:13px;font-weight:700;color:#e8f4f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.followingName||'משתמש'}</span></div>
-        
+        <div style="flex:1.6;min-width:0;display:flex;align-items:center;padding:0 4px 0 2px"><span style="font-size:13px;font-weight:700;color:#e8f4f8;white-space:normal;line-height:1.3;word-break:break-word">${w.followingName||'משתמש'}</span></div>
         <button class="wcard-action-btn wcard-nudge" onclick="sendNudge('${w.followingUid}','${(w.followingName||'').replace(/'/g,"\\'")}')">👋 <span style="font-size:8px">נדנד</span></button>
         <button class="wcard-action-btn wcard-trash" onclick="confirmUnfollow('${w.followingUid}','${(w.followingName||'משתמש').replace(/'/g,"\\'")}')">🗑️ <span style="font-size:8px">הסר</span></button>
       </div>
@@ -2114,7 +2116,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v47';
+var CACHE_NAME='ani-beseder-v48';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
