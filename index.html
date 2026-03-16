@@ -2469,15 +2469,12 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v67';
+var CACHE_NAME='ani-beseder-v68';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){
-  if(e.request.method!=='GET')return;
-  var url=e.request.url;
-  // דלג על כל בקשות auth — אל תחסום redirect flows
-  if(url.indexOf('firebaseapp.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('appleid.apple.com')>-1||url.indexOf('accounts.google.com')>-1||url.indexOf('__/auth')>-1||url.indexOf('identitytoolkit')>-1||url.indexOf('securetoken')>-1)return;
-  e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));
+  // SW לא מיירט שום בקשה — רק שקיפות מלאה
+  // זה מונע הפרעה ל-Apple Sign-In redirect על iOS Safari
 });
 self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.com'}}));});
 self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.com');}));});`;
@@ -2489,7 +2486,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v67';
+  var APP_BUILD='v68';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
