@@ -661,7 +661,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs,
          serverTimestamp, onSnapshot, updateDoc, orderBy, limit, getCountFromServer }
@@ -680,6 +680,8 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
+// טיפול בחזרה מ-redirect login (iOS Safari)
+getRedirectResult(auth).catch(e=>{ if(e&&e.code&&e.code!=='auth/no-current-user') console.log('redirect result:',e.code); });
 // Fix old lowercase avatar paths stored in Firestore
 function _fixPhotoUrl(url){
   if(!url) return null;
@@ -1364,14 +1366,23 @@ function renderAlerts(){
 window.togglePersonalAlert=i=>{personalAlerts[i].on=!personalAlerts[i].on;saveAlerts('personalAlerts',personalAlerts);renderAlerts();};
 window.toggleFollowerAlert=i=>{followerAlerts[i].on=!followerAlerts[i].on;saveAlerts('followerAlerts',followerAlerts);renderAlerts();};
 
-window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){alert('שגיאה: '+e.message);}};
+const _isIOSSafari = /iphone|ipad|ipod/i.test(navigator.userAgent) && /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
+
+window.signInWithGoogle=async()=>{
+  try{
+    const provider=new GoogleAuthProvider();
+    if(_isIOSSafari) await signInWithRedirect(auth,provider);
+    else await signInWithPopup(auth,provider);
+  }catch(e){ if(e.code!=='auth/popup-closed-by-user') alert('שגיאה: '+e.message); }
+};
 window.signInWithApple=async()=>{
   try{
     const provider=new OAuthProvider('apple.com');
     provider.addScope('email');
     provider.addScope('name');
     provider.setCustomParameters({locale:'he'});
-    await signInWithPopup(auth,provider);
+    if(_isIOSSafari) await signInWithRedirect(auth,provider);
+    else await signInWithPopup(auth,provider);
   }catch(e){
     if(e.code!=='auth/popup-closed-by-user') alert('שגיאה: '+e.message);
   }
@@ -2440,7 +2451,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v64';
+var CACHE_NAME='ani-beseder-v65';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2454,7 +2465,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v64';
+  var APP_BUILD='v65';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
