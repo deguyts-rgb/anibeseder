@@ -116,7 +116,7 @@
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:10px 0 18px}
     /* ── COINS BAR ── */
-    .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:6px 0 0;min-height:22px;direction:rtl}
+    .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:3px 0 0;min-height:22px;direction:rtl}
     .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap}
     .coins-number{font-size:13px;font-weight:800;color:#4cde80;white-space:nowrap;min-width:18px;text-align:left}
     .coins-stacks{display:flex;gap:3px;align-items:flex-end}
@@ -607,9 +607,9 @@
 
 <!-- COINS BAR -->
 <div class="coins-bar" id="coinsBar">
-  <span class="coins-label">מטבעות בסדרס</span>
-  <span class="coins-number" id="coinsText">0</span>
   <div class="coins-stacks" id="coinsStacks"></div>
+  <span class="coins-number" id="coinsText">0</span>
+  <span class="coins-label">מטבעות בסדרס</span>
 </div>
 
 <div class="home-divider"></div>
@@ -2208,7 +2208,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v50';
+var CACHE_NAME='ani-beseder-v51';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2222,7 +2222,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v50';
+  var APP_BUILD='v51';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
