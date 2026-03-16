@@ -1366,14 +1366,18 @@ function renderAlerts(){
 window.togglePersonalAlert=i=>{personalAlerts[i].on=!personalAlerts[i].on;saveAlerts('personalAlerts',personalAlerts);renderAlerts();};
 window.toggleFollowerAlert=i=>{followerAlerts[i].on=!followerAlerts[i].on;saveAlerts('followerAlerts',followerAlerts);renderAlerts();};
 
-const _isIOSSafari = /iphone|ipad|ipod/i.test(navigator.userAgent) && /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
+const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
 window.signInWithGoogle=async()=>{
   try{
-    const provider=new GoogleAuthProvider();
-    if(_isIOSSafari) await signInWithRedirect(auth,provider);
-    else await signInWithPopup(auth,provider);
-  }catch(e){ if(e.code!=='auth/popup-closed-by-user') alert('שגיאה: '+e.message); }
+    await signInWithPopup(auth,new GoogleAuthProvider());
+  }catch(e){
+    if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+      await signInWithRedirect(auth,new GoogleAuthProvider());
+    } else if(e.code!=='auth/popup-closed-by-user'){
+      alert('שגיאה: '+e.message);
+    }
+  }
 };
 window.signInWithApple=async()=>{
   try{
@@ -1381,10 +1385,16 @@ window.signInWithApple=async()=>{
     provider.addScope('email');
     provider.addScope('name');
     provider.setCustomParameters({locale:'he'});
-    if(_isIOSSafari) await signInWithRedirect(auth,provider);
-    else await signInWithPopup(auth,provider);
+    await signInWithPopup(auth,provider);
   }catch(e){
-    if(e.code!=='auth/popup-closed-by-user') alert('שגיאה: '+e.message);
+    if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+      const provider=new OAuthProvider('apple.com');
+      provider.addScope('email'); provider.addScope('name');
+      provider.setCustomParameters({locale:'he'});
+      await signInWithRedirect(auth,provider);
+    } else if(e.code!=='auth/popup-closed-by-user'){
+      alert('שגיאה: '+e.message);
+    }
   }
 };
 window.doSignOut=async()=>{await signOut(auth);};
@@ -2451,10 +2461,10 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v65';
+var CACHE_NAME='ani-beseder-v66';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
-self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
+self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;var url=e.request.url;if(url.indexOf('firebaseapp.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('appleid.apple.com')>-1||url.indexOf('accounts.google.com')>-1)return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
 self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.com'}}));});
 self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.com');}));});`;
   var blob=new Blob([sw],{type:'text/javascript'});
@@ -2465,7 +2475,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v65';
+  var APP_BUILD='v66';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
