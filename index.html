@@ -1399,8 +1399,9 @@ onAuthStateChanged(auth,async user=>{
     await checkPendingFollowRequests();
     renderAlerts(); checkInstallPrompt();
     if(Notification.permission==='granted') registerFCMToken();
-    // Init admin nudge emoji bar
     if(isAdmin()) initAdminEmojiBar();
+    // ── Listener בזמן אמת על הסטטוס של המשתמש עצמו ──
+    startSelfStatusListener();
   } else {
     currentUser=null;
     document.getElementById('login-screen').style.display='flex';
@@ -1602,6 +1603,29 @@ function earnCoins(amount,typePrefix){
   setDoc(doc(db,'users',currentUser.uid),{coins:state.coins},{merge:true}).catch(()=>{});
   renderCoinDisplay();
   showCoinToast(amount);
+}
+
+let _selfStatusUnsub = null;
+function startSelfStatusListener(){
+  if(_selfStatusUnsub) _selfStatusUnsub();
+  _selfStatusUnsub = onSnapshot(doc(db,'status',currentUser.uid), snap => {
+    if(!snap.exists()) return;
+    const sd = snap.data();
+    let changed = false;
+    // אימוג׳י
+    const newEmoji = sd.moodEmoji||null;
+    if(newEmoji !== state.moodEmoji){ state.moodEmoji=newEmoji; state.moodLevel=2; localStorage.setItem('moodEmoji_'+currentUser.uid,newEmoji||''); changed=true; }
+    // סימן
+    const newSign = sd.sign||null;
+    if(newSign !== state.sign){ state.sign=newSign; if(newSign) localStorage.setItem('sign_'+currentUser.uid,newSign); else localStorage.removeItem('sign_'+currentUser.uid); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===newSign)); changed=true; }
+    // טקסט חופשי
+    const newText = sd.customText||null;
+    if(newText !== state.customText){ state.customText=newText; if(newText){ localStorage.setItem('customText_'+currentUser.uid,newText); const inp=document.getElementById('signCustomInput'); if(inp) inp.value=newText; } else { localStorage.removeItem('customText_'+currentUser.uid); const inp=document.getElementById('signCustomInput'); if(inp){ inp.value=''; inp.dataset.unlocked=''; } } changed=true; }
+    // סאונד
+    const newSound = (sd.soundId!==undefined&&sd.soundId!==null)?sd.soundId:null;
+    if(newSound !== state.soundId){ state.soundId=newSound; if(newSound!==null){ localStorage.setItem('soundId_'+currentUser.uid,String(newSound)); const sBtn=document.getElementById('soundBtn'); if(sBtn){sBtn.textContent=SOUND_DEFS[newSound]?.emoji||'♪';sBtn.classList.add('has-sound');} } else { localStorage.removeItem('soundId_'+currentUser.uid); const sBtn=document.getElementById('soundBtn'); if(sBtn){sBtn.textContent='♪';sBtn.classList.remove('has-sound');} } changed=true; }
+    if(changed) updateMainUI();
+  });
 }
 
 async function initUser(){
@@ -2415,7 +2439,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v62';
+var CACHE_NAME='ani-beseder-v63';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2429,7 +2453,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v62';
+  var APP_BUILD='v63';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
