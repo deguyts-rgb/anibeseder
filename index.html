@@ -1388,20 +1388,19 @@ window.signInWithApple=async()=>{
   provider.addScope('email');
   provider.addScope('name');
   provider.setCustomParameters({locale:'he'});
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(isIOS){
-    // iOS Safari: redirect תמיד (popup לא עובד עם Apple)
-    try{ await signInWithRedirect(auth,provider); }
-    catch(e){ alert('שגיאה: '+e.message); }
-    return;
-  }
   try{
+    // Popup עובד על iOS Safari כשמופעל ישירות מלחיצת המשתמש
     await signInWithPopup(auth,provider);
   }catch(e){
-    if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+    if(e.code==='auth/popup-blocked'){
+      alert('הדפדפן חסם את חלון ההתחברות. אנא אפשר popups עבור anibeseder.com בהגדרות Safari ונסה שוב.');
+    } else if(e.code==='auth/popup-closed-by-user'){
+      // המשתמש סגר — לא לעשות כלום
+    } else if(e.code==='auth/operation-not-supported-in-this-environment'){
+      // fallback ל-redirect רק אם popup לא נתמך בכלל
       await signInWithRedirect(auth,provider);
-    } else if(e.code!=='auth/popup-closed-by-user'){
-      alert('שגיאה: '+e.message);
+    } else {
+      alert('שגיאה: '+e.message+' ('+e.code+')');
     }
   }
 };
@@ -2469,7 +2468,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v68';
+var CACHE_NAME='ani-beseder-v69';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){
@@ -2486,7 +2485,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v68';
+  var APP_BUILD='v69';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
