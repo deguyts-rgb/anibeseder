@@ -87,6 +87,7 @@
     .sign-btn{position:absolute;bottom:-14px;left:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:#e8f4f8;font-family:inherit}
     .sign-btn:active{transform:scale(0.88)}
     .sign-btn.visible{display:flex}
+    .sign-btn.has-custom{border-color:rgba(200,160,40,0.8);box-shadow:0 3px 14px rgba(0,0,0,0.45),0 0 10px rgba(200,160,0,0.35);color:rgba(255,220,100,0.95)}
     /* ── SOUND BUTTON ── */
     .sound-btn{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.28);cursor:pointer;font-size:13px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:rgba(200,230,255,0.4);line-height:1;font-family:inherit}
     .sound-btn:active{transform:translateX(-50%) scale(0.85)}
@@ -602,7 +603,10 @@
       <div class="sign-cell" data-sign="-" onclick="selectSignByEl(this)">-</div>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
-      <input type="text" id="signCustomInput" class="sign-text-input premium" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomTextPremium(this)" onfocus="checkSignTextPremium(this)"/>
+      <div style="position:relative;flex:1">
+        <input type="text" id="signCustomInput" class="sign-text-input premium" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomTextPremium(this)" onfocus="checkSignTextPremium(this)" style="padding-left:28px"/>
+        <button onclick="confirmCustomText()" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:rgba(76,222,128,0.18);border:1px solid rgba(76,222,128,0.45);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;color:#4cde80;padding:0;line-height:1;font-family:inherit">✓</button>
+      </div>
       <span style="font-size:10px;color:rgba(200,160,40,0.85);font-weight:700;white-space:nowrap;flex-shrink:0">🪙 7</span>
     </div>
     <button class="sign-clear-btn" onclick="clearSign()">✕ נקה הכל</button>
@@ -1220,7 +1224,7 @@ window.handleCustomText = inp => {
 };
 
 window.checkSignTextPremium = inp => {
-  if(inp.dataset.unlocked) return; // כבר שולם
+  if(inp.dataset.unlocked) return;
   if((state.coins||0)<7){
     inp.blur();
     let el=document.getElementById('coinToast');
@@ -1232,26 +1236,66 @@ window.checkSignTextPremium = inp => {
     }
     return;
   }
+  // unlock - don't deduct yet, deduct on confirm
   inp.dataset.unlocked='1';
-  state.coins-=7;
-  localStorage.setItem(_coinKey('coins'),String(state.coins));
-  renderCoinDisplay();
   inp.placeholder='טקסט חופשי פרמיום ✨';
-  // מטבע אחד אם עברו 5 דקות מהשינוי הקודם
-  earnCoins(1,'change');
 };
 window.handleCustomTextPremium = inp => {
   if(!inp.dataset.unlocked){
     inp.value='';
     return;
   }
-  handleCustomText(inp);
+  const filtered = inp.value.replace(/[0-9]/g,'').substring(0,6);
+  inp.value = filtered;
+  // don't save yet - wait for confirm
+};
+window.confirmCustomText = () => {
+  const inp = document.getElementById('signCustomInput');
+  if(!inp) return;
+  const val = inp.value.replace(/[0-9]/g,'').substring(0,6);
+  if(!val){
+    document.getElementById('signPanel').classList.remove('show');
+    return;
+  }
+  // deduct 7 coins
+  if((state.coins||0)<7){
+    let el=document.getElementById('coinToast');
+    if(el){
+      clearTimeout(_coinToastTimer);
+      el.textContent='דווח ותקבל בסדרס 🪙';
+      el.classList.add('show');
+      _coinToastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+    }
+    inp.value=''; inp.dataset.unlocked='';
+    return;
+  }
+  state.coins-=7;
+  localStorage.setItem(_coinKey('coins'),String(state.coins));
+  renderCoinDisplay();
+  showCoinToast(-7);
+  // save text
+  state.customText=val;
+  if(currentUser){
+    localStorage.setItem('customText_'+currentUser.uid,val);
+    setDoc(doc(db,'status',currentUser.uid),{customText:val},{merge:true}).catch(()=>{});
+  }
+  // golden sign btn
+  const signBtn=document.getElementById('signBtn');
+  signBtn.textContent='T';
+  signBtn.classList.add('has-custom');
+  // earn 1 coin if 5min passed
+  earnCoins(1,'change');
+  document.getElementById('signPanel').classList.remove('show');
+  updateMainUI();
 };
 window.clearSign = () => {
   state.sign = null; state.customText = null;
   document.querySelectorAll('.sign-cell').forEach(el => el.classList.remove('selected'));
-  document.getElementById('signBtn').textContent = '!';
-  const inp=document.getElementById('signCustomInput'); if(inp) inp.value='';
+  const signBtn=document.getElementById('signBtn');
+  signBtn.textContent = '!';
+  signBtn.classList.remove('has-custom');
+  const inp=document.getElementById('signCustomInput');
+  if(inp){ inp.value=''; inp.dataset.unlocked=''; }
   if(currentUser){
     localStorage.removeItem('sign_'+currentUser.uid);
     localStorage.removeItem('customText_'+currentUser.uid);
@@ -2302,7 +2346,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v56';
+var CACHE_NAME='ani-beseder-v57';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2316,7 +2360,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v56';
+  var APP_BUILD='v57';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
