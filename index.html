@@ -680,8 +680,12 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
-// טיפול בחזרה מ-redirect login (iOS Safari)
-getRedirectResult(auth).catch(e=>{ if(e&&e.code&&e.code!=='auth/no-current-user') console.log('redirect result:',e.code); });
+// טיפול בחזרה מ-redirect login (Apple iOS)
+getRedirectResult(auth).then(result=>{
+  if(result&&result.user) console.log('redirect login success:',result.user.email);
+}).catch(e=>{
+  if(e&&e.code&&e.code!=='auth/no-current-user'&&e.code!=='auth/null-user') console.log('redirect result:',e.code,e.message);
+});
 // Fix old lowercase avatar paths stored in Firestore
 function _fixPhotoUrl(url){
   if(!url) return null;
@@ -1380,17 +1384,21 @@ window.signInWithGoogle=async()=>{
   }
 };
 window.signInWithApple=async()=>{
+  const provider=new OAuthProvider('apple.com');
+  provider.addScope('email');
+  provider.addScope('name');
+  provider.setCustomParameters({locale:'he'});
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS){
+    // iOS Safari: redirect תמיד (popup לא עובד עם Apple)
+    try{ await signInWithRedirect(auth,provider); }
+    catch(e){ alert('שגיאה: '+e.message); }
+    return;
+  }
   try{
-    const provider=new OAuthProvider('apple.com');
-    provider.addScope('email');
-    provider.addScope('name');
-    provider.setCustomParameters({locale:'he'});
     await signInWithPopup(auth,provider);
   }catch(e){
     if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
-      const provider=new OAuthProvider('apple.com');
-      provider.addScope('email'); provider.addScope('name');
-      provider.setCustomParameters({locale:'he'});
       await signInWithRedirect(auth,provider);
     } else if(e.code!=='auth/popup-closed-by-user'){
       alert('שגיאה: '+e.message);
@@ -2461,10 +2469,16 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v66';
+var CACHE_NAME='ani-beseder-v67';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
-self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;var url=e.request.url;if(url.indexOf('firebaseapp.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('appleid.apple.com')>-1||url.indexOf('accounts.google.com')>-1)return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
+self.addEventListener('fetch',function(e){
+  if(e.request.method!=='GET')return;
+  var url=e.request.url;
+  // דלג על כל בקשות auth — אל תחסום redirect flows
+  if(url.indexOf('firebaseapp.com')>-1||url.indexOf('googleapis.com')>-1||url.indexOf('appleid.apple.com')>-1||url.indexOf('accounts.google.com')>-1||url.indexOf('__/auth')>-1||url.indexOf('identitytoolkit')>-1||url.indexOf('securetoken')>-1)return;
+  e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));
+});
 self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.com'}}));});
 self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.com');}));});`;
   var blob=new Blob([sw],{type:'text/javascript'});
@@ -2475,7 +2489,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v66';
+  var APP_BUILD='v67';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
