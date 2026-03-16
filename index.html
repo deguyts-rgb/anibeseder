@@ -119,7 +119,7 @@
     .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:3px 0 0;min-height:22px;direction:rtl}
     .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap}
     .coins-number{font-size:13px;font-weight:800;color:#4cde80;white-space:nowrap;min-width:18px;text-align:left}
-    .coins-stacks{display:flex;gap:3px;align-items:flex-end}
+    .coins-stacks{display:flex;gap:3px;align-items:flex-end;margin-right:0;margin-left:-3px;padding-top:3px}
     .coins-stack{display:flex;flex-direction:column-reverse;gap:2px;align-items:stretch}
     .coins-line{height:3.5px;width:17px;background:linear-gradient(90deg,#2db86a,#4cde80);border-radius:2px;box-shadow:0 1px 4px rgba(76,222,128,0.4)}
     /* ── COIN TOAST ── */
@@ -607,8 +607,8 @@
 
 <!-- COINS BAR -->
 <div class="coins-bar" id="coinsBar">
-  <div class="coins-stacks" id="coinsStacks"></div>
-  <span class="coins-number" id="coinsText">0</span>
+  <div class="coins-stacks" id="coinsStacks" style="margin-left:0"></div>
+  <span class="coins-number" id="coinsText" style="margin-right:1px">0</span>
   <span class="coins-label">מטבעות בסדרס</span>
 </div>
 
@@ -1893,6 +1893,12 @@ function updateHeaderFriendsStrip(){
     return (now-s.timestamp.getTime())<24*3600000;
   });
   if(!greenFriends.length){strip.innerHTML='';return;}
+  // מיון: הכי עדכני ראשון (שמאל)
+  greenFriends.sort((a,b)=>{
+    const ta=watchingStatuses[a.followingUid]?.timestamp?.getTime()||0;
+    const tb=watchingStatuses[b.followingUid]?.timestamp?.getTime()||0;
+    return tb-ta;
+  });
   strip.innerHTML=greenFriends.map(w=>{
     const s=watchingStatuses[w.followingUid];
     const photo=s?.photoURL?_fixPhotoUrl(s.photoURL):null;
@@ -1900,7 +1906,6 @@ function updateHeaderFriendsStrip(){
     const circleInner=photo
       ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       :`<span style="font-size:19px">${s?.moodEmoji||'✓'}</span>`;
-    // Use onclick directly — most reliable cross-platform
     return `<div class="hfriend-item" onclick="window.openFriendHeaderPopup('${w.followingUid}')" style="cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0);user-select:none;-webkit-user-select:none"><div class="hfriend-circle" style="pointer-events:none">${circleInner}</div><span class="hfriend-name" style="pointer-events:none">${firstName}</span></div>`;
   }).join('');
 }
@@ -2208,7 +2213,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v51';
+var CACHE_NAME='ani-beseder-v52';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2222,7 +2227,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v51';
+  var APP_BUILD='v52';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
