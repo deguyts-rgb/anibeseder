@@ -48,7 +48,7 @@
     .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 6px 3px;display:flex;align-items:center;justify-content:center;gap:0;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
     .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 9px;border-radius:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent;flex:0 0 auto}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
-    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:80px 20px 40px}
+    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:68px 20px 40px}
     .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
     .last-time-above.visible{display:block}
     .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
@@ -100,10 +100,14 @@
     .sound-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:5px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:2px}
     .mood-panel{position:absolute;bottom:-14px;right:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:12px;z-index:100;display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:196px}
     .mood-panel.show{display:grid}
-    .mood-cell{width:56px;height:58px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;gap:2px;user-select:none}
+    .mood-cell{width:56px;height:52px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:all 0.14s;user-select:none}
     .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
     .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
     .mood-panel-title{grid-column:1/-1;text-align:center;font-size:12px;color:rgba(200,230,255,0.5);margin-bottom:2px;font-weight:600}
+    .mood-premium-sep{grid-column:1/-1;height:1px;background:linear-gradient(90deg,transparent,rgba(200,160,40,0.4),transparent);margin:4px 0 2px}
+    .mood-premium-header{grid-column:1/-1;text-align:center;font-size:10px;color:rgba(200,160,40,0.85);font-weight:700;margin-bottom:1px;letter-spacing:0.3px}
+    .mood-cell-premium{width:56px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:25px;cursor:pointer;background:rgba(160,120,0,0.1);border:1px solid rgba(200,160,40,0.38);transition:all 0.14s;user-select:none;box-shadow:0 0 8px rgba(200,160,0,0.12)}
+    .mood-cell-premium:active{transform:scale(0.86);background:rgba(200,160,0,0.22)}
     .sign-panel{position:absolute;bottom:-14px;left:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:14px 16px;z-index:100;display:none;flex-direction:column;gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:248px}
     .sign-panel.show{display:flex}
     .sign-panel-title{text-align:center;font-size:12px;color:rgba(200,230,255,0.5);font-weight:600}
@@ -116,10 +120,10 @@
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:10px 0 18px}
     /* ── COINS BAR ── */
-    .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:3px 0 0;min-height:22px;direction:rtl}
-    .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap}
+    .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:1px 0 0;min-height:22px;direction:rtl}
+    .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap;margin-right:2px}
     .coins-number{font-size:13px;font-weight:800;color:#4cde80;white-space:nowrap;min-width:18px;text-align:left}
-    .coins-stacks{display:flex;gap:3px;align-items:flex-end;margin-right:0;margin-left:-3px;padding-top:3px}
+    .coins-stacks{display:flex;gap:3px;align-items:flex-end;margin-left:0;padding-top:3px;margin-right:-4px}
     .coins-stack{display:flex;flex-direction:column-reverse;gap:2px;align-items:stretch}
     .coins-line{height:3.5px;width:17px;background:linear-gradient(90deg,#2db86a,#4cde80);border-radius:2px;box-shadow:0 1px 4px rgba(76,222,128,0.4)}
     /* ── COIN TOAST ── */
@@ -1103,12 +1107,53 @@ const MOOD_OPTIONS=[
   {emoji:'😊',label:'בסדר',level:2},{emoji:'😐',label:'ניטרלי',level:2},{emoji:'🤔',label:'חושב',level:2},
   {emoji:'🫥',label:'מעורפל',level:3},{emoji:'😒',label:'לא מרוצה',level:3},{emoji:'😤',label:'מתוח',level:3},
 ];
+const MOOD_PREMIUM=[
+  {emoji:'🤬'},{emoji:'😈'},{emoji:'💩'},
+];
 
 function renderMoodPanel(){
   const p=document.getElementById('moodPanel');
-  p.innerHTML='<div class="mood-panel-title">איזה בסדר אתה? 😊</div>'+
-    MOOD_OPTIONS.map((m,i)=>`<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span><span class="mood-cell-label">${m.label}</span></div>`).join('');
+  const regularCells=MOOD_OPTIONS.map((m,i)=>
+    `<div class="mood-cell" onclick="selectMood(${i})"><span>${m.emoji}</span></div>`
+  ).join('');
+  const premiumCells=MOOD_PREMIUM.map((m,i)=>
+    `<div class="mood-cell-premium" onclick="buyPremiumMood('${m.emoji}')"><span>${m.emoji}</span></div>`
+  ).join('');
+  p.innerHTML=
+    `<div class="mood-panel-title">איזה בסדר אתה? 😊</div>`+
+    regularCells+
+    `<div class="mood-premium-sep"></div>`+
+    `<div class="mood-premium-header">🪙 5 מטבעות בסדרס</div>`+
+    premiumCells;
 }
+
+window.buyPremiumMood = emoji => {
+  if((state.coins||0)<5){
+    // הודעה שנעלמת
+    let el=document.getElementById('coinToast');
+    if(el){
+      clearTimeout(_coinToastTimer);
+      el.textContent='דווח ותקבל בסדרס 🪙';
+      el.classList.add('show');
+      _coinToastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+    }
+    return;
+  }
+  // רכישה
+  state.coins-=5;
+  localStorage.setItem(_coinKey('coins'),String(state.coins));
+  renderCoinDisplay();
+  // בחירת אימוג׳י
+  state.moodEmoji=emoji; state.moodLevel=2;
+  if(currentUser){
+    localStorage.setItem('moodEmoji_'+currentUser.uid,emoji);
+    setDoc(doc(db,'status',currentUser.uid),{moodEmoji:emoji},{merge:true}).catch(()=>{});
+  }
+  document.getElementById('moodPanel').classList.remove('show');
+  document.getElementById('moodBtn').textContent=emoji;
+  applyTimerGradient();
+  updateMainUI();
+};
 window.toggleMoodPanel = e => {
   e.stopPropagation();
   document.getElementById('signPanel').classList.remove('show');
@@ -2213,7 +2258,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v52';
+var CACHE_NAME='ani-beseder-v53';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2227,7 +2272,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v52';
+  var APP_BUILD='v53';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
