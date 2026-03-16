@@ -1523,16 +1523,23 @@ function checkAndResetPremium(){
 }
 
 async function loadCoins(){
+  const localCoins=parseInt(localStorage.getItem(_coinKey('coins'))||'0');
   try{
     const snap=await getDoc(doc(db,'users',currentUser.uid));
-    const remoteCoins=snap.exists()?(snap.data().coins||0):0;
-    state.coins=isNaN(remoteCoins)?0:remoteCoins;
-    // עדכן localStorage לסנכרון
-    localStorage.setItem(_coinKey('coins'),String(state.coins));
+    const remoteCoins=snap.exists()&&snap.data().coins>0?snap.data().coins:0;
+    if(remoteCoins>0 && remoteCoins>=localCoins){
+      // Firestore יש ערך אמין — קח אותו
+      state.coins=remoteCoins;
+      localStorage.setItem(_coinKey('coins'),String(state.coins));
+    } else if(localCoins>0){
+      // localStorage יש מטבעות שFirestore לא יודע עליהם — שמור לFirestore
+      state.coins=localCoins;
+      setDoc(doc(db,'users',currentUser.uid),{coins:state.coins},{merge:true}).catch(()=>{});
+    } else {
+      state.coins=0;
+    }
   }catch(e){
-    // אם אין חיבור — קרא מהמקומי
-    const local=parseInt(localStorage.getItem(_coinKey('coins'))||'0');
-    state.coins=isNaN(local)?0:local;
+    state.coins=isNaN(localCoins)?0:localCoins;
   }
   checkAndResetPremium();
   renderCoinDisplay();
@@ -1614,10 +1621,10 @@ async function initUser(){
       const sd = statusSnap.data();
       // אימוג׳י
       if(sd.moodEmoji){ state.moodEmoji=sd.moodEmoji; state.moodLevel=2; localStorage.setItem('moodEmoji_'+currentUser.uid,sd.moodEmoji); }
-      // סימן
-      if(sd.sign){ state.sign=sd.sign; localStorage.setItem('sign_'+currentUser.uid,sd.sign); document.getElementById('signBtn').textContent=(sd.sign==='"'?'״':sd.sign); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===sd.sign)); }
+      // סימן — שמור ב-state בלבד, updateMainUI יציג
+      if(sd.sign!==undefined){ state.sign=sd.sign||null; if(sd.sign) localStorage.setItem('sign_'+currentUser.uid,sd.sign); else localStorage.removeItem('sign_'+currentUser.uid); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===sd.sign)); }
       // טקסט חופשי
-      if(sd.customText){ state.customText=sd.customText; localStorage.setItem('customText_'+currentUser.uid,sd.customText); const inp=document.getElementById('signCustomInput'); if(inp) inp.value=sd.customText; }
+      if(sd.customText!==undefined){ state.customText=sd.customText||null; if(sd.customText){ localStorage.setItem('customText_'+currentUser.uid,sd.customText); const inp=document.getElementById('signCustomInput'); if(inp) inp.value=sd.customText; } else localStorage.removeItem('customText_'+currentUser.uid); }
       // סאונד
       if(sd.soundId!==undefined&&sd.soundId!==null){ state.soundId=sd.soundId; localStorage.setItem('soundId_'+currentUser.uid,String(sd.soundId)); const sBtn=document.getElementById('soundBtn'); if(sBtn){sBtn.textContent=SOUND_DEFS[sd.soundId]?.emoji||'♪';sBtn.classList.add('has-sound');} }
       // תמונה
@@ -1627,7 +1634,7 @@ async function initUser(){
 
   // fallback מ-localStorage אם Firestore לא החזיר
   if(!state.moodEmoji && state.isOk){ const se=localStorage.getItem('moodEmoji_'+currentUser.uid); if(se){state.moodEmoji=se;state.moodLevel=parseInt(localStorage.getItem('moodLevel_'+currentUser.uid))||2;} }
-  if(!state.sign){ const ss=localStorage.getItem('sign_'+currentUser.uid); if(ss){ state.sign=ss; document.getElementById('signBtn').textContent=(ss==='"'?'״':ss); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===ss)); } }
+  if(state.sign===undefined||state.sign===null){ const ss=localStorage.getItem('sign_'+currentUser.uid); if(ss){ state.sign=ss; document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===ss)); } }
   if(!state.customText){ const sct=localStorage.getItem('customText_'+currentUser.uid); if(sct){ state.customText=sct; const inp=document.getElementById('signCustomInput'); if(inp) inp.value=sct; } }
   if(state.soundId===null){ const savedSound=localStorage.getItem('soundId_'+currentUser.uid); if(savedSound!==null&&savedSound!==''){const sid=parseInt(savedSound);if(!isNaN(sid)){state.soundId=sid;const sBtn=document.getElementById('soundBtn');if(sBtn){sBtn.textContent=SOUND_DEFS[sid]?.emoji||'♪';sBtn.classList.add('has-sound');}}} }
   await loadFollowers();
@@ -1964,13 +1971,14 @@ function updateMainUI(){
     if(emoji && PREMIUM_EMOJIS.includes(emoji)) moodBtn.classList.add('has-premium');
     else moodBtn.classList.remove('has-premium');
     signBtn.classList.add('visible');
-    // מסגרת זהב לסימן אם יש טקסט חופשי
+    // כפתור סימן: טקסט פרמיום → T זהב, סימן רגיל → הסימן, אחרת → !
     if(state.customText){
       signBtn.classList.add('has-custom');
       signBtn.textContent='T';
     } else {
       signBtn.classList.remove('has-custom');
-      if(!state.sign) signBtn.textContent='!';
+      if(state.sign) signBtn.textContent=(state.sign==='"'?'״':state.sign);
+      else signBtn.textContent='!';
     }
     soundBtn.classList.add('visible');
   } else if(state.lastConfirmed){
@@ -2407,7 +2415,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v61';
+var CACHE_NAME='ani-beseder-v62';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2421,7 +2429,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v61';
+  var APP_BUILD='v62';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
