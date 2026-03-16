@@ -1911,7 +1911,19 @@ function updateMainUI(){
     else { btn.style.cursor='pointer'; }
     if(addFriendsBtn) addFriendsBtn.style.display='flex';
     moodBtn.classList.add('visible'); moodBtn.textContent=emoji||'😊';
+    // מסגרת זהב לאימוג׳י פרמיום
+    const PREMIUM_EMOJIS=['🤬','😈','💩'];
+    if(emoji && PREMIUM_EMOJIS.includes(emoji)) moodBtn.classList.add('has-premium');
+    else moodBtn.classList.remove('has-premium');
     signBtn.classList.add('visible');
+    // מסגרת זהב לסימן אם יש טקסט חופשי
+    if(state.customText){
+      signBtn.classList.add('has-custom');
+      signBtn.textContent='T';
+    } else {
+      signBtn.classList.remove('has-custom');
+      if(!state.sign) signBtn.textContent='!';
+    }
     soundBtn.classList.add('visible');
   } else if(state.lastConfirmed){
     btn.style.background='radial-gradient(circle at 40% 35%,#ff8c42,#c04a00)';
@@ -2346,7 +2358,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v57';
+var CACHE_NAME='ani-beseder-v58';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2360,7 +2372,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v57';
+  var APP_BUILD='v58';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
