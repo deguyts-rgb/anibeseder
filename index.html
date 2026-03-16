@@ -51,9 +51,11 @@
     #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:68px 20px 40px}
     .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
     .last-time-above.visible{display:block}
-    .notif-bar{width:100%;max-width:480px;background:rgba(255,200,50,0.09);border-bottom:1px solid rgba(255,200,50,0.2);padding:10px 18px;font-size:13px;color:rgba(255,230,150,0.85);text-align:center;display:none}
+    .notif-bar{position:fixed;top:0;left:0;right:0;z-index:50;display:none;pointer-events:none}
     .notif-bar.show{display:block}
-    .notif-bar button{background:rgba(255,200,50,0.2);border:1px solid rgba(255,200,50,0.35);border-radius:8px;color:#ffd97d;padding:4px 14px;cursor:pointer;font-size:12px;margin-top:6px;font-family:inherit;font-weight:700}
+    .notif-bar-inner{max-width:480px;margin:0 auto;background:rgba(255,200,50,0.13);border:1px solid rgba(255,200,50,0.3);border-radius:0 0 14px 14px;padding:7px 14px 7px 10px;font-size:13px;color:rgba(255,230,150,0.9);display:flex;align-items:center;gap:8px;pointer-events:all;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .notif-bar-btn{background:rgba(255,200,50,0.22);border:1px solid rgba(255,200,50,0.45);border-radius:8px;color:#ffd97d;padding:4px 11px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:700;white-space:nowrap;flex-shrink:0}
+    .notif-bar-close{background:none;border:none;color:rgba(255,230,150,0.6);font-size:14px;cursor:pointer;padding:2px 4px;line-height:1;flex-shrink:0;margin-right:auto}
     .follow-banner{width:100%;max-width:480px;margin:6px 0;background:rgba(40,200,100,0.1);border:1px solid rgba(40,200,100,0.3);border-radius:14px;padding:12px 18px;display:none}
     .follow-banner.show{display:block}
     .follow-req-banner{width:100%;max-width:480px;margin:4px 0;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.25);border-radius:14px;padding:12px 16px;display:none;flex-direction:column;gap:8px}
@@ -81,6 +83,7 @@
     .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
     .mood-btn:active{transform:scale(0.88)}
     .mood-btn.visible{display:flex}
+    .mood-btn.has-premium{border-color:rgba(200,160,40,0.8);box-shadow:0 3px 14px rgba(0,0,0,0.45),0 0 10px rgba(200,160,0,0.35)}
     .sign-btn{position:absolute;bottom:-14px;left:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;color:#e8f4f8;font-family:inherit}
     .sign-btn:active{transform:scale(0.88)}
     .sign-btn.visible{display:flex}
@@ -106,8 +109,8 @@
     .mood-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
     .mood-cell-label{font-size:9px;color:rgba(200,230,255,0.5);font-weight:600;letter-spacing:0.2px}
     .mood-panel-title{text-align:center;font-size:11px;color:rgba(200,230,255,0.5);font-weight:600;margin-bottom:2px}
-    .mood-premium-col{display:flex;flex-direction:column;gap:5px;border-right:1px solid rgba(200,160,40,0.25);padding-right:8px}
-    .mood-premium-header{text-align:center;font-size:9px;color:rgba(200,160,40,0.9);font-weight:700;letter-spacing:0.2px;white-space:nowrap}
+    .mood-premium-col{display:flex;flex-direction:column;gap:6px;border-right:1px solid rgba(200,160,40,0.25);padding-right:8px;justify-content:flex-end}
+    .mood-premium-header{text-align:center;font-size:9px;color:rgba(200,160,40,0.9);font-weight:700;letter-spacing:0.2px;white-space:nowrap;margin-bottom:2px}
     .mood-cell-premium{width:52px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;background:rgba(160,120,0,0.12);border:1px solid rgba(200,160,40,0.4);transition:all 0.14s;user-select:none;box-shadow:0 0 8px rgba(200,160,0,0.1)}
     .mood-cell-premium:active{transform:scale(0.86);background:rgba(200,160,0,0.22)}
     .sign-panel{position:absolute;bottom:-14px;left:-14px;transform:translateY(100%);background:#1a2a3a;border:1px solid rgba(126,207,255,0.28);border-radius:18px;padding:14px 16px;z-index:100;display:none;flex-direction:column;gap:8px;box-shadow:0 10px 40px rgba(0,0,0,0.55);min-width:248px}
@@ -118,7 +121,9 @@
     .sign-cell:active{transform:scale(0.86);background:rgba(126,207,255,0.18)}
     .sign-cell.selected{background:rgba(126,207,255,0.18);border-color:#7ecfff;color:#7ecfff}
     .sign-text-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#e8f4f8;padding:8px 10px;font-size:13px;font-family:inherit;text-align:center;outline:none;direction:rtl;-webkit-appearance:none}
+    .sign-text-input.premium{background:rgba(160,120,0,0.1);border:1px solid rgba(200,160,40,0.5);color:#ffd97d;box-shadow:0 0 8px rgba(200,160,0,0.15)}
     .sign-text-input::placeholder{color:rgba(200,230,255,0.28);font-size:11px}
+    .sign-text-input.premium::placeholder{color:rgba(200,160,40,0.5)}
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:4px 0 18px}
     /* ── COINS BAR ── */
@@ -246,14 +251,13 @@
     .avatar-picker-wrap.show{display:block}
     .avatar-picker-title{font-size:11px;color:rgba(200,230,255,0.4);text-align:center;margin-bottom:4px}
 
-```
 /* ── FRIEND HEADER POPUP ── */
 #friendHeaderPopup{position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);overflow:hidden;padding-top:125px;-webkit-transform:translateZ(0);transform:translateZ(0)}
 .fhp-blob{position:relative;width:251px;height:311px;background:linear-gradient(170deg,#0d1e2e 0%,#142840 55%,#0a1a28 100%);border:1.5px solid rgba(76,222,128,0.5);border-radius:48% 48% 52% 52% / 36% 36% 60% 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 0 100px rgba(40,200,100,0.65),0 0 50px rgba(40,200,100,0.35),0 0 22px rgba(40,200,100,0.2),0 20px 55px rgba(0,0,0,0.65);overflow:hidden;padding:20px 18px 22px;animation:blobPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 @keyframes blobPop{from{transform:scale(0.82) translateY(16px)}to{transform:scale(1) translateY(0)}}
 .fhp-bg-avatar{position:absolute;inset:0;background-size:cover;background-position:center top;filter:blur(4px) brightness(0.6) saturate(1.5);transform:scale(1.06);z-index:0}
 .fhp-green-overlay{position:absolute;inset:0;background:rgba(20,100,50,0.28);z-index:1;pointer-events:none}
-.fhp-blob::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.12) 0%,transparent 70%);pointer-events:none;z-index:2}
+.fhp-blob::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(76,222,128,0.12) 0%,transparent 70%);pointer-events:none;z-index:2}
 .fhp-close{position:absolute;top:10px;right:10px;transform:none;width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#c01515,#8a0f0f);border:2px solid rgba(255,100,100,0.4);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(180,20,20,0.5);z-index:6;font-family:inherit;line-height:1;padding:0}
 .fhp-close:active{transform:scale(0.88)}
 .fhp-name{font-size:12px;font-weight:800;color:rgba(255,255,255,0.95);text-align:center;z-index:3;text-shadow:0 1px 8px rgba(0,0,0,0.6);margin-top:-4px}
@@ -315,7 +319,6 @@
 .nudge-stat-chip.blue{background:rgba(126,207,255,0.07);border-color:rgba(126,207,255,0.2);color:rgba(200,230,255,0.6)}
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
-```
 
   </style>
 </head>
@@ -554,7 +557,13 @@
   </div>
 <!-- end friendHeaderPopup -->
 
-  <div class="notif-bar" id="notifBar">🔔 הפעל התראות לקבלת עדכונים<br><button onclick="askNotifications()">הפעל התראות</button></div>
+  <div class="notif-bar" id="notifBar">
+    <div class="notif-bar-inner">
+      <span style="flex:1">🔔 הפעל התראות כדי לקבל עדכונים</span>
+      <button class="notif-bar-btn" onclick="askNotifications()">💪🏻 הפעל</button>
+      <button class="notif-bar-close" onclick="document.getElementById('notifBar').classList.remove('show')">✕</button>
+    </div>
+  </div>
   <div class="follow-banner" id="followBanner">
     <div style="font-weight:700;color:#4cde80;margin-bottom:5px" id="followBannerTitle"></div>
     <div style="font-size:12px;color:rgba(200,230,255,0.65)" id="followBannerText"></div>
@@ -567,7 +576,6 @@
       <span class="add-friends-plus">+</span>הוסף חברים
     </button>
 
-```
 <div class="btn-wrapper">
   <button class="big-btn" id="bigBtn" onclick="handleOkPress()">
     <span class="btn-emoji" id="btnEmoji">👋</span>
@@ -593,7 +601,10 @@
       <div class="sign-cell" data-sign="+" onclick="selectSignByEl(this)">+</div>
       <div class="sign-cell" data-sign="-" onclick="selectSignByEl(this)">-</div>
     </div>
-    <input type="text" id="signCustomInput" class="sign-text-input" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomText(this)"/>
+    <div style="display:flex;align-items:center;gap:6px">
+      <input type="text" id="signCustomInput" class="sign-text-input" maxlength="6" placeholder="טקסט חופשי (עד 6 תווים)" oninput="handleCustomTextPremium(this)" onfocus="checkSignTextPremium(this)"/>
+      <span style="font-size:10px;color:rgba(200,160,40,0.85);font-weight:700;white-space:nowrap;flex-shrink:0">🪙 3</span>
+    </div>
     <button class="sign-clear-btn" onclick="clearSign()">✕ נקה הכל</button>
   </div>
   <!-- SOUND BUTTON -->
@@ -612,6 +623,7 @@
 </div>
 
 <!-- COINS BAR -->
+
 <div class="coins-bar" id="coinsBar">
   <div class="coins-stacks" id="coinsStacks" style="margin-left:0"></div>
   <span class="coins-number" id="coinsText" style="margin-right:1px">0</span>
@@ -627,7 +639,6 @@
 <div id="watchingList" style="width:100%">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
-```
 
   </div>
 </div>
@@ -1121,8 +1132,9 @@ function renderMoodPanel(){
   const premiumCells=MOOD_PREMIUM.map((m)=>
     `<div class="mood-cell-premium" onclick="buyPremiumMood('${m.emoji}')">${m.emoji}</div>`
   ).join('');
+  // גובה כל שורה בגריד = 48px, gap=6px → 3 שורות = 48*3+6*2 = 156px
   p.innerHTML=
-    `<div class="mood-premium-col">
+    `<div class="mood-premium-col" style="height:156px;padding-top:0">
       <div class="mood-premium-header">🪙 5 בסדרס</div>
       ${premiumCells}
     </div>
@@ -1134,7 +1146,6 @@ function renderMoodPanel(){
 
 window.buyPremiumMood = emoji => {
   if((state.coins||0)<5){
-    // הודעה שנעלמת
     let el=document.getElementById('coinToast');
     if(el){
       clearTimeout(_coinToastTimer);
@@ -1144,18 +1155,18 @@ window.buyPremiumMood = emoji => {
     }
     return;
   }
-  // רכישה
   state.coins-=5;
   localStorage.setItem(_coinKey('coins'),String(state.coins));
   renderCoinDisplay();
-  // בחירת אימוג׳י
   state.moodEmoji=emoji; state.moodLevel=2;
   if(currentUser){
     localStorage.setItem('moodEmoji_'+currentUser.uid,emoji);
     setDoc(doc(db,'status',currentUser.uid),{moodEmoji:emoji},{merge:true}).catch(()=>{});
   }
   document.getElementById('moodPanel').classList.remove('show');
-  document.getElementById('moodBtn').textContent=emoji;
+  const moodBtn=document.getElementById('moodBtn');
+  moodBtn.textContent=emoji;
+  moodBtn.classList.add('has-premium');
   applyTimerGradient();
   updateMainUI();
 };
@@ -1208,6 +1219,36 @@ window.handleCustomText = inp => {
   updateMainUI();
 };
 
+window.checkSignTextPremium = inp => {
+  if((state.coins||0)<3){
+    inp.blur();
+    let el=document.getElementById('coinToast');
+    if(el){
+      clearTimeout(_coinToastTimer);
+      el.textContent='דווח ותקבל בסדרס 🪙';
+      el.classList.add('show');
+      _coinToastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+    }
+    return;
+  }
+  // נעל את הרכישה רק פעם אחת
+  if(!inp.dataset.unlocked){
+    inp.dataset.unlocked='1';
+    state.coins-=3;
+    localStorage.setItem(_coinKey('coins'),String(state.coins));
+    renderCoinDisplay();
+    inp.classList.add('premium');
+    inp.placeholder='טקסט חופשי פרמיום ✨';
+  }
+};
+window.handleCustomTextPremium = inp => {
+  // בלי רכישה – חסום
+  if(!inp.dataset.unlocked && (state.coins||0)<3){
+    inp.value='';
+    return;
+  }
+  handleCustomText(inp);
+};
 window.clearSign = () => {
   state.sign = null; state.customText = null;
   document.querySelectorAll('.sign-cell').forEach(el => el.classList.remove('selected'));
@@ -1264,8 +1305,8 @@ document.addEventListener('click',()=>{
   document.getElementById('soundPanel')?.classList.remove('show');
 });
 
-const defPA=[{id:'p2h',label:'2 שעות לפני',on:true},{id:'p1h',label:'שעה לפני',on:true},{id:'p30',label:'30 דקות לפני',on:true},{id:'p10',label:'10 דקות לפני',on:true},{id:'p1',label:'דקה לפני',on:true}];
-const defFA=[{id:'f0',label:'מיידית',on:true},{id:'f30',label:'30 דקות אחרי',on:true},{id:'f1h',label:'שעה אחרי',on:true},{id:'f2h',label:'שעתיים אחרי',on:true},{id:'f4h',label:'4 שעות אחרי',on:true},{id:'f12',label:'12 שעות אחרי',on:true},{id:'f24',label:'כל 24 שעות',on:true}];
+const defPA=[{id:'p2h',label:'2 שעות לפני',on:false},{id:'p1h',label:'שעה לפני',on:false},{id:'p30',label:'30 דקות לפני',on:false},{id:'p10',label:'10 דקות לפני',on:true},{id:'p1',label:'דקה לפני',on:false}];
+const defFA=[{id:'f0',label:'מיידית',on:false},{id:'f30',label:'30 דקות אחרי',on:true},{id:'f1h',label:'שעה אחרי',on:false},{id:'f2h',label:'שעתיים אחרי',on:false},{id:'f4h',label:'4 שעות אחרי',on:false},{id:'f12',label:'12 שעות אחרי',on:false},{id:'f24',label:'כל 24 שעות',on:false}];
 function getAlerts(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch{return d;}}
 function saveAlerts(k,a){localStorage.setItem(k,JSON.stringify(a));}
 let personalAlerts=getAlerts('personalAlerts',defPA);
@@ -1777,7 +1818,7 @@ window.doShare=()=>{
   else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
 
-function checkNotifPermission(){if('Notification'in window&&Notification.permission==='default')document.getElementById('notifBar').classList.add('show');}
+function checkNotifPermission(){if('Notification'in window&&Notification.permission!=='granted')document.getElementById('notifBar').classList.add('show');}
 function updateNotifToggleBtn(){const btn=document.getElementById('notifToggleBtn');if(!('Notification'in window)){btn.style.display='none';return;}if(Notification.permission==='granted'){btn.textContent='🔕 בטל התראות';btn.className='settings-action-btn notif-on-btn';}else{btn.textContent='🔔 הפעל התראות';btn.className='settings-action-btn notif-off-btn';}}
 window.toggleNotifications=async()=>{if(!('Notification'in window)){alert('המכשיר שלך אינו תומך בהתראות');return;}if(Notification.permission==='granted'){alert('כדי לבטל התראות, עבור להגדרות הדפדפן.');}else{const p=await Notification.requestPermission();if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות.'});registerFCMToken();document.getElementById('notifBar').classList.remove('show');}updateNotifToggleBtn();}};
 window.askNotifications=async()=>{const p=await Notification.requestPermission();document.getElementById('notifBar').classList.remove('show');if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה!'});registerFCMToken();}updateNotifToggleBtn();};
@@ -2263,7 +2304,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v54';
+var CACHE_NAME='ani-beseder-v55';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2277,7 +2318,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v54';
+  var APP_BUILD='v55';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
