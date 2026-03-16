@@ -2219,6 +2219,29 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
   navigator.serviceWorker.register(swUrl,{scope:'/'}).catch(function(){});
   navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='SW_UPDATED')location.reload();});
 }
+
+// ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
+(function(){
+  var APP_BUILD='v50';
+  function checkUpdate(){
+    fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
+      .then(function(r){return r.text();})
+      .then(function(html){
+        var m=html.match(/APP_BUILD='([^']+)'/);
+        if(m&&m[1]&&m[1]!==APP_BUILD){
+          console.log('New version detected:',m[1],'reloading…');
+          location.reload(true);
+        }
+      })
+      .catch(function(){});
+  }
+  // Check on visibility restore (user switches back to app)
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible') checkUpdate();
+  });
+  // Also check every 5 minutes while app is open
+  setInterval(checkUpdate, 5*60*1000);
+})();
 </script>
 
   <!-- FRIEND HEADER POPUP - fixed overlay -->
