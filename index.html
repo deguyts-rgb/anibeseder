@@ -1934,9 +1934,10 @@ window.handleOkPress=async()=>{
 
 window.doShare=()=>{
   const link=`https://anibeseder.com/?follow=${currentUser.uid}`;
-  const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך להיות חברים ב״אני בסדר״.\nלחץ על הלינק — ונהיה חברים שמקבלים עדכונים אחד מהשני:\n${link}`;
+  const text=`היי! ${currentUser.displayName||'אני'} מזמין אותך להיות חברים ב״אני בסדר״.\nלחץ על הלינק — ונהיה חברים שמקבלים עדכונים אחד מהשני:`;
+  const fullText=`${text}\n${link}`;
   if(navigator.share)navigator.share({title:'אני בסדר',text,url:link});
-  else navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
+  else navigator.clipboard.writeText(fullText).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
 
 function checkNotifPermission(){if('Notification'in window&&Notification.permission!=='granted')document.getElementById('notifBar').classList.add('show');}
@@ -2439,7 +2440,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v63';
+var CACHE_NAME='ani-beseder-v64';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
@@ -2453,7 +2454,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v63';
+  var APP_BUILD='v64';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
