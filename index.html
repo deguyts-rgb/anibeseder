@@ -116,11 +116,12 @@
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
     .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:10px 0 18px}
     /* ── COINS BAR ── */
-    .coins-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 0;min-height:26px;direction:ltr}
-    .coins-text{font-size:13px;font-weight:700;color:rgba(76,222,128,0.88);white-space:nowrap;letter-spacing:0.2px}
-    .coins-stacks{display:flex;gap:4px;align-items:flex-end}
+    .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:6px 0 0;min-height:22px;direction:rtl}
+    .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap}
+    .coins-number{font-size:13px;font-weight:800;color:#4cde80;white-space:nowrap;min-width:18px;text-align:left}
+    .coins-stacks{display:flex;gap:3px;align-items:flex-end}
     .coins-stack{display:flex;flex-direction:column-reverse;gap:2px;align-items:stretch}
-    .coins-line{height:5px;width:34px;background:linear-gradient(90deg,#2db86a,#4cde80);border-radius:2px;box-shadow:0 1px 5px rgba(76,222,128,0.45)}
+    .coins-line{height:3.5px;width:17px;background:linear-gradient(90deg,#2db86a,#4cde80);border-radius:2px;box-shadow:0 1px 4px rgba(76,222,128,0.4)}
     /* ── COIN TOAST ── */
     .coin-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.85);background:rgba(10,36,20,0.95);border:1px solid rgba(76,222,128,0.55);border-radius:24px;padding:7px 20px;font-size:15px;font-weight:800;color:#4cde80;pointer-events:none;z-index:600;opacity:0;transition:opacity 0.35s ease,transform 0.35s ease;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,0.5),0 0 16px rgba(76,222,128,0.2)}
     .coin-toast.show{opacity:1;transform:translate(-50%,-80%) scale(1)}
@@ -606,8 +607,9 @@
 
 <!-- COINS BAR -->
 <div class="coins-bar" id="coinsBar">
+  <span class="coins-label">מטבעות בסדרס</span>
+  <span class="coins-number" id="coinsText">0</span>
   <div class="coins-stacks" id="coinsStacks"></div>
-  <span class="coins-text" id="coinsText">0 מטבעות בסדרס</span>
 </div>
 
 <div class="home-divider"></div>
@@ -1360,12 +1362,11 @@ function loadCoins(){
 }
 
 function renderCoinDisplay(){
-  const textEl=document.getElementById('coinsText');
+  const numberEl=document.getElementById('coinsText');
   const stacksEl=document.getElementById('coinsStacks');
-  if(!textEl||!stacksEl)return;
+  if(!numberEl||!stacksEl)return;
   const coins=state.coins||0;
-  textEl.textContent=`${coins} מטבעות בסדרס`;
-  // lines: 0-100 = 1 line, 101-200 = 2 lines …
+  numberEl.textContent=String(coins);
   const linesTotal=coins>0?Math.floor((coins-1)/100)+1:0;
   if(!linesTotal){stacksEl.innerHTML='';return;}
   const stackCount=Math.ceil(linesTotal/5);
@@ -2207,7 +2208,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v49';
+var CACHE_NAME='ani-beseder-v50';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
