@@ -669,7 +669,7 @@ import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where,
 
 const firebaseConfig = {
   apiKey: "AIzaSyBdErGgHq1ens9kQiQzofowxFsyeS2hjNY",
-  authDomain: "ani-beseder-57800.firebaseapp.com",
+  authDomain: "auth.anibeseder.com",
   projectId: "ani-beseder-57800",
   storageBucket: "ani-beseder-57800.firebasestorage.app",
   messagingSenderId: "596709424854",
@@ -2468,7 +2468,7 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 
 if('serviceWorker'in navigator){
   const sw=`
-var CACHE_NAME='ani-beseder-v69';
+var CACHE_NAME='ani-beseder-v70';
 self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
 self.addEventListener('fetch',function(e){
@@ -2485,7 +2485,7 @@ self.addEventListener('notificationclick',function(e){e.notification.close();e.w
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v69';
+  var APP_BUILD='v70';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
