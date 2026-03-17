@@ -688,7 +688,7 @@ function _fixPhotoUrl(url){
   return url;
 }
 
-const VAPID_KEY = 'Oaylv1DxhiHzbzQc_lfkgMyxrJB0DuM7le3OcfAPuCE';
+const VAPID_KEY = `BJwyf1V6RpkESAvX7ait-6Dl8QjGZRpy5-13M2xrW7Apj-O2cxHzFsq1lJ9a4aNC1oHNgYym4KGegES_JYTsiD0`;
 const WINDOW_MS = 24 * 3600000;
 const AVATARS = Array.from({length:12},(_,i)=>`/Avatars/avatar-${i+1}.png`);
 
@@ -2505,7 +2505,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v73';
+  var APP_BUILD='v74';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
