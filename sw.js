@@ -23,9 +23,7 @@ clients.forEach(function(c) { c.postMessage({ type: ‘SW_UPDATED’ }); });
 );
 });
 
-self.addEventListener(‘fetch’, function(e) {
-// pass-through only
-});
+self.addEventListener(‘fetch’, function(e) {});
 
 self.addEventListener(‘push’, function(e) {
 if (!e.data) return;
@@ -46,9 +44,7 @@ data: { url: n.url || ‘https://anibeseder.com’ }
 
 self.addEventListener(‘notificationclick’, function(e) {
 e.notification.close();
-var targetUrl = (e.notification.data && e.notification.data.url)
-? e.notification.data.url
-: ‘https://anibeseder.com’;
+var targetUrl = (e.notification.data && e.notification.data.url) ? e.notification.data.url : ‘https://anibeseder.com’;
 e.waitUntil(
 clients.matchAll({ type: ‘window’, includeUncontrolled: true })
 .then(function(list) {
