@@ -1953,6 +1953,32 @@ window.handleOkPress=async()=>{
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
   sendPushToFollowers('ok');
+  // אחרי לחיצה ראשונה — הרגע הטוב ביותר לבקש הרשאת התראות
+  if(state.okCount===1&&'Notification'in window&&Notification.permission!=='granted'){
+    const _isStandaloneNow=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+    if(_isIOS&&!_isStandaloneNow){
+      // iOS בדפדפן — לא ניתן לבקש הרשאה, מפנים להוספה למסך הבית
+      setTimeout(()=>{
+        const bar=document.getElementById('notifBar');
+        const inner=document.querySelector('.notif-bar-inner');
+        if(bar&&inner){
+          inner.innerHTML='<span style="flex:1;line-height:1.5">📲 כדי לקבל התראות — לחץ ⎙ ← "הוסף למסך הבית"</span><button class="notif-bar-close" onclick="document.getElementById(\'notifBar\').classList.remove(\'show\')">✕</button>';
+          bar.classList.add('show');
+        }
+      },1200);
+    } else {
+      // אנדרואיד או iOS standalone — ניתן לבקש הרשאה
+      setTimeout(async()=>{
+        const p=await Notification.requestPermission();
+        if(p==='granted'){
+          new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות כשחברים מדווחים.',icon:'/icon-192.png'});
+          registerFCMToken();
+          document.getElementById('notifBar').classList.remove('show');
+        }
+        updateNotifToggleBtn();
+      },1200);
+    }
+  }
 };
 
 window.doShare=()=>{
@@ -1963,7 +1989,12 @@ window.doShare=()=>{
   else navigator.clipboard.writeText(fullText).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
 };
 
-function checkNotifPermission(){if('Notification'in window&&Notification.permission!=='granted')document.getElementById('notifBar').classList.add('show');}
+// מציג באנר התראות כל כניסה לאפליקציה — כל עוד ההרשאה אינה granted (כולל אחרי denied)
+function checkNotifPermission(){
+  if(!('Notification'in window)) return;
+  if(Notification.permission==='granted') return;
+  document.getElementById('notifBar').classList.add('show');
+}
 function updateNotifToggleBtn(){const btn=document.getElementById('notifToggleBtn');if(!('Notification'in window)){btn.style.display='none';return;}if(Notification.permission==='granted'){btn.textContent='🔕 בטל התראות';btn.className='settings-action-btn notif-on-btn';}else{btn.textContent='🔔 הפעל התראות';btn.className='settings-action-btn notif-off-btn';}}
 window.toggleNotifications=async()=>{if(!('Notification'in window)){alert('המכשיר שלך אינו תומך בהתראות');return;}if(Notification.permission==='granted'){alert('כדי לבטל התראות, עבור להגדרות הדפדפן.');}else{const p=await Notification.requestPermission();if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה! תקבל התראות.'});registerFCMToken();document.getElementById('notifBar').classList.remove('show');}updateNotifToggleBtn();}};
 window.askNotifications=async()=>{const p=await Notification.requestPermission();document.getElementById('notifBar').classList.remove('show');if(p==='granted'){new Notification('אני בסדר 🤝',{body:'מעולה!'});registerFCMToken();}updateNotifToggleBtn();};
@@ -2184,7 +2215,11 @@ function runPeriodicUpdate(){
 }
 setInterval(runPeriodicUpdate,60000);
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible') runPeriodicUpdate();
+  if(document.visibilityState==='visible'){
+    runPeriodicUpdate();
+    // רענן FCM token בשקט — tokens יכולים לפוג
+    if(currentUser&&Notification.permission==='granted') registerFCMToken();
+  }
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -2462,25 +2497,15 @@ window.checkNudgeResponses = async (nudgeId, preloadedData) => {
 // ══════════════════════════════════════════════════════════════
 
 if('serviceWorker'in navigator){
-  const sw=`
-var CACHE_NAME='ani-beseder-v72';
-self.addEventListener('install',function(e){e.waitUntil(self.skipWaiting());});
-self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)));}).then(function(){return self.clients.claim();}).then(function(){return self.clients.matchAll({type:'window',includeUncontrolled:true});}).then(function(cl){cl.forEach(function(c){c.postMessage({type:'SW_UPDATED'});});}));});
-self.addEventListener('fetch',function(e){
-  // SW לא מיירט שום בקשה — רק שקיפות מלאה
-  // זה מונע הפרעה ל-Apple Sign-In redirect על iOS Safari
-});
-self.addEventListener('push',function(e){if(!e.data)return;var d;try{d=e.data.json();}catch(err){d={notification:{title:'Ani Beseder',body:e.data.text()}};}var n=d.notification||{};e.waitUntil(self.registration.showNotification(n.title||'Ani Beseder',{body:n.body||'',icon:'/icon-192.png',dir:'rtl',requireInteraction:true,data:{url:'https://anibeseder.com'}}));});
-self.addEventListener('notificationclick',function(e){e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(function(l){for(var i=0;i<l.length;i++){if(l[i].url.includes('anibeseder')&&'focus'in l[i])return l[i].focus();}return clients.openWindow('https://anibeseder.com');}));});`;
-  var blob=new Blob([sw],{type:'text/javascript'});
-  var swUrl=URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl,{scope:'/'}).catch(function(){});
+  // רישום ל-/sw.js (קובץ עצמאי) — חובה לתפקוד FCM / Push תקין
+  // Blob URL SW אינו יכול לתבוע scope='/' ולכן FCM לא עובד עמו
+  navigator.serviceWorker.register('/sw.js').catch(function(err){ console.log('SW register error:',err); });
   navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='SW_UPDATED')location.reload();});
 }
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v72';
+  var APP_BUILD='v73';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
