@@ -661,7 +661,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, linkWithPopup, linkWithRedirect, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs,
          serverTimestamp, onSnapshot, updateDoc, orderBy, limit, getCountFromServer }
@@ -1387,12 +1387,44 @@ window.toggleFollowerAlert=i=>{followerAlerts[i].on=!followerAlerts[i].on;saveAl
 const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const _isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+// ── פונקציה כללית לקישור חשבון קיים ───────────────────────────
+async function _linkAccount(existingProvider, newProvider, newProviderName){
+  const existingName = existingProvider==='google.com' ? 'Google' : 'Apple';
+  const msg = `נרשמת כבר עם ${existingName}.\nאפשר להתחבר גם עם ${newProviderName} — מאשר?`;
+  if(!confirm(msg)) return;
+  // התחבר עם הספק הקיים קודם
+  try{
+    const existingProv = existingProvider==='google.com' ? new GoogleAuthProvider() : new OAuthProvider('apple.com');
+    let userCred;
+    if(_isIOS && existingProvider!=='google.com'){
+      // Apple + iOS → redirect, לא נוכל להמשיך כאן
+      await signInWithRedirect(auth, existingProv);
+      return;
+    }
+    userCred = await signInWithPopup(auth, existingProv);
+    // קשר את הספק החדש
+    if(_isIOS && newProviderName==='Apple'){
+      await linkWithRedirect(userCred.user, newProvider);
+    } else {
+      await linkWithPopup(userCred.user, newProvider);
+    }
+    // הצלחה — onAuthStateChanged יטפל בשאר
+  }catch(e){
+    if(e.code!=='auth/popup-closed-by-user'&&e.code!=='auth/cancelled-popup-request'){
+      alert('שגיאה בקישור חשבונות: '+e.message);
+    }
+  }
+}
+
 window.signInWithGoogle=async()=>{
   try{
-    await signInWithPopup(auth,new GoogleAuthProvider());
+    await signInWithPopup(auth, new GoogleAuthProvider());
   }catch(e){
-    if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
-      await signInWithRedirect(auth,new GoogleAuthProvider());
+    if(e.code==='auth/account-exists-with-different-credential'){
+      // יש חשבון Apple באותו אימייל
+      await _linkAccount('apple.com', new GoogleAuthProvider(), 'Google');
+    } else if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+      await signInWithRedirect(auth, new GoogleAuthProvider());
     } else if(e.code!=='auth/popup-closed-by-user'){
       alert('שגיאה: '+e.message);
     }
@@ -1405,16 +1437,15 @@ window.signInWithApple=async()=>{
   provider.addScope('name');
   provider.setCustomParameters({locale:'he'});
 
-  // iOS Safari: הצג מסך טעינה לפני redirect
   if(_isIOS){
     const loadingEl=document.getElementById('loading');
     if(loadingEl){
       loadingEl.style.display='flex';
-      loadingEl.querySelector?.('p') && (loadingEl.querySelector('p').textContent='מתחבר עם Apple...');
+      const p=loadingEl.querySelector('p');
+      if(p) p.textContent='מתחבר עם Apple...';
     }
     try{
-      await signInWithRedirect(auth,provider);
-      // signInWithRedirect מנווט את הדף — הקוד מתחת לא ירוץ
+      await signInWithRedirect(auth, provider);
     }catch(e){
       if(loadingEl) loadingEl.style.display='none';
       alert('שגיאה: '+e.message);
@@ -1422,19 +1453,17 @@ window.signInWithApple=async()=>{
     return;
   }
 
-  // שאר הדפדפנים: popup
   try{
-    await signInWithPopup(auth,provider);
+    await signInWithPopup(auth, provider);
   }catch(e){
-    if(e.code==='auth/popup-blocked'){
-      // Popup נחסם — עבור ל-redirect
-      try{ await signInWithRedirect(auth,provider); }
+    if(e.code==='auth/account-exists-with-different-credential'){
+      // יש חשבון Google באותו אימייל
+      await _linkAccount('google.com', provider, 'Apple');
+    } else if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+      try{ await signInWithRedirect(auth, provider); }
       catch(e2){ alert('שגיאה: '+e2.message); }
-    } else if(e.code==='auth/popup-closed-by-user'){
-      // המשתמש סגר — בסדר, לא לעשות כלום
-    } else if(e.code==='auth/operation-not-supported-in-this-environment'){
-      try{ await signInWithRedirect(auth,provider); }
-      catch(e2){ alert('שגיאה: '+e2.message); }
+    } else if(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request'){
+      // המשתמש סגר — בסדר
     } else if(e.code==='auth/internal-error'||e.code==='auth/network-request-failed'){
       alert('בעיית חיבור. בדוק את החיבור לאינטרנט ונסה שוב.');
     } else {
@@ -2548,7 +2577,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v75';
+  var APP_BUILD='v76';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
