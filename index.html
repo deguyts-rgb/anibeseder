@@ -681,19 +681,35 @@ const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 // טיפול בחזרה מ-redirect (Apple iOS Safari)
-// מציג loading עד שהתוצאה מגיעה
 (async()=>{
   try{
     const result = await getRedirectResult(auth);
     if(result&&result.user){
-      // התחברות הצליחה — onAuthStateChanged יטפל בשאר
       console.log('Apple redirect success:', result.user.email);
+      // onAuthStateChanged יטפל בשאר
     }
   }catch(e){
     if(e.code==='auth/account-exists-with-different-credential'){
-      // חשבון קיים עם אמצעי כניסה אחר
+      // חשבון Google קיים באותו אימייל — קשר אוטומטית
       document.getElementById('loading').style.display='none';
-      alert('כבר קיים חשבון עם האימייל הזה. נסה להתחבר עם Google.');
+      const msg='נרשמת כבר עם Google.\nאפשר להתחבר גם עם Apple — מאשר?';
+      if(confirm(msg)){
+        try{
+          // התחבר עם Google קודם
+          const googleCred = await signInWithPopup(auth, new GoogleAuthProvider());
+          // קשר את Apple
+          const appleProvider = new OAuthProvider('apple.com');
+          appleProvider.addScope('email');
+          appleProvider.addScope('name');
+          appleProvider.setCustomParameters({locale:'he'});
+          await linkWithPopup(googleCred.user, appleProvider);
+          // הצלחה — onAuthStateChanged יטפל
+        }catch(linkErr){
+          if(linkErr.code!=='auth/popup-closed-by-user'&&linkErr.code!=='auth/cancelled-popup-request'){
+            alert('שגיאה בקישור: '+linkErr.message);
+          }
+        }
+      }
     } else if(e.code&&e.code!=='auth/no-current-user'&&e.code!=='auth/null-user'){
       document.getElementById('loading').style.display='none';
       console.log('redirect error:', e.code, e.message);
@@ -2577,7 +2593,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v76';
+  var APP_BUILD='v77';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
