@@ -565,6 +565,20 @@
   </div>
 </div>
 
+<!-- PLATFORM DRILLDOWN MODAL -->
+
+<div class="admin-sub-modal" id="adminPlatformDrillModal" onclick="if(event.target===this)this.classList.remove('show')" style="z-index:130">
+  <div class="admin-sub-box">
+    <div class="admin-sub-header">
+      <span class="admin-sub-title" id="adminPlatformDrillTitle">משתמשים</span>
+      <button class="admin-sub-close" onclick="document.getElementById('adminPlatformDrillModal').classList.remove('show')">סגור ✕</button>
+    </div>
+    <div class="admin-sub-content" id="adminPlatformDrillContent">
+      <div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>
+    </div>
+  </div>
+</div>
+
 <div class="install-banner" id="installBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
@@ -2461,28 +2475,25 @@ window.openReportsModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    // שליפת כל הדיווחים — ללא orderBy כדי לא לדרוש index
     const snaps = await getDocs(collection(db,'reports'));
-    // קיבוץ לפי תאריך
     const byDate = {};
     snaps.forEach(d=>{
-      const data = d.data();
-      const date = data.date || (data.ts?.toDate().toISOString().split('T')[0]);
-      if(!date) return;
-      if(!byDate[date]) byDate[date] = {count:0, uids: new Set()};
-      byDate[date].count++;
-      if(data.uid) byDate[date].uids.add(data.uid);
+      try{
+        const data = d.data();
+        const date = data.date || (data.ts?.toDate?.().toISOString().split('T')[0]);
+        if(!date) return;
+        if(!byDate[date]) byDate[date] = {count:0, uids: new Set()};
+        byDate[date].count++;
+        if(data.uid) byDate[date].uids.add(data.uid);
+      }catch(ie){}
     });
-    // מיון תאריכים יורד
     const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
     if(!dates.length){
-      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין</div>';
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין — יצטברו מגרסה זו והלאה</div>';
       return;
     }
-    // גרף
     const chartData = [...dates].reverse();
     const chartCounts = chartData.map(d=>byDate[d].count);
-    // טבלה
     let html = `<div class="admin-chart-wrap">
       <div class="admin-chart-title">דיווחים לפי תאריך</div>
       <canvas id="reportsChart" class="admin-chart-canvas" height="150"></canvas>
@@ -2492,16 +2503,15 @@ window.openReportsModal = async () => {
       <tbody>`;
     dates.forEach(d=>{
       const row = byDate[d];
-      const [y,m,day] = d.split('-');
-      const label = `${day}/${m}/${y.slice(2)}`;
+      const parts = d.split('-');
+      const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
       html+=`<tr><td>${label}</td><td style="color:#7ecfff;font-weight:700">${row.count}</td><td style="color:#4cde80">${row.uids.size}</td></tr>`;
     });
     html += '</tbody></table>';
     content.innerHTML = html;
-    // ציור גרף
-    drawAdminChart('reportsChart', chartData, chartCounts, '#7ecfff', 'דיווחים');
+    setTimeout(()=>drawAdminChart('reportsChart', chartData, chartCounts, '#7ecfff', 'דיווחים'), 60);
   }catch(e){
-    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message}</div>`;
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
 };
 
@@ -2512,8 +2522,9 @@ window.openActiveUsersModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    const actRef = collection(db,'activity');
-    const snaps = await getDocs(actRef);
+    const snaps = await getDocs(collection(db,'activity'));
+    // שמור את כל נתוני הפעילות גלובלית לצורך drill-down
+    window._activityData = {};
     const byDate = {};
     snaps.forEach(d=>{
       try{
@@ -2525,7 +2536,17 @@ window.openActiveUsersModal = async () => {
           byDate[date].users[data.uid] = {
             platform: data.platform||'לא ידוע',
             browser: data.browser||'',
-            auth: data.authMethod||'לא ידוע'
+            auth: data.authMethod||'לא ידוע',
+            uid: data.uid
+          };
+        }
+        // שמירה גלובלית לפי uid
+        if(!window._activityData[data.uid]){
+          window._activityData[data.uid] = {
+            platform: data.platform||'לא ידוע',
+            browser: data.browser||'',
+            auth: data.authMethod||'לא ידוע',
+            uid: data.uid
           };
         }
       }catch(ie){}
@@ -2542,7 +2563,7 @@ window.openActiveUsersModal = async () => {
       <canvas id="activeChart" class="admin-chart-canvas" height="150"></canvas>
     </div>
     <table class="admin-hist-table">
-      <thead><tr><th>תאריך</th><th>פעילים</th><th>פירוט</th></tr></thead>
+      <thead><tr><th>תאריך</th><th>פעילים</th><th>פירוט (לחץ לפרטים)</th></tr></thead>
       <tbody>`;
     dates.forEach(d=>{
       const row = byDate[d];
@@ -2550,21 +2571,71 @@ window.openActiveUsersModal = async () => {
       const count = users.length;
       const parts = d.split('-');
       const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
+      // קיבוץ לפי פלטפורמה
       const groups = {};
+      const groupUsers = {}; // uid per group
       users.forEach(u=>{
         const key = platformLabel(u.platform, u.browser);
         groups[key] = (groups[key]||0)+1;
+        if(!groupUsers[key]) groupUsers[key]=[];
+        groupUsers[key].push(u.uid);
       });
-      const detail = Object.entries(groups).map(([k,v])=>`${k} (${v})`).join(' | ');
+      const chips = Object.entries(groups).map(([k,v])=>{
+        const uidsJson = JSON.stringify(groupUsers[k]).replace(/"/g,'&quot;');
+        return `<span onclick="openPlatformDrill('${k.replace(/'/g,'\\'+'\'')}',(${uidsJson}))" style="display:inline-block;background:rgba(126,207,255,0.1);border:1px solid rgba(126,207,255,0.25);border-radius:8px;padding:2px 8px;font-size:10px;color:#7ecfff;cursor:pointer;margin:1px;white-space:nowrap">${k} (${v})</span>`;
+      }).join('');
       html+=`<tr>
         <td>${label}</td>
         <td style="color:#4cde80;font-weight:700">${count}</td>
-        <td style="color:rgba(200,230,255,0.6);font-size:10px;text-align:right;direction:rtl;line-height:1.6">${detail||'–'}</td>
+        <td style="text-align:right;direction:rtl;line-height:1.8">${chips}</td>
       </tr>`;
     });
     html += '</tbody></table>';
     content.innerHTML = html;
     setTimeout(()=>drawAdminChart('activeChart', chartData, chartCounts, '#4cde80', 'פעילים'), 60);
+  }catch(e){
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
+  }
+};
+
+// ── PLATFORM DRILL-DOWN ───────────────────────────────────────
+window.openPlatformDrill = async (platformName, uids) => {
+  const modal = document.getElementById('adminPlatformDrillModal');
+  const title = document.getElementById('adminPlatformDrillTitle');
+  const content = document.getElementById('adminPlatformDrillContent');
+  title.textContent = `${uids.length} משתמשים — ${platformName}`;
+  modal.classList.add('show');
+  content.innerHTML = '<div style="text-align:center;padding:16px;color:rgba(200,230,255,0.3)">טוען...</div>';
+  try{
+    // שליפת פרטי משתמשים
+    const rows = [];
+    const batchSize = 10;
+    for(let i=0; i<uids.length; i+=batchSize){
+      const batch = uids.slice(i,i+batchSize);
+      const promises = batch.map(uid=>getDoc(doc(db,'users',uid)));
+      const results = await Promise.all(promises);
+      results.forEach((snap,idx)=>{
+        const uid = batch[idx];
+        if(snap.exists()){
+          const d = snap.data();
+          rows.push({uid, name: d.name||'ללא שם', email: d.email||'–', auth: d.authMethod||window._activityData?.[uid]?.auth||'–'});
+        } else {
+          rows.push({uid, name:'–', email:'–', auth:'–'});
+        }
+      });
+    }
+    let html = `<table class="admin-hist-table">
+      <thead><tr><th>#</th><th>שם</th><th>אימייל / רישום</th></tr></thead>
+      <tbody>`;
+    rows.forEach((r,i)=>{
+      html+=`<tr>
+        <td style="color:rgba(200,230,255,0.35)">${i+1}</td>
+        <td style="font-weight:600;color:#e8f4f8">${(r.name||'').replace(/</g,'&lt;')}</td>
+        <td style="color:rgba(200,230,255,0.55);font-size:10px;direction:ltr;text-align:left">${(r.email||'').replace(/</g,'&lt;')}<br><span style="color:rgba(200,230,255,0.35)">${r.auth}</span></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    content.innerHTML = html;
   }catch(e){
     content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
@@ -2943,7 +3014,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v81';
+  var APP_BUILD='v82';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
