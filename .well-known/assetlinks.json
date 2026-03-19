@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.anibeseder.twa",
+        "sha256_cert_fingerprints": ["E9:63:2C:23:D5:D4:9B:83:8C:C0:69:1A:D3:04:1E:F7:08:9C:92:3A:22:7B:77:C2:CE:EC:D4:6D:04:60:8C:15"]
+      }
+    }]
