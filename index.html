@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
@@ -565,6 +564,8 @@
     </div>
   </div>
 </div>
+
+<div class="install-banner" id="installBanner">
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
     <div style="flex:1"><div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:3px">הוסף לדף הבית</div><div style="font-size:12px;color:rgba(200,230,255,0.6)">גישה מהירה כמו אפליקציה רגילה</div></div>
@@ -2511,22 +2512,23 @@ window.openActiveUsersModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    // ללא orderBy כדי לא לדרוש index — מיון ב-client
-    const snaps = await getDocs(collection(db,'activity'));
-    // קיבוץ לפי תאריך — כל משתמש נספר פעם אחת ביום
+    const actRef = collection(db,'activity');
+    const snaps = await getDocs(actRef);
     const byDate = {};
     snaps.forEach(d=>{
-      const data = d.data();
-      const date = data.date;
-      if(!date||!data.uid) return;
-      if(!byDate[date]) byDate[date] = {users:{}};
-      if(!byDate[date].users[data.uid]){
-        byDate[date].users[data.uid] = {
-          platform: data.platform||'לא ידוע',
-          browser: data.browser||'',
-          auth: data.authMethod||'לא ידוע'
-        };
-      }
+      try{
+        const data = d.data();
+        const date = data.date;
+        if(!date||!data.uid) return;
+        if(!byDate[date]) byDate[date] = {users:{}};
+        if(!byDate[date].users[data.uid]){
+          byDate[date].users[data.uid] = {
+            platform: data.platform||'לא ידוע',
+            browser: data.browser||'',
+            auth: data.authMethod||'לא ידוע'
+          };
+        }
+      }catch(ie){}
     });
     const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
     if(!dates.length){
@@ -2546,8 +2548,8 @@ window.openActiveUsersModal = async () => {
       const row = byDate[d];
       const users = Object.values(row.users);
       const count = users.length;
-      const [y,m,day] = d.split('-');
-      const label = `${day}/${m}/${y.slice(2)}`;
+      const parts = d.split('-');
+      const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
       const groups = {};
       users.forEach(u=>{
         const key = platformLabel(u.platform, u.browser);
@@ -2562,9 +2564,9 @@ window.openActiveUsersModal = async () => {
     });
     html += '</tbody></table>';
     content.innerHTML = html;
-    drawAdminChart('activeChart', chartData, chartCounts, '#4cde80', 'פעילים');
+    setTimeout(()=>drawAdminChart('activeChart', chartData, chartCounts, '#4cde80', 'פעילים'), 60);
   }catch(e){
-    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message}</div>`;
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
 };
 
@@ -2941,7 +2943,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v80';
+  var APP_BUILD='v81';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
