@@ -321,6 +321,25 @@
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
 
+/* ── ADMIN SUB-MODALS ── */
+.admin-sub-modal{position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:120;display:none;align-items:flex-end;justify-content:center}
+.admin-sub-modal.show{display:flex}
+.admin-sub-box{background:#111e2b;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;display:flex;flex-direction:column;border-top:2px solid rgba(255,200,50,0.3)}
+.admin-sub-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;border-bottom:1px solid rgba(255,200,50,0.15);flex-shrink:0}
+.admin-sub-title{font-size:16px;font-weight:800;color:#ffd97d}
+.admin-sub-close{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:rgba(200,230,255,0.6);padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}
+.admin-sub-close:active{background:rgba(255,255,255,0.08)}
+.admin-sub-content{overflow-y:auto;padding:14px 16px 28px;flex:1}
+.admin-hist-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.admin-hist-table th{background:rgba(255,200,50,0.07);color:rgba(255,220,130,0.7);font-weight:700;padding:7px 8px;text-align:center;border-bottom:1px solid rgba(255,200,50,0.15);font-size:11px}
+.admin-hist-table td{padding:6px 8px;text-align:center;border-bottom:1px solid rgba(126,207,255,0.06);color:rgba(200,230,255,0.75);font-size:11px;vertical-align:middle}
+.admin-hist-table tr:last-child td{border-bottom:none}
+.admin-hist-table tbody tr:hover td{background:rgba(126,207,255,0.03)}
+.admin-chart-wrap{background:rgba(0,0,0,0.22);border:1px solid rgba(126,207,255,0.1);border-radius:12px;padding:10px 10px 6px;margin-bottom:16px;overflow:hidden}
+.admin-chart-title{font-size:11px;color:rgba(200,230,255,0.38);text-align:center;margin-bottom:6px}
+.admin-chart-canvas{width:100%;display:block}
+.admin-stat-chip.clickable:active{background:rgba(255,200,50,0.14)!important}
+
   </style>
 </head>
 <body>
@@ -479,8 +498,8 @@
       <!-- Stats -->
       <div class="admin-stats-row" id="adminStatsRow">
         <div class="admin-stat-chip"><div class="admin-stat-num" id="adminTotalUsers">–</div><div class="admin-stat-label">משתמשים</div></div>
-        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminReportsToday">–</div><div class="admin-stat-label">דיווחים היום</div></div>
-        <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label" style="display:flex;align-items:center;gap:3px">פעילים<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0"></span></div></div>
+        <div class="admin-stat-chip clickable" id="adminReportsTodayChip" onclick="openReportsModal()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminReportsToday">–</div><div class="admin-stat-label">דיווחים היום ↗</div></div>
+        <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" ondblclick="openActiveUsersModal()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label" style="display:flex;align-items:center;gap:3px">פעילים<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0"></span></div></div>
         <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
       </div>
       <!-- Select all + filter -->
@@ -518,7 +537,33 @@
   </div>
 </div>
 
-<div class="install-banner" id="installBanner">
+<!-- REPORTS HISTORY SUB-MODAL -->
+
+<div class="admin-sub-modal" id="adminReportsModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="admin-sub-box">
+    <div class="admin-sub-header">
+      <span class="admin-sub-title">📊 היסטוריית דיווחים</span>
+      <button class="admin-sub-close" onclick="document.getElementById('adminReportsModal').classList.remove('show')">סגור ✕</button>
+    </div>
+    <div class="admin-sub-content" id="adminReportsModalContent">
+      <div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVE USERS SUB-MODAL -->
+
+<div class="admin-sub-modal" id="adminActiveUsersModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="admin-sub-box">
+    <div class="admin-sub-header">
+      <span class="admin-sub-title">👥 היסטוריית משתמשים פעילים</span>
+      <button class="admin-sub-close" onclick="document.getElementById('adminActiveUsersModal').classList.remove('show')">סגור ✕</button>
+    </div>
+    <div class="admin-sub-content" id="adminActiveUsersModalContent">
+      <div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>
+    </div>
+  </div>
+</div>
   <div style="display:flex;align-items:center;gap:12px">
     <div style="font-size:32px">📲</div>
     <div style="flex:1"><div style="font-weight:800;font-size:14px;color:#7ecfff;margin-bottom:3px">הוסף לדף הבית</div><div style="font-size:12px;color:rgba(200,230,255,0.6)">גישה מהירה כמו אפליקציה רגילה</div></div>
@@ -663,7 +708,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, linkWithPopup, linkWithRedirect, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs,
+import { getFirestore, doc, setDoc, addDoc, getDoc, deleteDoc, collection, query, where, getDocs,
          serverTimestamp, onSnapshot, updateDoc, orderBy, limit, getCountFromServer }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -1486,7 +1531,7 @@ window.signInWithApple=async()=>{
     alert('שגיאה: '+e2.message);
   }
 };
-window.doSignOut=async()=>{await signOut(auth);};
+window.doSignOut=async()=>{ closePanel('profilePanel'); await signOut(auth); };
 
 onAuthStateChanged(auth,async user=>{
   document.getElementById('loading').style.display='none';
@@ -1510,6 +1555,7 @@ onAuthStateChanged(auth,async user=>{
     renderAlerts(); checkInstallPrompt();
     if(Notification.permission==='granted') registerFCMToken();
     if(isAdmin()) initAdminEmojiBar();
+    saveDailyActivity();
     // ── Listener בזמן אמת על הסטטוס של המשתמש עצמו ──
     startSelfStatusListener();
   } else {
@@ -2039,6 +2085,7 @@ window.handleOkPress=async()=>{
   updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
+  logReport();
   sendPushToFollowers('ok');
   // אחרי לחיצה ראשונה — הרגע הטוב ביותר לבקש הרשאת התראות
   if(state.okCount===1&&'Notification'in window&&Notification.permission!=='granted'){
@@ -2310,6 +2357,269 @@ document.addEventListener('visibilitychange',()=>{
 });
 
 // ══════════════════════════════════════════════════════════════
+// DAILY ACTIVITY LOGGING
+// ══════════════════════════════════════════════════════════════
+
+// כל לחיצה על כפתור "אני בסדר" → שומרת רשומה ב-reports/{date}/presses/{uid_timestamp}
+async function logReport(){
+  if(!currentUser) return;
+  try{
+    const dateStr = new Date().toISOString().split('T')[0];
+    await addDoc(collection(db,'reports'),{
+      uid: currentUser.uid,
+      date: dateStr,
+      ts: serverTimestamp()
+    });
+  }catch(e){ console.log('logReport:',e); }
+}
+
+// כניסה לאפליקציה → שומרת נוכחות יומית ב-activity/{date}/users/{uid}
+async function saveDailyActivity(){
+  if(!currentUser) return;
+  try{
+    const dateStr = new Date().toISOString().split('T')[0];
+    const platform = detectPlatform();
+    await setDoc(doc(db,'activity',`${dateStr}_${currentUser.uid}`),{
+      uid: currentUser.uid,
+      date: dateStr,
+      platform: platform.type,
+      browser: platform.browser,
+      authMethod: detectAuthMethod(),
+      ts: serverTimestamp()
+    },{merge:true});
+  }catch(e){ console.log('saveDailyActivity:',e); }
+}
+
+function detectPlatform(){
+  const ua = navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+  const isAndroid = /android/i.test(ua);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  let browser = 'דפדפן לא ידוע';
+  if(/CriOS/i.test(ua)) browser = 'Chrome (iOS)';
+  else if(/FxiOS/i.test(ua)) browser = 'Firefox (iOS)';
+  else if(isIOS && /safari/i.test(ua)) browser = 'Safari';
+  else if(/chrome/i.test(ua) && !/edge/i.test(ua)) browser = 'Chrome';
+  else if(/firefox/i.test(ua)) browser = 'Firefox';
+  else if(/edg/i.test(ua)) browser = 'Edge';
+  else if(/samsung/i.test(ua)) browser = 'Samsung Browser';
+  if(isIOS){
+    if(isStandalone) return {type:'apple_pwa', browser};
+    return {type:'apple_browser', browser};
+  }
+  if(isAndroid){
+    // בדיקה אם רץ כ-TWA (גוגל פליי)
+    if(document.referrer.startsWith('android-app://')) return {type:'android_twa', browser:'גוגל פליי'};
+    if(isStandalone) return {type:'android_pwa', browser};
+    return {type:'android_browser', browser};
+  }
+  return {type:'desktop', browser};
+}
+
+function detectAuthMethod(){
+  if(!currentUser) return 'לא ידוע';
+  const providers = currentUser.providerData.map(p=>p.providerId);
+  if(providers.includes('apple.com')) return 'Apple';
+  if(providers.includes('google.com')) return 'Google';
+  return providers[0] || 'לא ידוע';
+}
+
+function platformLabel(type, browser){
+  if(type==='apple_pwa') return `🍎 Apple — PWA`;
+  if(type==='apple_browser') return `🍎 Apple — ${browser}`;
+  if(type==='android_twa') return `🤖 Android — גוגל פליי`;
+  if(type==='android_pwa') return `🤖 Android — PWA`;
+  if(type==='android_browser') return `🤖 Android — ${browser}`;
+  if(type==='desktop') return `🖥️ מחשב — ${browser}`;
+  return browser||type;
+}
+
+// ── REPORTS MODAL ─────────────────────────────────────────────
+window.openReportsModal = async () => {
+  const modal = document.getElementById('adminReportsModal');
+  const content = document.getElementById('adminReportsModalContent');
+  modal.classList.add('show');
+  content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
+  try{
+    // שליפת כל הדיווחים (מקסימום 500 מסמכים)
+    const q = query(collection(db,'reports'), orderBy('ts','desc'), limit(500));
+    const snaps = await getDocs(q);
+    // קיבוץ לפי תאריך
+    const byDate = {};
+    snaps.forEach(d=>{
+      const data = d.data();
+      const date = data.date || (data.ts?.toDate().toISOString().split('T')[0]);
+      if(!date) return;
+      if(!byDate[date]) byDate[date] = {count:0, uids: new Set()};
+      byDate[date].count++;
+      if(data.uid) byDate[date].uids.add(data.uid);
+    });
+    // מיון תאריכים יורד
+    const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+    if(!dates.length){
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין</div>';
+      return;
+    }
+    // גרף
+    const chartData = [...dates].reverse();
+    const chartCounts = chartData.map(d=>byDate[d].count);
+    // טבלה
+    let html = `<div class="admin-chart-wrap">
+      <div class="admin-chart-title">דיווחים לפי תאריך</div>
+      <canvas id="reportsChart" class="admin-chart-canvas" height="150"></canvas>
+    </div>
+    <table class="admin-hist-table">
+      <thead><tr><th>תאריך</th><th>דיווחים</th><th>משתמשים</th></tr></thead>
+      <tbody>`;
+    dates.forEach(d=>{
+      const row = byDate[d];
+      const [y,m,day] = d.split('-');
+      const label = `${day}/${m}/${y.slice(2)}`;
+      html+=`<tr><td>${label}</td><td style="color:#7ecfff;font-weight:700">${row.count}</td><td style="color:#4cde80">${row.uids.size}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    content.innerHTML = html;
+    // ציור גרף
+    drawAdminChart('reportsChart', chartData, chartCounts, '#7ecfff', 'דיווחים');
+  }catch(e){
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message}</div>`;
+  }
+};
+
+// ── ACTIVE USERS MODAL ────────────────────────────────────────
+window.openActiveUsersModal = async () => {
+  const modal = document.getElementById('adminActiveUsersModal');
+  const content = document.getElementById('adminActiveUsersModalContent');
+  modal.classList.add('show');
+  content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
+  try{
+    const q = query(collection(db,'activity'), orderBy('ts','desc'), limit(1000));
+    const snaps = await getDocs(q);
+    // קיבוץ לפי תאריך — כל משתמש נספר פעם אחת ביום
+    const byDate = {};
+    snaps.forEach(d=>{
+      const data = d.data();
+      const date = data.date;
+      if(!date||!data.uid) return;
+      if(!byDate[date]) byDate[date] = {users:{}};
+      // שמירת פרטי המשתמש אם לא קיים עדיין להיום
+      if(!byDate[date].users[data.uid]){
+        byDate[date].users[data.uid] = {
+          platform: data.platform||'לא ידוע',
+          browser: data.browser||'',
+          auth: data.authMethod||'לא ידוע'
+        };
+      }
+    });
+    const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+    if(!dates.length){
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין</div>';
+      return;
+    }
+    const chartData = [...dates].reverse();
+    const chartCounts = chartData.map(d=>Object.keys(byDate[d].users).length);
+    let html = `<div class="admin-chart-wrap">
+      <div class="admin-chart-title">משתמשים פעילים לפי תאריך</div>
+      <canvas id="activeChart" class="admin-chart-canvas" height="150"></canvas>
+    </div>
+    <table class="admin-hist-table">
+      <thead><tr><th>תאריך</th><th>פעילים</th><th>פירוט</th></tr></thead>
+      <tbody>`;
+    dates.forEach(d=>{
+      const row = byDate[d];
+      const users = Object.values(row.users);
+      const count = users.length;
+      const [y,m,day] = d.split('-');
+      const label = `${day}/${m}/${y.slice(2)}`;
+      // קיבוץ לפי פלטפורמה
+      const groups = {};
+      users.forEach(u=>{
+        const key = platformLabel(u.platform, u.browser);
+        groups[key] = (groups[key]||0)+1;
+      });
+      const detail = Object.entries(groups).map(([k,v])=>`${k} (${v})`).join(' | ');
+      html+=`<tr>
+        <td>${label}</td>
+        <td style="color:#4cde80;font-weight:700">${count}</td>
+        <td style="color:rgba(200,230,255,0.6);font-size:10px;text-align:right;direction:rtl;line-height:1.6">${detail||'–'}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    content.innerHTML = html;
+    drawAdminChart('activeChart', chartData, chartCounts, '#4cde80', 'פעילים');
+  }catch(e){
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message}</div>`;
+  }
+};
+
+// ── CHART RENDERER ────────────────────────────────────────────
+function drawAdminChart(canvasId, labels, values, color, label){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const W = canvas.parentElement.clientWidth - 20;
+  const H = 150;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  if(!values.length) return;
+  // ציר x: דחיסה חכמה לפי מספר נקודות
+  const n = values.length;
+  // אם יותר מ-60 ימים — קיבוץ לחודשים
+  let plotLabels = labels, plotValues = values;
+  if(n > 60){
+    const monthly = {};
+    labels.forEach((d,i)=>{
+      const ym = d.slice(0,7);
+      if(!monthly[ym]){ monthly[ym]={sum:0,count:0}; }
+      monthly[ym].sum += values[i];
+      monthly[ym].count++;
+    });
+    plotLabels = Object.keys(monthly);
+    plotValues = plotLabels.map(k=>monthly[k].sum);
+  }
+  const pn = plotLabels.length;
+  const max = Math.max(...plotValues, 1);
+  const padL=28, padR=10, padT=12, padB=28;
+  const gW=W-padL-padR, gH=H-padT-padB;
+  // bg
+  ctx.clearRect(0,0,W,H);
+  // grid lines
+  ctx.strokeStyle='rgba(126,207,255,0.08)';
+  ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=padT+gH*(1-f);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(W-padR,y); ctx.stroke();
+    ctx.fillStyle='rgba(200,230,255,0.25)'; ctx.font='9px sans-serif'; ctx.textAlign='right';
+    ctx.fillText(Math.round(max*f), padL-3, y+3);
+  });
+  // bars
+  const bw = Math.max(2, Math.min(18, gW/pn - 2));
+  plotValues.forEach((v,i)=>{
+    const x = padL + (i/pn)*gW + (gW/pn - bw)/2;
+    const bh = (v/max)*gH;
+    const y = padT+gH-bh;
+    const grad = ctx.createLinearGradient(0,y,0,padT+gH);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, color.replace(')',',0.2)').replace('rgb','rgba').replace('#','')+color+'33');
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.82;
+    ctx.beginPath(); ctx.roundRect?ctx.roundRect(x,y,bw,bh,2):ctx.rect(x,y,bw,bh); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  // x labels (last, middle, first only if space)
+  ctx.fillStyle='rgba(200,230,255,0.38)'; ctx.font='8px sans-serif'; ctx.textAlign='center';
+  const showIndices = new Set([0, Math.floor(pn/2), pn-1]);
+  showIndices.forEach(i=>{
+    if(i>=0&&i<pn){
+      const x = padL + (i/pn)*gW + (gW/pn)/2;
+      const d = plotLabels[i];
+      const txt = d.length===7 ? d.slice(5)+'' : d.slice(5).replace('-','/');
+      ctx.fillText(txt, x, H-6);
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
 // ADMIN PANEL
 // ══════════════════════════════════════════════════════════════
 
@@ -2363,13 +2673,27 @@ async function loadAllUsersForAdmin(){
     const now = Date.now();
     let activeToday = 0, reportsToday = 0;
     adminStatusCache = {};
-    // Fetch status docs for active count
+    const midnight = new Date(); midnight.setHours(0,0,0,0);
+    // Fetch status docs for active count (since midnight today)
     const statusSnaps = await getDocs(collection(db,'status'));
     statusSnaps.forEach(d=>{
       const ts = d.data().timestamp?.toDate();
       adminStatusCache[d.id] = {ts, isOk: d.data().isOk};
-      if(ts && (now - ts.getTime()) < 24*3600000){ activeToday++; if(d.data().isOk) reportsToday++; }
+      if(ts && ts >= midnight){ activeToday++; }
     });
+    // Count today's reports from 'reports' collection (each press = 1 doc)
+    try{
+      const todayStr = new Date().toISOString().split('T')[0];
+      const rq = query(collection(db,'reports'), where('date','==',todayStr));
+      const rsnap = await getDocs(rq);
+      reportsToday = rsnap.size;
+    }catch(e){ reportsToday = 0; }
+    // Fetch FCM tokens for nudge coverage display
+    try{
+      const fcmSnap = await getDocs(collection(db,'fcmTokens'));
+      window._adminUsersWithFCM = new Set();
+      fcmSnap.forEach(d => window._adminUsersWithFCM.add(d.id));
+    }catch(e){ window._adminUsersWithFCM = new Set(); }
     document.getElementById('adminTotalUsers').textContent = adminAllUsers.length;
     document.getElementById('adminActiveToday').textContent = activeToday;
     const _rtEl = document.getElementById('adminReportsToday');
@@ -2471,6 +2795,12 @@ window.sendAdminNudge = async () => {
   if(!msg){ alert('כתוב הודעה לפני השליחה'); return; }
 
   const selectedArr = [...adminSelectedUids];
+
+  // בדוק כמה מהנבחרים יש להם FCM token (= יקבלו Push)
+  const fcmSet = window._adminUsersWithFCM || new Set();
+  const withFcm = selectedArr.filter(u=>fcmSet.has(u)).length;
+  const withoutFcm = selectedArr.length - withFcm;
+
   const sendBtn = document.getElementById('adminSendNudgeBtn');
   sendBtn.disabled = true;
   sendBtn.textContent = '⏳ שולח...';
@@ -2496,10 +2826,13 @@ window.sendAdminNudge = async () => {
       message: msg,
       recipientUids: selectedArr,
       recipientCount: selectedArr.length,
+      fcmCount: withFcm,
       sentAt: serverTimestamp()
     });
 
-    alert(`✅ נדנוד נשלח ל-${selectedArr.length} משתמשים!`);
+    let resultMsg = `✅ נדנוד נשלח ל-${selectedArr.length} משתמשים!\n📲 ${withFcm} יקבלו Push notification`;
+    if(withoutFcm > 0) resultMsg += `\n⚠️ ${withoutFcm} ללא token (לא יקבלו Push — לא הפעילו התראות)`;
+    alert(resultMsg);
     sendBtn.textContent = '✅ נשלח!';
     setTimeout(()=>{ sendBtn.textContent = '👋 שלח נדנוד לנבחרים'; sendBtn.disabled = adminSelectedUids.size===0; },2500);
   } catch(e){
@@ -2592,7 +2925,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v78';
+  var APP_BUILD='v79';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
