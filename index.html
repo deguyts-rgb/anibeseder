@@ -239,8 +239,8 @@
     .policy-text{font-size:12px;line-height:1.9;color:rgba(255,230,150,0.8)}
     .policy-text p{margin-bottom:10px}
     .policy-text h4{color:#ffd97d;margin:14px 0 6px;font-size:13px}
-    .install-banner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-    #iosInstallBanner{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+    .install-banner{display:none;position:fixed;bottom:16px;left:0;right:0;margin:0 auto;width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+    #iosInstallBanner{display:none;position:fixed;bottom:16px;left:0;right:0;margin:0 auto;width:calc(100% - 32px);max-width:448px;background:linear-gradient(135deg,#1a3a5c,#0d2a45);border:1px solid rgba(126,207,255,0.3);border-radius:18px;padding:16px 18px;z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
     @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
     @media(max-height:700px){.big-btn{width:170px;height:170px}.btn-emoji{font-size:30px}.btn-text{font-size:17px}}
     .avatar-picker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
@@ -2326,7 +2326,25 @@ function updateHeaderFriendsStrip(){
 
 
 function checkInstallPrompt(){if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||localStorage.getItem('installDismissed'))return;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);setTimeout(()=>{if(deferredInstallPrompt)document.getElementById('installBanner').style.display='block';else if(isIOS)document.getElementById('iosInstallBanner').style.display='block';},2500);}
-window.doInstall=async()=>{if(!deferredInstallPrompt)return;document.getElementById('installBanner').style.display='none';deferredInstallPrompt.prompt();deferredInstallPrompt=null;updateAddHomeBtn();};
+window.doInstall=async()=>{
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);
+  if(deferredInstallPrompt){
+    document.getElementById('installBanner').style.display='none';
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt=null;
+    updateAddHomeBtn();
+  } else if(isIOS && isSafari){
+    document.getElementById('installBanner').style.display='none';
+    document.getElementById('iosInstallBanner').style.display='block';
+  } else if(isIOS){
+    document.getElementById('installBanner').style.display='none';
+    alert('פתח את הדף ב-Safari → לחץ ⎙ → ״הוסף למסך הבית״');
+  } else {
+    document.getElementById('installBanner').style.display='none';
+    alert('פתח את תפריט הדפדפן ← הוסף לדף הבית');
+  }
+};
 window.dismissInstall=()=>{document.getElementById('installBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 window.dismissIosInstall=()=>{document.getElementById('iosInstallBanner').style.display='none';localStorage.setItem('installDismissed','1');};
 
@@ -2441,9 +2459,8 @@ window.openReportsModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    // שליפת כל הדיווחים (מקסימום 500 מסמכים)
-    const q = query(collection(db,'reports'), orderBy('ts','desc'), limit(500));
-    const snaps = await getDocs(q);
+    // שליפת כל הדיווחים — ללא orderBy כדי לא לדרוש index
+    const snaps = await getDocs(collection(db,'reports'));
     // קיבוץ לפי תאריך
     const byDate = {};
     snaps.forEach(d=>{
@@ -2493,8 +2510,8 @@ window.openActiveUsersModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    const q = query(collection(db,'activity'), orderBy('ts','desc'), limit(1000));
-    const snaps = await getDocs(q);
+    // ללא orderBy כדי לא לדרוש index — מיון ב-client
+    const snaps = await getDocs(collection(db,'activity'));
     // קיבוץ לפי תאריך — כל משתמש נספר פעם אחת ביום
     const byDate = {};
     snaps.forEach(d=>{
@@ -2502,7 +2519,6 @@ window.openActiveUsersModal = async () => {
       const date = data.date;
       if(!date||!data.uid) return;
       if(!byDate[date]) byDate[date] = {users:{}};
-      // שמירת פרטי המשתמש אם לא קיים עדיין להיום
       if(!byDate[date].users[data.uid]){
         byDate[date].users[data.uid] = {
           platform: data.platform||'לא ידוע',
@@ -2513,7 +2529,7 @@ window.openActiveUsersModal = async () => {
     });
     const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
     if(!dates.length){
-      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין</div>';
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין — יצטברו מגרסה זו והלאה</div>';
       return;
     }
     const chartData = [...dates].reverse();
@@ -2531,7 +2547,6 @@ window.openActiveUsersModal = async () => {
       const count = users.length;
       const [y,m,day] = d.split('-');
       const label = `${day}/${m}/${y.slice(2)}`;
-      // קיבוץ לפי פלטפורמה
       const groups = {};
       users.forEach(u=>{
         const key = platformLabel(u.platform, u.browser);
@@ -2925,7 +2940,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v79';
+  var APP_BUILD='v80';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
