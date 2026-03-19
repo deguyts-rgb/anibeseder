@@ -551,6 +551,20 @@
   </div>
 </div>
 
+<!-- REPORTS DATE DRILLDOWN MODAL -->
+
+<div class="admin-sub-modal" id="adminReportsDrillModal" onclick="if(event.target===this)this.classList.remove('show')" style="z-index:130">
+  <div class="admin-sub-box">
+    <div class="admin-sub-header">
+      <span class="admin-sub-title" id="adminReportsDrillTitle">דיווחים</span>
+      <button class="admin-sub-close" onclick="document.getElementById('adminReportsDrillModal').classList.remove('show')">סגור ✕</button>
+    </div>
+    <div class="admin-sub-content" id="adminReportsDrillContent">
+      <div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>
+    </div>
+  </div>
+</div>
+
 <!-- ACTIVE USERS SUB-MODAL -->
 
 <div class="admin-sub-modal" id="adminActiveUsersModal" onclick="if(event.target===this)this.classList.remove('show')">
@@ -2477,6 +2491,8 @@ window.openReportsModal = async () => {
   try{
     const snaps = await getDocs(collection(db,'reports'));
     const byDate = {};
+    // שמירת הרשומות הגולמיות לפי uid לכל יום — לצורך drill-down
+    window._reportsByDate = {};
     snaps.forEach(d=>{
       try{
         const data = d.data();
@@ -2485,6 +2501,11 @@ window.openReportsModal = async () => {
         if(!byDate[date]) byDate[date] = {count:0, uids: new Set()};
         byDate[date].count++;
         if(data.uid) byDate[date].uids.add(data.uid);
+        // שמירה לפי יום+uid לספירה
+        if(!window._reportsByDate[date]) window._reportsByDate[date] = {};
+        if(data.uid){
+          window._reportsByDate[date][data.uid] = (window._reportsByDate[date][data.uid]||0)+1;
+        }
       }catch(ie){}
     });
     const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
@@ -2498,6 +2519,7 @@ window.openReportsModal = async () => {
       <div class="admin-chart-title">דיווחים לפי תאריך</div>
       <canvas id="reportsChart" class="admin-chart-canvas" height="150"></canvas>
     </div>
+    <p style="font-size:10px;color:rgba(200,230,255,0.3);text-align:center;margin-bottom:6px">לחץ על שורה לפירוט לפי משתמש</p>
     <table class="admin-hist-table">
       <thead><tr><th>תאריך</th><th>דיווחים</th><th>משתמשים</th></tr></thead>
       <tbody>`;
@@ -2505,11 +2527,69 @@ window.openReportsModal = async () => {
       const row = byDate[d];
       const parts = d.split('-');
       const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
-      html+=`<tr><td>${label}</td><td style="color:#7ecfff;font-weight:700">${row.count}</td><td style="color:#4cde80">${row.uids.size}</td></tr>`;
+      html+=`<tr onclick="openReportsDrill('${d}','${label}')" style="cursor:pointer" onmouseover="this.style.background='rgba(126,207,255,0.06)'" onmouseout="this.style.background=''">
+        <td>${label}</td>
+        <td style="color:#7ecfff;font-weight:700">${row.count}</td>
+        <td style="color:#4cde80">${row.uids.size}</td>
+      </tr>`;
     });
     html += '</tbody></table>';
     content.innerHTML = html;
     setTimeout(()=>drawAdminChart('reportsChart', chartData, chartCounts, '#7ecfff', 'דיווחים'), 60);
+  }catch(e){
+    content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
+  }
+};
+
+// ── REPORTS DATE DRILL-DOWN ───────────────────────────────────
+window.openReportsDrill = async (dateKey, dateLabel) => {
+  const modal = document.getElementById('adminReportsDrillModal');
+  const title = document.getElementById('adminReportsDrillTitle');
+  const content = document.getElementById('adminReportsDrillContent');
+  title.textContent = `דיווחים לפי משתמש (${dateLabel})`;
+  modal.classList.add('show');
+  content.innerHTML = '<div style="text-align:center;padding:16px;color:rgba(200,230,255,0.3)">טוען...</div>';
+  try{
+    const uidCounts = window._reportsByDate?.[dateKey] || {};
+    const uids = Object.keys(uidCounts);
+    if(!uids.length){
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים</div>';
+      return;
+    }
+    // שליפת פרטי משתמשים
+    const rows = [];
+    const batchSize = 10;
+    for(let i=0; i<uids.length; i+=batchSize){
+      const batch = uids.slice(i,i+batchSize);
+      const promises = batch.map(uid=>getDoc(doc(db,'users',uid)));
+      const results = await Promise.all(promises);
+      results.forEach((snap,idx)=>{
+        const uid = batch[idx];
+        const d = snap.exists() ? snap.data() : {};
+        rows.push({
+          uid,
+          name: d.name||'ללא שם',
+          email: d.email||'–',
+          auth: d.authMethod || window._activityData?.[uid]?.auth || '–',
+          count: uidCounts[uid]||0
+        });
+      });
+    }
+    // מיון לפי מספר דיווחים יורד
+    rows.sort((a,b)=>b.count-a.count);
+    let html = `<table class="admin-hist-table">
+      <thead><tr><th>#</th><th>שם</th><th>אימייל / רישום</th><th>דיווחים</th></tr></thead>
+      <tbody>`;
+    rows.forEach((r,i)=>{
+      html+=`<tr>
+        <td style="color:rgba(200,230,255,0.35)">${i+1}</td>
+        <td style="font-weight:600;color:#e8f4f8">${(r.name||'').replace(/</g,'&lt;')}</td>
+        <td style="color:rgba(200,230,255,0.55);font-size:10px;direction:ltr;text-align:left">${(r.email||'').replace(/</g,'&lt;')}<br><span style="color:rgba(200,230,255,0.35)">${r.auth}</span></td>
+        <td style="color:#7ecfff;font-weight:700;text-align:center">${r.count}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    content.innerHTML = html;
   }catch(e){
     content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
@@ -3014,7 +3094,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v82';
+  var APP_BUILD='v83';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
