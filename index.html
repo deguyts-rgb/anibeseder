@@ -2427,6 +2427,11 @@ async function saveDailyActivity(){
   try{
     const dateStr = new Date().toISOString().split('T')[0];
     const platform = detectPlatform();
+    // אם זוהה TWA — שמור בlocalStorage כדי שנזכור לכל היום
+    if(platform.type === 'android_twa'){
+      localStorage.setItem('detectedTWA_'+currentUser.uid, dateStr);
+    }
+    // תמיד דרוס את הפלטפורמה (לא merge) — כך TWA יחליף PWA אם המשתמש פתח מגוגל פליי
     await setDoc(doc(db,'activity',`${dateStr}_${currentUser.uid}`),{
       uid: currentUser.uid,
       date: dateStr,
@@ -2434,7 +2439,7 @@ async function saveDailyActivity(){
       browser: platform.browser,
       authMethod: detectAuthMethod(),
       ts: serverTimestamp()
-    },{merge:true});
+    });
   }catch(e){ console.log('saveDailyActivity:',e); }
 }
 
@@ -2457,7 +2462,12 @@ function detectPlatform(){
     return {type:'apple_browser', browser};
   }
   if(isAndroid || isAndroidTablet){
-    if(document.referrer.startsWith('android-app://')) return {type:'android_twa', browser:'גוגל פליי'};
+    // TWA detection: referrer או localStorage מכניסה קודמת באותו יום
+    const todayStr = new Date().toISOString().split('T')[0];
+    const uid = typeof currentUser !== 'undefined' && currentUser ? currentUser.uid : '';
+    const wasTWAToday = uid && localStorage.getItem('detectedTWA_'+uid) === todayStr;
+    const isTWA = document.referrer.includes('android-app://') || wasTWAToday;
+    if(isTWA) return {type:'android_twa', browser:'גוגל פליי'};
     if(isStandalone) return {type:'android_pwa', browser};
     return {type:'android_browser', browser: isAndroidTablet ? browser+' (טאבלט)' : browser};
   }
@@ -3094,7 +3104,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v84';
+  var APP_BUILD='v85';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
