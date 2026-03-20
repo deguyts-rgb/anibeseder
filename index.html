@@ -2471,6 +2471,11 @@ function detectPlatform(){
   const isIOS = /iphone|ipad|ipod/i.test(ua);
   const isAndroid = /android/i.test(ua);
   const isAndroidTablet = isAndroid && !/mobile/i.test(ua);
+  // גיבוי: מכשיר עם מגע + מסך גדול שלא זוהה כ-iOS או Android = כנראה טאבלט אנדרואיד
+  const hasTouch = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+  const isLargeScreen = window.screen && Math.min(window.screen.width, window.screen.height) >= 600;
+  const looksLikeAndroidTablet = !isIOS && !isAndroid && hasTouch && isLargeScreen &&
+    (/chrome/i.test(ua) || /samsung/i.test(ua) || /tablet/i.test(ua));
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   let browser = 'דפדפן לא ידוע';
   if(/CriOS/i.test(ua)) browser = 'Chrome (iOS)';
@@ -2484,10 +2489,8 @@ function detectPlatform(){
     if(isStandalone) return {type:'apple_pwa', browser};
     return {type:'apple_browser', browser};
   }
-  if(isAndroid || isAndroidTablet){
-    // בדיקת TWA: referrer מכיל android-app, או שזוהה בעבר כ-TWA על מכשיר זה
+  if(isAndroid || isAndroidTablet || looksLikeAndroidTablet){
     const uid = typeof currentUser !== 'undefined' && currentUser ? currentUser.uid : '';
-    // שלוש שיטות זיהוי TWA — כל אחת מהן מספיקה
     const referrerIsTWA = _initialReferrer.includes('android-app://') ||
                           sessionStorage.getItem('twaReferrer') === '1';
     const confirmedTWA = localStorage.getItem('everDetectedTWA_confirmed') === '1';
@@ -2495,7 +2498,8 @@ function detectPlatform(){
     const isTWA = referrerIsTWA || confirmedTWA || wasTWABefore;
     if(isTWA) return {type:'android_twa', browser:'גוגל פליי'};
     if(isStandalone) return {type:'android_pwa', browser};
-    return {type:'android_browser', browser: isAndroidTablet ? browser+' (טאבלט)' : browser};
+    const isTablet = isAndroidTablet || looksLikeAndroidTablet;
+    return {type:'android_browser', browser: isTablet ? browser+' (טאבלט)' : browser};
   }
   return {type:'desktop', browser};
 }
@@ -3130,7 +3134,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v88';
+  var APP_BUILD='v89';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
