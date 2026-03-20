@@ -735,6 +735,29 @@
 </div>
 
 <script type="module">
+// ── קרא referrer מיידית לפני כל navigation ──
+const _initialReferrer = document.referrer || '';
+if(_initialReferrer.includes('android-app://')){
+  try{ sessionStorage.setItem('twaReferrer','1'); }catch(e){}
+}
+
+// ── זיהוי TWA אמין דרך getInstalledRelatedApps ──
+(async()=>{
+  try{
+    if('getInstalledRelatedApps' in navigator){
+      const apps = await navigator.getInstalledRelatedApps();
+      const isTWA = apps.some(a=>
+        (a.id||'').includes('anibeseder') ||
+        (a.platform||'')==='play'
+      );
+      if(isTWA){
+        sessionStorage.setItem('twaReferrer','1');
+        try{ localStorage.setItem('everDetectedTWA_confirmed','1'); }catch(e){}
+      }
+    }
+  }catch(e){}
+})();
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, linkWithPopup, linkWithRedirect, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -2427,11 +2450,11 @@ async function saveDailyActivity(){
   try{
     const dateStr = new Date().toISOString().split('T')[0];
     const platform = detectPlatform();
-    // אם זוהה TWA — שמור בlocalStorage כדי שנזכור לכל היום
+    // אם זוהה TWA — שמור לצמיתות (לא רק ליום)
     if(platform.type === 'android_twa'){
-      localStorage.setItem('detectedTWA_'+currentUser.uid, dateStr);
+      localStorage.setItem('everDetectedTWA_'+currentUser.uid, '1');
+      localStorage.setItem('everDetectedTWA_confirmed','1');
     }
-    // תמיד דרוס את הפלטפורמה (לא merge) — כך TWA יחליף PWA אם המשתמש פתח מגוגל פליי
     await setDoc(doc(db,'activity',`${dateStr}_${currentUser.uid}`),{
       uid: currentUser.uid,
       date: dateStr,
@@ -2462,11 +2485,14 @@ function detectPlatform(){
     return {type:'apple_browser', browser};
   }
   if(isAndroid || isAndroidTablet){
-    // TWA detection: referrer או localStorage מכניסה קודמת באותו יום
-    const todayStr = new Date().toISOString().split('T')[0];
+    // בדיקת TWA: referrer מכיל android-app, או שזוהה בעבר כ-TWA על מכשיר זה
     const uid = typeof currentUser !== 'undefined' && currentUser ? currentUser.uid : '';
-    const wasTWAToday = uid && localStorage.getItem('detectedTWA_'+uid) === todayStr;
-    const isTWA = document.referrer.includes('android-app://') || wasTWAToday;
+    // שלוש שיטות זיהוי TWA — כל אחת מהן מספיקה
+    const referrerIsTWA = _initialReferrer.includes('android-app://') ||
+                          sessionStorage.getItem('twaReferrer') === '1';
+    const confirmedTWA = localStorage.getItem('everDetectedTWA_confirmed') === '1';
+    const wasTWABefore = (uid && localStorage.getItem('everDetectedTWA_'+uid) === '1');
+    const isTWA = referrerIsTWA || confirmedTWA || wasTWABefore;
     if(isTWA) return {type:'android_twa', browser:'גוגל פליי'};
     if(isStandalone) return {type:'android_pwa', browser};
     return {type:'android_browser', browser: isAndroidTablet ? browser+' (טאבלט)' : browser};
@@ -3104,7 +3130,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v85';
+  var APP_BUILD='v88';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
