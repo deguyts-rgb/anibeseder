@@ -1,8 +1,11 @@
 [{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "app.netlify.anibeseder.twa",
-        "sha256_cert_fingerprints": ["E9:63:2C:23:D5:D4:9B:83:8C:C0:69:1A:D3:04:1E:F7:08:9C:92:3A:22:7B:77:C2:CE:EC:D4:6D:04:60:8C:15"]
-      }
-    }]
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.netlify.anibeseder.twa",
+    "sha256_cert_fingerprints": [
+      "E9:63:2C:23:D5:D4:9B:83:8C:C0:69:1A:D3:04:1E:F7:08:9C:92:3A:22:7B:77:C2:CE:EC:D4:6D:04:60:8C:15",
+      "39:DE:26:BF:75:32:3B:7F:DA:A0:6E:25:DE:37:FE:A0:8A:F4:7C:2D:CC:24:6C:91:39:9A:26:3E:0B:C6:30:95"
+    ]
+  }
+}]
