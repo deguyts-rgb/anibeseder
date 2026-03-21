@@ -515,16 +515,15 @@
             </select>
           </div>
         </div>
-        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
       </div>
-      <!-- Select all + filter -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <div class="admin-select-all-row" onclick="toggleAdminSelectAll()" style="flex:1">
+      <!-- Select all + נבחרו -->
+      <div style="display:flex;align-items:stretch;gap:8px;margin-bottom:8px">
+        <div class="admin-select-all-row" onclick="toggleAdminSelectAll()" style="flex:1;margin-bottom:0">
           <input type="checkbox" class="admin-cb-all" id="adminSelectAllCb" onclick="event.stopPropagation();toggleAdminSelectAll()" />
           <span class="admin-select-label">בחר הכל</span>
         </div>
-        <div class="admin-stat-chip" style="flex:1;padding:8px 6px">
-          <div class="admin-stat-num" style="font-size:18px" id="adminSelectedCount">0</div>
+        <div class="admin-stat-chip" style="flex:0 0 80px;padding:6px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div class="admin-stat-num" style="font-size:18px;line-height:1" id="adminSelectedCount">0</div>
           <div class="admin-stat-label" id="adminSelLabelCount">נבחרו</div>
         </div>
       </div>
@@ -2559,8 +2558,18 @@ window.openReportsModal = async () => {
     ]);
     // בנה מיפוי uid → platform
     const uidPlatform = {};
+    const uidPlatformTs = {};
     activitySnap.forEach(d=>{
-      try{ const data=d.data(); if(data.uid) uidPlatform[data.uid]={platform:data.platform||'לא ידוע',browser:data.browser||''}; }catch(e){}
+      try{
+        const data=d.data();
+        if(!data.uid) return;
+        const ts = data.ts?.toDate?.()?.getTime() || 0;
+        // שמור רק את הרשומה הכי עדכנית לכל uid
+        if(!uidPlatformTs[data.uid] || ts > uidPlatformTs[data.uid]){
+          uidPlatformTs[data.uid] = ts;
+          uidPlatform[data.uid] = {platform:data.platform||'לא ידוע', browser:data.browser||''};
+        }
+      }catch(e){}
     });
     const byDate = {};
     window._reportsByDate = {};
@@ -3063,22 +3072,26 @@ function renderAdminUsersList(filterActive){
 
 
 window.applyActiveFilter = (period) => {
-  // עדכן מספר פעילים לפי פרק הזמן הנבחר
   const now = Date.now();
-  const periods = {
-    'all': Infinity,
-    'today': (() => { const m=new Date(); m.setHours(0,0,0,0); return now-m.getTime(); })(),
-    '24h': 24*3600000,
-    'week': 7*24*3600000,
-    'month': 30*24*3600000,
-    'year': 365*24*3600000
+  const midnight = new Date(); midnight.setHours(0,0,0,0);
+  const getPeriodMs = (p) => {
+    if(p==='all') return Infinity;
+    if(p==='today') return now - midnight.getTime();
+    return {'24h':24*3600000,'week':7*24*3600000,'month':30*24*3600000,'year':365*24*3600000}[p] || Infinity;
   };
-  const ms = periods[period] || Infinity;
+  const ms = getPeriodMs(period);
+  // עדכן מספר
   let count = 0;
-  Object.values(adminStatusCache).forEach(s=>{
-    if(s && s.ts && (now - s.ts.getTime()) <= ms) count++;
+  const seen = new Set();
+  Object.entries(adminStatusCache).forEach(([uid,s])=>{
+    if(s && s.ts && !seen.has(uid)){
+      const diff = period==='today' ? s.ts >= midnight : (now - s.ts.getTime()) <= ms;
+      if(diff){ count++; seen.add(uid); }
+    }
   });
   document.getElementById('adminActiveToday').textContent = count;
+  // סנן ומיין את הרשימה אם המיון פעיל
+  if(adminFilterActive) renderAdminUsersListActive(true);
 };
 
 window.toggleActiveFilter = () => {
@@ -3098,15 +3111,27 @@ window.toggleActiveFilter = () => {
 function renderAdminUsersListActive(filterActive){
   const listEl = document.getElementById('adminUsersList');
   if(!adminAllUsers.length){ listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין משתמשים</div>'; return; }
-  const now = Date.now();
   if(!filterActive){ renderAdminUsersList(false); return; }
-  // מיון לפי פעילות אחרונה — unique users, newest first
+  const now = Date.now();
+  const midnight = new Date(); midnight.setHours(0,0,0,0);
+  const period = document.getElementById('adminActiveFilterSelect')?.value || 'today';
+  const inPeriod = (ts) => {
+    if(!ts) return false;
+    if(period==='all') return true;
+    if(period==='today') return ts >= midnight;
+    const ms = {'24h':24*3600000,'week':7*24*3600000,'month':30*24*3600000,'year':365*24*3600000}[period];
+    return ms ? (now - ts.getTime()) <= ms : true;
+  };
   const seen = new Set();
   const activeUsers = [...adminAllUsers]
     .map(u=>({ u, ts: adminStatusCache[u.uid]?.ts }))
-    .filter(({u,ts})=>{ if(!ts) return false; if(seen.has(u.uid)) return false; seen.add(u.uid); return true; })
+    .filter(({u,ts})=>{
+      if(!ts || !inPeriod(ts)) return false;
+      if(seen.has(u.uid)) return false;
+      seen.add(u.uid); return true;
+    })
     .sort((a,b)=>(b.ts?.getTime()||0)-(a.ts?.getTime()||0));
-  if(!activeUsers.length){ listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים</div>'; return; }
+  if(!activeUsers.length){ listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים בתקופה הנבחרת</div>'; return; }
   listEl.innerHTML = activeUsers.map(({u,ts},i)=>{
     const checked = adminSelectedUids.has(u.uid) ? 'checked' : '';
     const nameSafe = (u.name||'ללא שם').replace(/</g,'&lt;');
@@ -3130,11 +3155,14 @@ window.toggleAdminUser = uid => {
   if(adminSelectedUids.has(uid)) adminSelectedUids.delete(uid);
   else adminSelectedUids.add(uid);
   updateAdminSelectedCount();
-  // Update checkbox state in DOM
-  const rows = document.querySelectorAll('#adminUsersList .admin-user-row');
-  adminAllUsers.forEach((u,i)=>{
-    const cb = rows[i]?.querySelector('.admin-cb');
-    if(cb) cb.checked = adminSelectedUids.has(u.uid);
+  // עדכן checkboxes לפי uid ולא לפי אינדקס
+  document.querySelectorAll('#adminUsersList .admin-user-row').forEach(row=>{
+    const cb = row.querySelector('.admin-cb');
+    if(cb){
+      // מצא את ה-uid מתוך ה-onclick של השורה
+      const match = row.getAttribute('onclick')?.match(/'([^']+)'/);
+      if(match) cb.checked = adminSelectedUids.has(match[1]);
+    }
   });
 };
 
@@ -3301,7 +3329,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v92';
+  var APP_BUILD='v93';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
