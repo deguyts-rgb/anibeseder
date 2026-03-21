@@ -2139,6 +2139,7 @@ window.handleOkPress=async()=>{
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
   logReport();
+  saveDailyActivity(); // עדכן תאריך פעילות — חשוב אם המשתמש עבר חצות מאז הכניסה
   sendPushToFollowers('ok');
   // אחרי לחיצה ראשונה — הרגע הטוב ביותר לבקש הרשאת התראות
   if(state.okCount===1&&'Notification'in window&&Notification.permission!=='granted'){
@@ -3134,7 +3135,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v89';
+  var APP_BUILD='v90';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
