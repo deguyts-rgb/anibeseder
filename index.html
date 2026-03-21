@@ -497,16 +497,36 @@
     <div class="panel-content">
       <!-- Stats -->
       <div class="admin-stats-row" id="adminStatsRow">
-        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminTotalUsers">–</div><div class="admin-stat-label">משתמשים</div></div>
+        <div class="admin-stat-chip"><div class="admin-stat-num" id="adminTotalUsers">–</div><div class="admin-stat-label">נרשמים</div></div>
         <div class="admin-stat-chip clickable" id="adminReportsTodayChip" onclick="openReportsModal()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminReportsToday">–</div><div class="admin-stat-label">דיווחים היום ↗</div></div>
-        <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" ondblclick="openActiveUsersModal()" style="cursor:pointer;transition:background 0.2s"><div class="admin-stat-num" id="adminActiveToday">–</div><div class="admin-stat-label" style="display:flex;align-items:center;gap:3px">פעילים<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0"></span></div></div>
+        <div style="display:flex;flex:1;gap:0;min-width:0">
+          <div class="admin-stat-chip" id="adminActiveTodayChip" onclick="toggleActiveFilter()" ondblclick="openActiveUsersModal()" style="cursor:pointer;transition:background 0.2s;border-radius:12px 0 0 12px;border-right:none;flex:1">
+            <div class="admin-stat-num" id="adminActiveToday">–</div>
+            <div class="admin-stat-label" style="display:flex;align-items:center;justify-content:center;gap:3px">פעילים<span id="adminFilterDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#4cde80;flex-shrink:0"></span></div>
+          </div>
+          <div style="background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.18);border-radius:0 12px 12px 0;display:flex;align-items:center;padding:0 4px;flex-shrink:0">
+            <select id="adminActiveFilterSelect" onchange="applyActiveFilter(this.value)" onclick="event.stopPropagation()" style="background:transparent;border:none;color:rgba(200,230,255,0.7);font-size:9px;cursor:pointer;outline:none;font-family:inherit;direction:rtl;max-width:52px">
+              <option value="all">כולם</option>
+              <option value="today" selected>היום</option>
+              <option value="24h">24 שע'</option>
+              <option value="week">שבוע</option>
+              <option value="month">חודש</option>
+              <option value="year">שנה</option>
+            </select>
+          </div>
+        </div>
         <div class="admin-stat-chip"><div class="admin-stat-num" id="adminSelectedCount">0</div><div class="admin-stat-label">נבחרו</div></div>
       </div>
       <!-- Select all + filter -->
-      <div class="admin-select-all-row" onclick="toggleAdminSelectAll()">
-        <input type="checkbox" class="admin-cb-all" id="adminSelectAllCb" onclick="event.stopPropagation();toggleAdminSelectAll()" />
-        <span class="admin-select-label">בחר את כולם</span>
-        <span class="admin-selected-count" id="adminSelLabelCount"></span>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div class="admin-select-all-row" onclick="toggleAdminSelectAll()" style="flex:1">
+          <input type="checkbox" class="admin-cb-all" id="adminSelectAllCb" onclick="event.stopPropagation();toggleAdminSelectAll()" />
+          <span class="admin-select-label">בחר הכל</span>
+        </div>
+        <div class="admin-stat-chip" style="flex:1;padding:8px 6px">
+          <div class="admin-stat-num" style="font-size:18px" id="adminSelectedCount">0</div>
+          <div class="admin-stat-label" id="adminSelLabelCount">נבחרו</div>
+        </div>
       </div>
       <!-- User list -->
       <div class="admin-users-box" id="adminUsersList">
@@ -2126,7 +2146,9 @@ async function checkFollowParam(){
 }
 
 window.handleOkPress=async()=>{
-  if(!currentUser||state.okCount>=100)return;
+  if(!currentUser) return;
+  // אדמין — דיווחים בלתי מוגבלים
+  if(!isAdmin() && state.okCount>=100) return;
   const btn=document.getElementById('bigBtn');
   btn.classList.add('pulse');setTimeout(()=>btn.classList.remove('pulse'),300);
   state.isOk=true;state.lastConfirmed=new Date();state.okCount=(state.okCount||0)+1;
@@ -2229,7 +2251,7 @@ function updateMainUI(){
     else { btnCustom.style.display='none'; }
     applyTimerGradient();
     st.className='status-text-inline'; st.textContent='';
-    if(state.okCount>=100){ btn.style.cursor='not-allowed'; }
+    if(state.okCount>=100 && !isAdmin()){ btn.style.cursor='not-allowed'; }
     else { btn.style.cursor='pointer'; }
     if(addFriendsBtn) addFriendsBtn.style.display='flex';
     moodBtn.classList.add('visible'); moodBtn.textContent=emoji||'😊';
@@ -2530,23 +2552,34 @@ window.openReportsModal = async () => {
   modal.classList.add('show');
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
-    const snaps = await getDocs(collection(db,'reports'));
+    // שליפת דיווחים + פעילות יחד
+    const [reportsSnap, activitySnap] = await Promise.all([
+      getDocs(collection(db,'reports')),
+      getDocs(collection(db,'activity'))
+    ]);
+    // בנה מיפוי uid → platform
+    const uidPlatform = {};
+    activitySnap.forEach(d=>{
+      try{ const data=d.data(); if(data.uid) uidPlatform[data.uid]={platform:data.platform||'לא ידוע',browser:data.browser||''}; }catch(e){}
+    });
     const byDate = {};
-    // שמירת הרשומות הגולמיות לפי uid לכל יום — לצורך drill-down
     window._reportsByDate = {};
-    snaps.forEach(d=>{
+    reportsSnap.forEach(d=>{
       try{
         const data = d.data();
         const date = data.date || (data.ts?.toDate?.().toISOString().split('T')[0]);
         if(!date) return;
-        if(!byDate[date]) byDate[date] = {count:0, uids: new Set()};
+        if(!byDate[date]) byDate[date] = {count:0, uids:new Set(), platforms:{}};
         byDate[date].count++;
-        if(data.uid) byDate[date].uids.add(data.uid);
-        // שמירה לפי יום+uid לספירה
-        if(!window._reportsByDate[date]) window._reportsByDate[date] = {};
         if(data.uid){
-          window._reportsByDate[date][data.uid] = (window._reportsByDate[date][data.uid]||0)+1;
+          byDate[date].uids.add(data.uid);
+          // קיבוץ לפי פלטפורמה
+          const pdata = uidPlatform[data.uid];
+          const plabel = pdata ? platformLabel(pdata.platform, pdata.browser) : '🌐 לא ידוע';
+          byDate[date].platforms[plabel] = (byDate[date].platforms[plabel]||0)+1;
         }
+        if(!window._reportsByDate[date]) window._reportsByDate[date] = {};
+        if(data.uid) window._reportsByDate[date][data.uid] = (window._reportsByDate[date][data.uid]||0)+1;
       }catch(ie){}
     });
     const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
@@ -2556,27 +2589,32 @@ window.openReportsModal = async () => {
     }
     const chartData = [...dates].reverse();
     const chartCounts = chartData.map(d=>byDate[d].count);
+    // גרף עם פירוט פלטפורמות — צבעים לפי פלטפורמה
     let html = `<div class="admin-chart-wrap">
       <div class="admin-chart-title">דיווחים לפי תאריך</div>
       <canvas id="reportsChart" class="admin-chart-canvas" height="150"></canvas>
     </div>
     <p style="font-size:10px;color:rgba(200,230,255,0.3);text-align:center;margin-bottom:6px">לחץ על שורה לפירוט לפי משתמש</p>
     <table class="admin-hist-table">
-      <thead><tr><th>תאריך</th><th>דיווחים</th><th>משתמשים</th></tr></thead>
+      <thead><tr><th>תאריך</th><th>דיווחים</th><th>משתמשים</th><th>פלטפורמה</th></tr></thead>
       <tbody>`;
     dates.forEach(d=>{
       const row = byDate[d];
       const parts = d.split('-');
       const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
+      const chips = Object.entries(row.platforms).map(([k,v])=>
+        `<span style="display:inline-block;background:rgba(126,207,255,0.08);border:1px solid rgba(126,207,255,0.2);border-radius:6px;padding:1px 5px;font-size:9px;color:rgba(200,230,255,0.7);margin:1px;white-space:nowrap">${k} (${v})</span>`
+      ).join('');
       html+=`<tr onclick="openReportsDrill('${d}','${label}')" style="cursor:pointer" onmouseover="this.style.background='rgba(126,207,255,0.06)'" onmouseout="this.style.background=''">
         <td>${label}</td>
         <td style="color:#7ecfff;font-weight:700">${row.count}</td>
         <td style="color:#4cde80">${row.uids.size}</td>
+        <td style="text-align:right;direction:rtl">${chips}</td>
       </tr>`;
     });
     html += '</tbody></table>';
     content.innerHTML = html;
-    setTimeout(()=>drawAdminChart('reportsChart', chartData, chartCounts, '#7ecfff', 'דיווחים'), 60);
+    setTimeout(()=>drawAdminLineChart('reportsChart', chartData, chartCounts, '#7ecfff'), 60);
   }catch(e){
     content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
@@ -2644,7 +2682,6 @@ window.openActiveUsersModal = async () => {
   content.innerHTML = '<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">טוען...</div>';
   try{
     const snaps = await getDocs(collection(db,'activity'));
-    // שמור את כל נתוני הפעילות גלובלית לצורך drill-down
     window._activityData = {};
     const byDate = {};
     snaps.forEach(d=>{
@@ -2661,7 +2698,6 @@ window.openActiveUsersModal = async () => {
             uid: data.uid
           };
         }
-        // שמירה גלובלית לפי uid
         if(!window._activityData[data.uid]){
           window._activityData[data.uid] = {
             platform: data.platform||'לא ידוע',
@@ -2672,29 +2708,42 @@ window.openActiveUsersModal = async () => {
         }
       }catch(ie){}
     });
-    const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
-    if(!dates.length){
-      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים עדיין — יצטברו מגרסה זו והלאה</div>';
+    // סנן לפי תחום הזמן הנבחר
+    const period = document.getElementById('adminActiveFilterSelect')?.value || 'today';
+    const now = new Date();
+    const filterDate = (dateStr) => {
+      const d = new Date(dateStr);
+      if(period==='all') return true;
+      if(period==='today'){ const m=new Date(); m.setHours(0,0,0,0); return d>=m; }
+      const ms = {
+        '24h': 24*3600000, 'week': 7*24*3600000,
+        'month': 30*24*3600000, 'year': 365*24*3600000
+      }[period];
+      return ms ? (now - d) <= ms : true;
+    };
+    const allDates = Object.keys(byDate).sort((a,b)=>a.localeCompare(b));
+    const filteredDates = allDates.filter(filterDate);
+    if(!filteredDates.length){
+      content.innerHTML='<div style="text-align:center;padding:24px;color:rgba(200,230,255,0.3)">אין נתונים לתקופה הנבחרת</div>';
       return;
     }
-    const chartData = [...dates].reverse();
-    const chartCounts = chartData.map(d=>Object.keys(byDate[d].users).length);
+    const chartData = filteredDates;
+    const chartCounts = filteredDates.map(d=>Object.keys(byDate[d].users).length);
+    const periodLabels = {'all':'כולם','today':'היום','24h':'24 שעות','week':'שבוע','month':'חודש','year':'שנה'};
     let html = `<div class="admin-chart-wrap">
-      <div class="admin-chart-title">משתמשים פעילים לפי תאריך</div>
+      <div class="admin-chart-title">פעילים לפי תאריך — ${periodLabels[period]||''}</div>
       <canvas id="activeChart" class="admin-chart-canvas" height="150"></canvas>
     </div>
     <table class="admin-hist-table">
       <thead><tr><th>תאריך</th><th>פעילים</th><th>פירוט (לחץ לפרטים)</th></tr></thead>
       <tbody>`;
-    dates.forEach(d=>{
+    [...filteredDates].reverse().forEach(d=>{
       const row = byDate[d];
       const users = Object.values(row.users);
       const count = users.length;
       const parts = d.split('-');
       const label = parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(2)}` : d;
-      // קיבוץ לפי פלטפורמה
-      const groups = {};
-      const groupUsers = {}; // uid per group
+      const groups = {}, groupUsers = {};
       users.forEach(u=>{
         const key = platformLabel(u.platform, u.browser);
         groups[key] = (groups[key]||0)+1;
@@ -2703,17 +2752,13 @@ window.openActiveUsersModal = async () => {
       });
       const chips = Object.entries(groups).map(([k,v])=>{
         const uidsJson = JSON.stringify(groupUsers[k]).replace(/"/g,'&quot;');
-        return `<span onclick="openPlatformDrill('${k.replace(/'/g,'\\'+'\'')}',(${uidsJson}))" style="display:inline-block;background:rgba(126,207,255,0.1);border:1px solid rgba(126,207,255,0.25);border-radius:8px;padding:2px 8px;font-size:10px;color:#7ecfff;cursor:pointer;margin:1px;white-space:nowrap">${k} (${v})</span>`;
+        return `<span onclick="openPlatformDrill('${k.replace(/'/g,"\\'")}',(${uidsJson}))" style="display:inline-block;background:rgba(126,207,255,0.1);border:1px solid rgba(126,207,255,0.25);border-radius:8px;padding:2px 8px;font-size:10px;color:#7ecfff;cursor:pointer;margin:1px;white-space:nowrap">${k} (${v})</span>`;
       }).join('');
-      html+=`<tr>
-        <td>${label}</td>
-        <td style="color:#4cde80;font-weight:700">${count}</td>
-        <td style="text-align:right;direction:rtl;line-height:1.8">${chips}</td>
-      </tr>`;
+      html+=`<tr><td>${label}</td><td style="color:#4cde80;font-weight:700">${count}</td><td style="text-align:right;direction:rtl;line-height:1.8">${chips}</td></tr>`;
     });
     html += '</tbody></table>';
     content.innerHTML = html;
-    setTimeout(()=>drawAdminChart('activeChart', chartData, chartCounts, '#4cde80', 'פעילים'), 60);
+    setTimeout(()=>drawAdminLineChart('activeChart', chartData, chartCounts, '#4cde80'), 60);
   }catch(e){
     content.innerHTML=`<div style="text-align:center;padding:24px;color:#ff8888">שגיאה: ${e.message||String(e)}</div>`;
   }
@@ -2829,9 +2874,74 @@ function drawAdminChart(canvasId, labels, values, color, label){
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-// ADMIN PANEL
-// ══════════════════════════════════════════════════════════════
+// ── גרף קווי ─────────────────────────────────────────────────
+function drawAdminLineChart(canvasId, labels, values, color){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const W = canvas.parentElement.clientWidth - 20;
+  const H = 150;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  if(!values.length) return;
+  let plotLabels = labels, plotValues = values;
+  const n = values.length;
+  if(n > 60){
+    const monthly = {};
+    labels.forEach((d,i)=>{
+      const ym = d.slice(0,7);
+      if(!monthly[ym]) monthly[ym]=0;
+      monthly[ym] += values[i];
+    });
+    plotLabels = Object.keys(monthly).sort();
+    plotValues = plotLabels.map(k=>monthly[k]);
+  }
+  const pn = plotLabels.length;
+  const max = Math.max(...plotValues, 1);
+  const padL=28, padR=10, padT=14, padB=28;
+  const gW=W-padL-padR, gH=H-padT-padB;
+  ctx.clearRect(0,0,W,H);
+  // grid
+  ctx.strokeStyle='rgba(126,207,255,0.08)'; ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=padT+gH*(1-f);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(W-padR,y); ctx.stroke();
+    ctx.fillStyle='rgba(200,230,255,0.25)'; ctx.font='9px sans-serif'; ctx.textAlign='right';
+    ctx.fillText(Math.round(max*f), padL-3, y+3);
+  });
+  // line
+  const pts = plotValues.map((v,i)=>({
+    x: padL + (pn===1 ? gW/2 : (i/(pn-1))*gW),
+    y: padT + gH - (v/max)*gH
+  }));
+  // fill under line
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, padT+gH);
+  pts.forEach(p=>ctx.lineTo(p.x, p.y));
+  ctx.lineTo(pts[pts.length-1].x, padT+gH);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0,padT,0,padT+gH);
+  grad.addColorStop(0, color+'55'); grad.addColorStop(1, color+'08');
+  ctx.fillStyle=grad; ctx.fill();
+  // line stroke
+  ctx.beginPath();
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+  // dots
+  pts.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle=color; ctx.fill();
+  });
+  // x labels
+  ctx.fillStyle='rgba(200,230,255,0.38)'; ctx.font='8px sans-serif'; ctx.textAlign='center';
+  const showIdx = new Set([0, Math.floor(pn/2), pn-1]);
+  showIdx.forEach(i=>{
+    if(i>=0&&i<pn){
+      const d = plotLabels[i];
+      const txt = d.length===7 ? d.slice(5) : d.slice(5).replace('-','/');
+      ctx.fillText(txt, pts[i].x, H-6);
+    }
+  });
+}
 
 let adminAllUsers = [], adminSelectedUids = new Set(), adminFilterActive = false, adminStatusCache = {};
 
@@ -2931,20 +3041,45 @@ function renderAdminUsersList(filterActive){
   if(filterActive && !displayUsers.length){listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים ב-24 שעות האחרונות</div>';return;}
   listEl.innerHTML = displayUsers.map((u,i)=>{
     const checked = adminSelectedUids.has(u.uid) ? 'checked' : '';
-    const dateStr = u.createdAt ? u.createdAt.toDate().toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '–';
+    const createdAt = u.createdAt ? u.createdAt.toDate() : null;
+    const dateStr = createdAt ? createdAt.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '–';
+    const timeStr = createdAt ? createdAt.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '';
     const nameSafe = (u.name||'ללא שם').replace(/</g,'&lt;');
     const emailSafe = (u.email||'').replace(/</g,'&lt;');
-    const num = filterActive ? displayUsers.length-i : adminAllUsers.length-i; // reverse number (oldest = 1)
+    const providers = u.providerData || [];
+    const authIcon = providers.some(p=>(p.providerId||'').includes('apple')) ? '🍎' :
+                     providers.some(p=>(p.providerId||'').includes('google')) ? 'G' : '?';
+    const num = filterActive ? displayUsers.length-i : adminAllUsers.length-i;
     return `<div class="admin-user-row" onclick="toggleAdminUser('${u.uid}')">
       <input type="checkbox" class="admin-cb" ${checked} onclick="event.stopPropagation();toggleAdminUser('${u.uid}')"/>
       <span class="admin-user-num">${num}</span>
       <span class="admin-user-name">${nameSafe}</span>
       <span class="admin-user-email">${emailSafe}</span>
-      <span class="admin-user-date">${dateStr}</span>
+      <span class="admin-user-date" style="text-align:center">${dateStr}<br><span style="color:rgba(200,230,255,0.2)">${timeStr}</span></span>
+      <span style="font-size:10px;font-weight:700;color:${authIcon==='🍎'?'#e8f4f8':'#4285F4'};flex-shrink:0;width:14px;text-align:center">${authIcon}</span>
     </div>`;
   }).join('');
 }
 
+
+window.applyActiveFilter = (period) => {
+  // עדכן מספר פעילים לפי פרק הזמן הנבחר
+  const now = Date.now();
+  const periods = {
+    'all': Infinity,
+    'today': (() => { const m=new Date(); m.setHours(0,0,0,0); return now-m.getTime(); })(),
+    '24h': 24*3600000,
+    'week': 7*24*3600000,
+    'month': 30*24*3600000,
+    'year': 365*24*3600000
+  };
+  const ms = periods[period] || Infinity;
+  let count = 0;
+  Object.values(adminStatusCache).forEach(s=>{
+    if(s && s.ts && (now - s.ts.getTime()) <= ms) count++;
+  });
+  document.getElementById('adminActiveToday').textContent = count;
+};
 
 window.toggleActiveFilter = () => {
   adminFilterActive = !adminFilterActive;
@@ -2957,8 +3092,40 @@ window.toggleActiveFilter = () => {
     if(dot) dot.style.display='none';
     if(chip){ chip.style.background=''; chip.style.outline=''; }
   }
-  renderAdminUsersList(adminFilterActive);
+  renderAdminUsersListActive(adminFilterActive);
 };
+
+function renderAdminUsersListActive(filterActive){
+  const listEl = document.getElementById('adminUsersList');
+  if(!adminAllUsers.length){ listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין משתמשים</div>'; return; }
+  const now = Date.now();
+  if(!filterActive){ renderAdminUsersList(false); return; }
+  // מיון לפי פעילות אחרונה — unique users, newest first
+  const seen = new Set();
+  const activeUsers = [...adminAllUsers]
+    .map(u=>({ u, ts: adminStatusCache[u.uid]?.ts }))
+    .filter(({u,ts})=>{ if(!ts) return false; if(seen.has(u.uid)) return false; seen.add(u.uid); return true; })
+    .sort((a,b)=>(b.ts?.getTime()||0)-(a.ts?.getTime()||0));
+  if(!activeUsers.length){ listEl.innerHTML='<div style="text-align:center;padding:20px;color:rgba(200,230,255,0.3)">אין פעילים</div>'; return; }
+  listEl.innerHTML = activeUsers.map(({u,ts},i)=>{
+    const checked = adminSelectedUids.has(u.uid) ? 'checked' : '';
+    const nameSafe = (u.name||'ללא שם').replace(/</g,'&lt;');
+    const emailSafe = (u.email||'').replace(/</g,'&lt;');
+    const dateStr = ts ? ts.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '–';
+    const timeStr = ts ? ts.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '';
+    const providers = u.providerData || [];
+    const authIcon = providers.some(p=>(p.providerId||'').includes('apple')) ? '🍎' :
+                     providers.some(p=>(p.providerId||'').includes('google')) ? 'G' : '?';
+    return `<div class="admin-user-row" onclick="toggleAdminUser('${u.uid}')">
+      <input type="checkbox" class="admin-cb" ${checked} onclick="event.stopPropagation();toggleAdminUser('${u.uid}')"/>
+      <span class="admin-user-num">${activeUsers.length - i}</span>
+      <span class="admin-user-name">${nameSafe}</span>
+      <span class="admin-user-email">${emailSafe}</span>
+      <span class="admin-user-date" style="text-align:center">${dateStr}<br><span style="color:rgba(200,230,255,0.4)">${timeStr}</span></span>
+      <span style="font-size:10px;font-weight:700;color:${authIcon==='🍎'?'#e8f4f8':'#4285F4'};flex-shrink:0;width:14px;text-align:center">${authIcon}</span>
+    </div>`;
+  }).join('');
+}
 window.toggleAdminUser = uid => {
   if(adminSelectedUids.has(uid)) adminSelectedUids.delete(uid);
   else adminSelectedUids.add(uid);
@@ -2989,10 +3156,9 @@ function updateAdminSelectedCount(){
   const n = adminSelectedUids.size;
   document.getElementById('adminSelectedCount').textContent = n;
   const lbl = document.getElementById('adminSelLabelCount');
-  if(lbl) lbl.textContent = n > 0 ? `${n} נבחרו` : '';
+  if(lbl) lbl.textContent = n > 0 ? `${n} נבחרו` : 'נבחרו';
   const sendBtn = document.getElementById('adminSendNudgeBtn');
   if(sendBtn) sendBtn.disabled = n === 0;
-  // Sync select-all checkbox
   const allCb = document.getElementById('adminSelectAllCb');
   if(allCb) allCb.checked = adminAllUsers.length > 0 && n === adminAllUsers.length;
 }
@@ -3135,7 +3301,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v90';
+  var APP_BUILD='v92';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
