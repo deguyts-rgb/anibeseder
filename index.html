@@ -171,86 +171,83 @@
 
 ```
 /* ══════════════════════════════════════════════
-   POSTCARD v103
-   גובה קבוע 90px. תמונה בתוך המסגרת.
-   RTL: ראשון=ימין, אחרון=שמאל.
+   POSTCARD v104
+   direction:rtl מפורש על הכרטיס.
+   RTL: ילד ראשון בDOM → מופיע ימין, ילד אחרון → מופיע שמאל.
 
-   SELF:
-     .pc-body (ראשון→ימין): content + כפתורים,
-               border-right rounded כחצי-עיגול
-     .pc-img  (אחרון→שמאל): תמונה, width:82px,
-               גולש שמאלה (margin-left שלילי על הכרטיס),
-               אין border-left
+   SELF (חצי-עיגול ימין, גולש שמאל):
+     DOM: [pc-body][pc-img]
+     → pc-body ימין (חצי-עיגול), pc-img שמאל (גולש)
+     בתוך pc-body: [pc-texts][pc-circle]
+     → pc-texts ימין, pc-circle שמאל (צמוד לתמונה)
 
-   FRIEND:
-     .pc-img  (ראשון→ימין): תמונה, width:82px,
-               גולש ימינה (margin-right שלילי על הכרטיס),
-               אין border-right
-     .pc-body (אחרון→שמאל): content + כפתורים,
-               border-left rounded כחצי-עיגול
+   FRIEND (חצי-עיגול שמאל, גולש ימין):
+     DOM: [pc-img][pc-body]
+     → pc-img ימין (גולש), pc-body שמאל (חצי-עיגול)
+     בתוך pc-body: [pc-circle][pc-texts]
+     → pc-circle ימין (צמוד לתמונה), pc-texts שמאל
 ══════════════════════════════════════════════ */
 
-/* כרטיס בסיס */
-.pc{display:flex;height:90px;overflow:hidden;margin-bottom:10px;align-items:stretch}
+.pc{
+  display:flex;direction:rtl;
+  height:90px;overflow:hidden;
+  margin-bottom:10px;align-items:stretch}
 
-/* SELF – גבול ירוק, חצי-עיגול ימין, גולש שמאל */
 .pc-self{
-  margin-left:-18px;
-  border:2px solid #4cde80;
-  border-left:none;
+  margin-left:-16px;
+  border:2px solid #4cde80;border-left:none;
   border-radius:0 999px 999px 0;
   background:rgba(18,130,60,0.20)}
 
-/* FRIEND – גבול אוף-ווייט, חצי-עיגול שמאל, גולש ימין */
 .pc-friend{
-  margin-right:-18px;
-  border:2px solid rgba(210,232,220,0.44);
-  border-right:none;
+  margin-right:-16px;
+  border:2px solid rgba(210,232,220,0.44);border-right:none;
   border-radius:999px 0 0 999px;
   background:rgba(210,232,220,0.10)}
 
-/* עמודת תמונה – רוחב קבוע, גובה מלא, crop */
+/* תמונת פרופיל – background-image מוגדר ב-style inline */
 .pc-img{
   width:82px;min-width:82px;flex-shrink:0;
   position:relative;overflow:hidden;
-  background:#080f18}
-.pc-img img{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;object-position:center top}
-.pc-img-emoji{
+  background:#080f18 center top/cover no-repeat}
+/* אות ראשית כשאין תמונה */
+.pc-img-fallback{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:26px}
-/* גרדיאנט כהה + שם בתחתית התמונה */
-.pc-img-grad{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;
-  background:linear-gradient(to top,rgba(4,10,18,0.95) 0%,rgba(4,10,18,0.5) 50%,transparent 100%);
-  padding:3px 4px 4px;
+  font-size:28px;z-index:1}
+/* גרדיאנט כהה + שם בתחתית */
+.pc-img-overlay{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  background:linear-gradient(to top,rgba(4,10,18,0.95) 0%,rgba(4,10,18,0.45) 55%,transparent 100%);
+  padding:3px 4px 5px;
   display:flex;align-items:flex-end;justify-content:center}
 .pc-img-name{
   font-size:11px;font-weight:700;line-height:1.2;
   text-align:center;white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis;max-width:78px}
-.pc-img-name-self{color:rgba(100,245,155,0.95)}
+  overflow:hidden;text-overflow:ellipsis;max-width:76px}
+.pc-img-name-self{color:rgba(100,245,150,0.95)}
 .pc-img-name-friend{color:rgba(220,240,230,0.92)}
 
-/* עמודת תוכן */
+/* תוכן הכרטיס */
 .pc-body{
   flex:1;min-width:0;
   display:flex;flex-direction:column;
   justify-content:space-between;
-  padding:10px 8px 8px}
-/* ריפוד צד חצי-עיגול */
+  padding:10px 8px 7px}
+/* ריפוד לצד החצי-עיגול */
 .pc-self .pc-body{padding-right:28px}
 .pc-friend .pc-body{padding-left:28px}
 
-/* שורת סטטוס */
-.pc-row{display:flex;align-items:center;gap:8px}
-.pc-circle{width:44px;height:44px;border-radius:50%;
+/* שורת סטטוס – RTL: ראשון=ימין, אחרון=שמאל */
+.pc-row{display:flex;align-items:center;gap:8px;direction:rtl}
+.pc-circle{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:800;flex-shrink:0}
+  font-size:18px;font-weight:800}
 .pc-texts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+/* טקסט כרטיס שלי: text-align:left כדי שיזרום לכיוון העיגול שמשמאל */
+.pc-self .pc-texts{text-align:left}
+.pc-friend .pc-texts{text-align:right}
 .pc-s{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.3;word-break:break-word}
 .pc-s.ok{font-size:17px;font-weight:800}
 .pc-s.dim{font-size:12px;color:rgba(200,230,255,0.3);font-weight:400}
@@ -258,23 +255,25 @@
 .pc-tok{font-size:11px;font-weight:700;color:rgba(76,222,128,0.85);margin-top:1px}
 .pc-t{font-size:10px;color:rgba(200,230,255,0.28);margin-top:1px}
 
-/* כפתורי חבר (בתוך הכרטיס, תחתית) */
-.pc-btns{display:flex;gap:5px;align-items:center}
-.pc-nb{/* nudge btn */
+/* כפתורי חבר: justify-content:flex-end → נצמדים לשמאל ב-RTL */
+.pc-btns{
+  display:flex;gap:5px;align-items:center;
+  justify-content:flex-end;direction:rtl}
+.pc-nb{
   display:flex;align-items:center;justify-content:center;
   width:32px;height:24px;border-radius:7px;font-size:14px;
   background:rgba(210,232,220,0.08);border:1.5px solid rgba(210,232,220,0.25);
   cursor:pointer;font-family:inherit;transition:all 0.2s}
 .pc-nb.sent{background:rgba(76,222,128,0.15);border-color:rgba(76,222,128,0.5);color:#4cde80}
-.pc-rb{/* react btn */
+.pc-rb{
   display:flex;align-items:center;gap:3px;
   padding:3px 8px;height:24px;border-radius:7px;
   background:rgba(210,232,220,0.08);border:1.5px solid rgba(210,232,220,0.25);
-  cursor:pointer;font-size:13px;font-family:inherit;color:rgba(210,232,220,0.78)}
+  cursor:pointer;font-size:12px;font-family:inherit;color:rgba(210,232,220,0.78)}
 .pc-rb span:last-child{font-size:9px;font-weight:700}
 
-/* תגובות (פוסט שלי, תחתית כרטיס) */
-.pc-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+/* תגובות (פוסט שלי) */
+.pc-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap;direction:rtl;justify-content:flex-start}
 .pc-rb2{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
 .pc-rc{width:28px;height:28px;border-radius:50%;
   background:rgba(76,222,128,0.18);border:1.5px solid rgba(76,222,128,0.5);
@@ -1530,7 +1529,7 @@ async function sendPushToFollowers(type='ok', message='') {
 let currentUser = null;
 let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null, soundId:null, coins:0 };
 let statusListeners=[], watchingStatuses={};
-// ── REACTIONS v103 ──────────────────────────────────────────
+// ── REACTIONS v104 ──────────────────────────────────────────
 let selfReactions={}, selfReactionsUnsub=null;
 const REACT_EMOJIS=['❤️','🙏','💪','😂','🔥','🫶','👍','😍','🥹','😎'];
 const RAND_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
@@ -2315,8 +2314,16 @@ function buildSelfCardHTML(statuses){
   const myName=(currentUser.displayName||'אני').split(' ')[0];
   const rawPhoto=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
   const photoURL=rawPhoto?_fixPhotoUrl(rawPhoto):null;
+  const imgStyle=photoURL?`background-image:url('${photoURL}')`:'';
+  const fallback=!photoURL?`<div class="pc-img-fallback">${(currentUser.displayName||'א')[0]}</div>`:'';
   const reactHTML=buildReactsHTML(selfReactions);
-  /* RTL flex: pc-body=ראשון→ימין (חצי-עיגול), pc-img=אחרון→שמאל (גולש שמאל) */
+  /*
+    RTL DOM order: [pc-body][pc-img]
+    → pc-body=ימין (חצי-עיגול), pc-img=שמאל (גולש שמאל)
+    בתוך pc-row: [pc-texts][pc-circle]
+    → pc-texts=ימין, pc-circle=שמאל (צמוד לתמונה)
+    text-align:left כדי שהטקסט יזרום לכיוון העיגול משמאל
+  */
   return `<div class="pc pc-self" id="wrow-self">
     <div class="pc-body">
       <div class="pc-row">
@@ -2328,9 +2335,9 @@ function buildSelfCardHTML(statuses){
       </div>
       <div class="pc-reacts" id="pc-reacts-self">${reactHTML}</div>
     </div>
-    <div class="pc-img">
-      ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${(currentUser.displayName||'א')[0]}</div>`}
-      <div class="pc-img-grad"><span class="pc-img-name pc-img-name-self">אני – ${myName}</span></div>
+    <div class="pc-img" style="${imgStyle}">
+      ${fallback}
+      <div class="pc-img-overlay"><span class="pc-img-name pc-img-name-self">אני – ${myName}</span></div>
     </div>
   </div>`;
 }
@@ -2369,6 +2376,8 @@ function renderWatchingWithStatuses(watching,statuses){
     }else if(!isUnknown){fsc='err';fst='לא עדכן';}
     const photoURL=s?.photoURL||null;
     const fname=w.followingName||'משתמש';
+    const fimgStyle=photoURL?`background-image:url('${photoURL}')`:'';
+    const ffallback=!photoURL?`<div class="pc-img-fallback">${fname[0]||'?'}</div>`:'';
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const safeUid=w.followingUid.replace(/'/g,"\'");
     const safeName=fname.replace(/'/g,"\'");
@@ -2376,11 +2385,17 @@ function renderWatchingWithStatuses(watching,statuses){
     const nKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
     const nSent=localStorage.getItem(nKey)?'sent':'';
     const nIn=localStorage.getItem(nKey)?'✓':'👋';
-    /* RTL flex: pc-img=ראשון→ימין (גולש ימין), pc-body=אחרון→שמאל (חצי-עיגול) */
+    /*
+      RTL DOM order: [pc-img][pc-body]
+      → pc-img=ימין (גולש ימין), pc-body=שמאל (חצי-עיגול)
+      בתוך pc-row: [pc-circle][pc-texts]
+      → pc-circle=ימין (צמוד לתמונה), pc-texts=שמאל
+      כפתורים: justify-content:flex-end ב-RTL → נצמדים לשמאל (לכיוון החצי-עיגול)
+    */
     return `<div class="pc pc-friend" id="wrow-${w.followingUid}" onclick="openFriendProfile('${safeUid}')" style="cursor:pointer">
-      <div class="pc-img">
-        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${fname[0]||'?'}</div>`}
-        <div class="pc-img-grad"><span class="pc-img-name pc-img-name-friend">${fname}</span></div>
+      <div class="pc-img" style="${fimgStyle}">
+        ${ffallback}
+        <div class="pc-img-overlay"><span class="pc-img-name pc-img-name-friend">${fname}</span></div>
       </div>
       <div class="pc-body">
         <div class="pc-row">
@@ -2854,6 +2869,8 @@ function renderGfeedBody(group){
     const identityStyle=photoURL?`background-image:url('${photoURL}');background-size:cover;background-position:center top;`:'';
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const selfName=currentUser.displayName||'אני';
+    const gsImgStyle=photoURL?`background-image:url('${photoURL}')`:'';
+    const gsFallback=!photoURL?`<div class="pc-img-fallback">${(selfName||'א')[0]}</div>`:'';
     selfCardHTML=`<div class="pc pc-self" style="margin-bottom:10px">
       <div class="pc-body">
         <div class="pc-row">
@@ -2864,9 +2881,9 @@ function renderGfeedBody(group){
           <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
         </div>
       </div>
-      <div class="pc-img">
-        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${(selfName||'א')[0]}</div>`}
-        <div class="pc-img-grad"><span class="pc-img-name pc-img-name-self">אני – ${(selfName||'').split(' ')[0]}</span></div>
+      <div class="pc-img" style="${gsImgStyle}">
+        ${gsFallback}
+        <div class="pc-img-overlay"><span class="pc-img-name pc-img-name-self">אני – ${(selfName||'').split(' ')[0]}</span></div>
       </div>
     </div>`;
   }
@@ -2901,14 +2918,16 @@ function renderGfeedBody(group){
     const memberName=memberNames[uid]||'חבר';
     const safeUid=uid.replace(/'/g,"\\'");
     const safeMemberName=memberName.replace(/'/g,"\\'");
+    const gmImgStyle=photoURL?`background-image:url('${photoURL}')`:'';
+    const gmFallback=!photoURL?`<div class="pc-img-fallback">${memberName[0]||'?'}</div>`:'';
     const gmE=RAND_EMOJIS[Math.abs(uid.charCodeAt(0)+(uid.charCodeAt(1)||0))%RAND_EMOJIS.length];
     const gmNK='nudgeSent_'+currentUser.uid+'_'+uid;
     const gmNSent=localStorage.getItem(gmNK)?'sent':'';
     const gmNIn=localStorage.getItem(gmNK)?'✓':'👋';
     return `<div class="pc pc-friend" style="margin-bottom:10px;border-color:rgba(180,140,40,0.55)" onclick="openFriendProfile('${safeUid}')">
-      <div class="pc-img" style="background:rgba(8,15,24,0.8)">
-        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${memberName[0]||'?'}</div>`}
-        <div class="pc-img-grad"><span class="pc-img-name" style="color:rgba(212,169,64,0.92)">${memberName}</span></div>
+      <div class="pc-img" style="${gmImgStyle}">
+        ${gmFallback}
+        <div class="pc-img-overlay"><span class="pc-img-name" style="color:rgba(212,169,64,0.92)">${memberName}</span></div>
       </div>
       <div class="pc-body" style="background:rgba(180,140,40,0.04)">
         <div class="pc-row">
@@ -4149,7 +4168,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v103';
+  var APP_BUILD='v104';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
