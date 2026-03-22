@@ -170,53 +170,65 @@
     .wcard-identity.group-identity{width:140px;min-width:140px}
 
 ```
-/* ══ POSTCARD – D-SHAPE FEED CARDS v99 ══
-   גבול רציף אחד: top+bottom+חצי-עיגול. הצד הנגדי נגלש מחוץ למסך.
-   self  → תמונה ימין (חצי-עיגול), גוף שמאל, נגלש ימין (margin-left שלילי)
-   friend → תמונה שמאל (חצי-עיגול), גוף ימין, נגלש שמאל (margin-right שלילי) */
-.postcard{display:flex;align-items:stretch;margin-bottom:10px;min-height:88px;position:relative}
+/* ══ POSTCARD v100 ══
+   צורת D: border רציף אחד (top+bottom+חצי-עיגול), הצד הנגדי פתוח וגולש מחוץ למסך.
+   תמונת פרופיל: מחוץ למסגרת, בצד הנגדי לחצי-העיגול, גובה מלא.
+   שם: מחוץ למסגרת, מתחת לתמונה.
+══════════════════════════════════════════════════════════════════ */
 
-/* ── SELF (ירוק, חצי-עיגול ימין, גולש משמאל) ── */
-.postcard-self{margin-left:-20px;background:rgba(40,200,100,0.07)}
-.postcard-self .pc-body{
-  flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;
-  padding:10px 10px 10px 32px;gap:5px;
-  border-top:2px solid #4cde80;border-bottom:2px solid #4cde80;
-  border-left:none;border-right:none}
-.postcard-self .pc-cap{
-  width:82px;min-width:82px;flex-shrink:0;
-  border:2px solid #4cde80;border-left:none;
+.postcard{display:flex;align-items:stretch;margin-bottom:12px;min-height:82px}
+
+/* ─── פוסט שלי: חצי-עיגול ימין, תמונה שמאל, גולש שמאל ─── */
+.postcard-self{margin-left:-20px}
+
+.postcard-self .pc-d{
+  flex:1;min-width:0;
+  border:2px solid #4cde80;
+  border-left:none;
   border-radius:0 999px 999px 0;
-  background:rgba(40,200,100,0.17);
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-end;padding:8px 6px 6px;gap:3px}
+  background:rgba(40,200,100,0.08);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10px 26px 10px 14px;gap:6px}
 
-/* ── FRIEND (אוף-ווייט, חצי-עיגול שמאל, גולש מימין) ── */
-.postcard-friend{flex-direction:row-reverse;margin-right:-20px;background:rgba(220,235,228,0.03)}
-.postcard-friend .pc-body{
-  flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;
-  padding:10px 32px 10px 10px;gap:5px;
-  border-top:2px solid rgba(220,235,228,0.38);border-bottom:2px solid rgba(220,235,228,0.38);
-  border-left:none;border-right:none}
-.postcard-friend .pc-cap{
-  width:82px;min-width:82px;flex-shrink:0;
-  border:2px solid rgba(220,235,228,0.38);border-right:none;
+.postcard-self .pc-photo-col{
+  width:72px;min-width:72px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 4px 5px 20px;gap:4px}
+
+/* ─── פוסט חבר: חצי-עיגול שמאל, תמונה ימין, גולש ימין ─── */
+.postcard-friend{margin-right:-20px}
+
+.postcard-friend .pc-d{
+  flex:1;min-width:0;
+  border:2px solid rgba(215,232,222,0.4);
+  border-right:none;
   border-radius:999px 0 0 999px;
-  background:rgba(220,235,228,0.08);
+  background:rgba(215,232,222,0.04);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10px 14px 10px 26px;gap:6px}
+
+.postcard-friend .pc-photo-col{
+  width:72px;min-width:72px;flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-end;padding:8px 6px 6px;gap:3px}
+  padding:0 20px 5px 4px;gap:4px}
 
-/* ── תמונה ושם בתוך ה-cap ── */
-.pc-photo-img{width:54px;height:54px;border-radius:10px;overflow:hidden;
-  background:#0a1520;display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;border:2px solid rgba(255,255,255,0.13)}
-.pc-photo-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+/* ─── תמונת פרופיל – גובה מלא + קיטום בכל הפינות ─── */
+.pc-photo-img-wrap{
+  flex:1;width:52px;
+  border-radius:10px;overflow:hidden;
+  background:#0a1520;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px}
+.pc-photo-img-wrap img{
+  width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+
+/* ─── שם מחוץ למסגרת ─── */
 .pc-name-self{font-size:9px;font-weight:700;color:rgba(76,222,128,0.88);
-  text-align:center;max-width:78px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px}
 .pc-name-friend{font-size:9px;font-weight:700;color:rgba(195,215,205,0.72);
-  text-align:center;max-width:78px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px}
 
-/* ── תוכן בתוך ה-body ── */
+/* ─── תוכן פנימי ─── */
 .pc-status-row{display:flex;align-items:center;gap:8px}
 .pc-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
   justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
@@ -228,7 +240,7 @@
 .pc-time-ok{font-size:12px;font-weight:700;color:rgba(76,222,128,0.85);margin-top:2px}
 .pc-time{font-size:10px;color:rgba(200,230,255,0.3);margin-top:2px}
 
-/* ── תגובות (פוסט שלי) ── */
+/* ─── תגובות (פוסט שלי) ─── */
 .pc-reactions-row{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;
   padding-top:5px;border-top:1px solid rgba(76,222,128,0.14)}
 .pc-react-bubble{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
@@ -240,22 +252,22 @@
 .pc-react-sender{font-size:8px;color:rgba(200,230,255,0.42);text-align:center;
   max-width:38px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ── שם + כפתורים (פוסט חבר) ── */
+/* ─── שורת שם + כפתורים (פוסט חבר) ─── */
 .pc-friend-row{display:flex;align-items:center;gap:6px;
-  padding-top:4px;border-top:1px solid rgba(220,235,228,0.1)}
+  padding-top:4px;border-top:1px solid rgba(215,232,222,0.12)}
 .pc-friend-name{font-size:13px;font-weight:700;color:rgba(235,245,240,0.88);
   flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc-nudge-btn{display:flex;align-items:center;justify-content:center;
   width:36px;height:34px;border-radius:9px;
-  background:rgba(220,235,228,0.07);border:1.5px solid rgba(220,235,228,0.22);
-  cursor:pointer;font-size:18px;font-family:inherit;flex-shrink:0;transition:all 0.2s}
+  background:rgba(215,232,222,0.07);border:1.5px solid rgba(215,232,222,0.22);
+  cursor:pointer;font-size:17px;font-family:inherit;flex-shrink:0;transition:all 0.2s}
 .pc-nudge-btn.nudge-sent{background:rgba(76,222,128,0.15);border-color:rgba(76,222,128,0.5)}
 .pc-react-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:9px;
-  background:rgba(220,235,228,0.07);border:1.5px solid rgba(220,235,228,0.22);
-  cursor:pointer;font-size:14px;font-family:inherit;color:rgba(220,235,228,0.78);flex-shrink:0}
+  background:rgba(215,232,222,0.07);border:1.5px solid rgba(215,232,222,0.22);
+  cursor:pointer;font-size:14px;font-family:inherit;color:rgba(215,232,222,0.78);flex-shrink:0}
 .pc-react-btn-label{font-size:10px;font-weight:700}
 
-/* ── חלונית בחירת אימוג'י לתגובה ── */
+/* ─── חלונית אימוג'י לתגובה ─── */
 .react-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:300;
   display:none;align-items:flex-end;justify-content:center}
 .react-picker-overlay.show{display:flex}
@@ -1500,12 +1512,10 @@ let currentUser = null;
 let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null, soundId:null, coins:0 };
 let statusListeners=[], watchingStatuses={};
 
-// ── REACTIONS v99 ─────────────────────────────────────────────
-let selfReactions={};
-let selfReactionsUnsub=null;
+// ── REACTIONS v100 ─────────────────────────────────────────────
+let selfReactions={}, selfReactionsUnsub=null;
 const REACT_EMOJIS=['❤️','🙏','💪','😂','🔥','🫶','👍','😍','🥹','😎'];
 const RANDOM_BTN_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
-
 function loadSelfReactions(){
   if(!currentUser)return;
   if(selfReactionsUnsub){selfReactionsUnsub();selfReactionsUnsub=null;}
@@ -1514,50 +1524,33 @@ function loadSelfReactions(){
     selfReactions={};
     snap.forEach(d=>{selfReactions[d.id]=d.data();});
     const selfEl=document.getElementById('wrow-self');
-    if(selfEl){const rRow=selfEl.querySelector('.pc-reactions-row');if(rRow)rRow.innerHTML=buildReactionsInnerHTML(selfReactions);}
+    if(selfEl){const r=selfEl.querySelector('.pc-reactions-row');if(r)r.innerHTML=buildReactionsHTML(selfReactions);}
   });
 }
-function buildReactionsInnerHTML(reactions){
-  const items=Object.entries(reactions);
-  if(!items.length)return '';
-  return items.map(([id,r])=>{
-    if(r.isNudge){
-      return `<div class="pc-react-bubble" onclick="replyToNudge('${r.fromUid}','${(r.fromName||'').replace(/'/g,"\\'")}')">
-        <div class="pc-react-nudge-pill"><span>👋</span><span class="pc-react-nudge-txt">הגב לנדנוד</span></div>
-        <span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span>
-      </div>`;
-    }
-    return `<div class="pc-react-bubble">
-      <div class="pc-react-circle">${r.emoji||'❤️'}</div>
-      <span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span>
-    </div>`;
+function buildReactionsHTML(reactions){
+  return Object.entries(reactions).map(([id,r])=>{
+    if(r.isNudge)return `<div class="pc-react-bubble" onclick="replyToNudge('${r.fromUid}','${(r.fromName||'').replace(/'/g,"\\'")}')"><div class="pc-react-nudge-pill"><span>👋</span><span class="pc-react-nudge-txt">הגב לנדנוד</span></div><span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span></div>`;
+    return `<div class="pc-react-bubble"><div class="pc-react-circle">${r.emoji||'❤️'}</div><span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span></div>`;
   }).join('');
 }
-let _reactTargetUid=null,_reactTargetName='';
+let _rUid=null,_rName='';
 window.openReactPicker=(uid,name)=>{
-  _reactTargetUid=uid;_reactTargetName=name;
-  const title=document.getElementById('reactPickerTitle');
-  const grid=document.getElementById('reactPickerGrid');
-  if(title)title.textContent=`תגיב לדיווח של ${name.split(' ')[0]} 😊`;
-  if(grid)grid.innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
+  _rUid=uid;_rName=name;
+  document.getElementById('reactPickerTitle').textContent=`תגיב ל-${name.split(' ')[0]} 😊`;
+  document.getElementById('reactPickerGrid').innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
   document.getElementById('reactPickerOverlay').classList.add('show');
   document.getElementById('moodPanel')?.classList.remove('show');
 };
-window.closeReactPicker=(e)=>{
-  if(e&&e.type==='click'&&e.target!==document.getElementById('reactPickerOverlay'))return;
-  document.getElementById('reactPickerOverlay').classList.remove('show');
-};
+window.closeReactPicker=(e)=>{if(!e||e.target===document.getElementById('reactPickerOverlay'))document.getElementById('reactPickerOverlay').classList.remove('show');};
 window.sendReaction=async(emoji)=>{
-  if(!_reactTargetUid||!currentUser)return;
+  if(!_rUid||!currentUser)return;
   document.getElementById('reactPickerOverlay').classList.remove('show');
-  try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${_reactTargetUid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:_reactTargetUid,emoji,isNudge:false,ts:serverTimestamp()});}catch(e){}
+  try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${_rUid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:_rUid,emoji,isNudge:false,ts:serverTimestamp()});}catch(e){}
 };
 window.replyToNudge=(uid,name)=>{
-  _reactTargetUid=uid;_reactTargetName=name;
-  const title=document.getElementById('reactPickerTitle');
-  const grid=document.getElementById('reactPickerGrid');
-  if(title)title.textContent=`בחר תגובה לנדנוד של ${name.split(' ')[0]} 👋`;
-  if(grid)grid.innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
+  _rUid=uid;_rName=name;
+  document.getElementById('reactPickerTitle').textContent=`הגב לנדנוד של ${name.split(' ')[0]} 👋`;
+  document.getElementById('reactPickerGrid').innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
   document.getElementById('reactPickerOverlay').classList.add('show');
 };
 window.handleNudgeBtn=async(btn,uid,name)=>{
@@ -2296,34 +2289,34 @@ function buildSelfCardHTML(statuses){
     circleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';
   }
   const circleContent=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
-  let statusClass='dim',statusTxt='טרם עדכנתי';
+  let sc='dim',st='טרם עדכנתי';
   if(isOk){
     const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
-    const q=sign==='"';
-    statusTxt=q?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
-    statusClass='ok';
-  }else if(!isUnknown){statusClass='err';statusTxt='לא עדכנתי';}
+    st=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+    sc='ok';
+  }else if(!isUnknown){sc='err';st='לא עדכנתי';}
   const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
   const myName=(currentUser.displayName||'אני').split(' ')[0];
   const rawPhoto=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
   const photoURL=rawPhoto?_fixPhotoUrl(rawPhoto):null;
   const photoHTML=photoURL?`<img src="${photoURL}">`:`<span>${(currentUser.displayName||'א')[0]}</span>`;
-  const reactionsHTML=buildReactionsInnerHTML(selfReactions);
-  // self: RTL flex-row → cap (first child) goes to RIGHT, body goes to LEFT, card bleeds LEFT
+  const reactHTML=buildReactionsHTML(selfReactions);
+  // RTL: .pc-d (first child) → ימין (half-circle ימין)
+  //      .pc-photo-col (second child) → שמאל (תמונה שמאל, גולש שמאל)
   return `<div class="postcard postcard-self" id="wrow-self">
-    <div class="pc-cap">
-      <div class="pc-photo-img">${photoHTML}</div>
-      <span class="pc-name-self">אני – ${myName}</span>
-    </div>
-    <div class="pc-body">
+    <div class="pc-d">
       <div class="pc-status-row">
         <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
         <div class="pc-texts">
-          <div class="pc-status-txt ${statusClass}">${statusTxt}</div>
+          <div class="pc-status-txt ${sc}">${st}</div>
           ${timeStr?`<div class="${isOk?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
         </div>
       </div>
-      ${reactionsHTML?`<div class="pc-reactions-row">${reactionsHTML}</div>`:''}
+      ${reactHTML?`<div class="pc-reactions-row">${reactHTML}</div>`:''}
+    </div>
+    <div class="pc-photo-col">
+      <div class="pc-photo-img-wrap">${photoHTML}</div>
+      <span class="pc-name-self">אני – ${myName}</span>
     </div>
   </div>`;
 }
@@ -2347,49 +2340,48 @@ function renderWatchingWithStatuses(watching,statuses){
     const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
     const isOkStatus=s?.isOk&&hrs<24;
     const isUnknown=!s;
-    // --- build friend circle ---
-    let fcircleStyle='background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35);';
+    let fcStyle='background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35);';
     if(!isUnknown&&isOkStatus){
-      const fdeg=Math.min(hrs/24,1)*360;
-      const fconic=fdeg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${fdeg.toFixed(2)}deg,#4cde80 ${fdeg.toFixed(2)}deg 360deg)`;
-      fcircleStyle=`background:${fconic};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
+      const d=Math.min(hrs/24,1)*360;
+      const co=d<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${d.toFixed(2)}deg,#4cde80 ${d.toFixed(2)}deg 360deg)`;
+      fcStyle=`background:${co};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
     }else if(!isUnknown){
-      fcircleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;';
+      fcStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;';
     }
-    const fcircleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
-    let fstatusClass='dim',fstatusTxt='טרם עדכן';
+    const fcContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
+    let fsc='dim',fst='טרם עדכן';
     if(isOkStatus){
-      const fsign=s.sign,fct=s.customText||'',femoji=s.moodEmoji||'';
-      const fq=fsign==='"';
-      fstatusTxt=fq?`״אני בסדר״${fct?' '+fct:''}${femoji?' '+femoji:''}`:`אני בסדר${fsign||''}${fct?' '+fct:''}${femoji?' '+femoji:''}`;
-      fstatusClass='ok';
-    }else if(!isUnknown){fstatusClass='err';fstatusTxt='לא עדכן';}
+      const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
+      fst=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+      fsc='ok';
+    }else if(!isUnknown){fsc='err';fst='לא עדכן';}
     const photoURL=s?.photoURL||null;
-    const fphotoHTML=photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${(w.followingName||'?')[0]}</span>`;
+    const fphoto=photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${(w.followingName||'?')[0]}</span>`;
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const safeUid=w.followingUid.replace(/'/g,"\'");
     const safeName=(w.followingName||'משתמש').replace(/'/g,"\'");
     const rndEmoji=RANDOM_BTN_EMOJIS[Math.abs(w.followingUid.charCodeAt(0)+(w.followingUid.charCodeAt(1)||0))%RANDOM_BTN_EMOJIS.length];
-    const nudgeKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
-    const nudgeSentCls=localStorage.getItem(nudgeKey)?'nudge-sent':'';
-    const nudgeInner=localStorage.getItem(nudgeKey)?'✓':'👋';
-    // friend: row-reverse ב-RTL → cap (first child) goes to LEFT, body goes to RIGHT, bleeds RIGHT
+    const nKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
+    const nSent=localStorage.getItem(nKey)?'nudge-sent':'';
+    const nInner=localStorage.getItem(nKey)?'✓':'👋';
+    // RTL: .pc-photo-col (first child) → ימין (תמונה ימין, גולש ימין)
+    //      .pc-d (second child) → שמאל (half-circle שמאל)
     return `<div class="postcard postcard-friend" id="wrow-${w.followingUid}" onclick="openFriendProfile('${safeUid}')" style="cursor:pointer">
-      <div class="pc-cap">
-        <div class="pc-photo-img">${fphotoHTML}</div>
+      <div class="pc-photo-col">
+        <div class="pc-photo-img-wrap">${fphoto}</div>
         <span class="pc-name-friend">${w.followingName||'משתמש'}</span>
       </div>
-      <div class="pc-body">
+      <div class="pc-d">
         <div class="pc-status-row">
           <div class="pc-texts">
-            <div class="pc-status-txt ${fstatusClass}">${fstatusTxt}</div>
+            <div class="pc-status-txt ${fsc}">${fst}</div>
             ${timeStr?`<div class="${isOkStatus?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
           </div>
-          <div class="pc-circle" style="${fcircleStyle}">${fcircleContent}</div>
+          <div class="pc-circle" style="${fcStyle}">${fcContent}</div>
         </div>
         <div class="pc-friend-row" onclick="event.stopPropagation()">
           <span class="pc-friend-name">${w.followingName||'משתמש'}</span>
-          <button class="pc-nudge-btn ${nudgeSentCls}" id="nudgebtn-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nudgeInner}</button>
+          <button class="pc-nudge-btn ${nSent}" id="nbtn-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nInner}</button>
           <button class="pc-react-btn" onclick="openReactPicker('${safeUid}','${safeName}')"><span>${rndEmoji}</span><span class="pc-react-btn-label">תגיב</span></button>
         </div>
       </div>
@@ -2853,11 +2845,7 @@ function renderGfeedBody(group){
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const selfName=currentUser.displayName||'אני';
     selfCardHTML=`<div class="postcard postcard-self" style="margin-bottom:10px">
-      <div class="pc-cap">
-        <div class="pc-photo-img">${photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${(selfName||'א')[0]}</span>`}</div>
-        <span class="pc-name-self">אני – ${(selfName||'').split(' ')[0]}</span>
-      </div>
-      <div class="pc-body">
+      <div class="pc-d">
         <div class="pc-status-row">
           <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
           <div class="pc-texts">
@@ -2865,6 +2853,10 @@ function renderGfeedBody(group){
             ${timeStr?`<div class="${isOk?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
           </div>
         </div>
+      </div>
+      <div class="pc-photo-col">
+        <div class="pc-photo-img-wrap">${photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${(selfName||'א')[0]}</span>`}</div>
+        <span class="pc-name-self">אני – ${(selfName||'').split(' ')[0]}</span>
       </div>
     </div>`;
   }
@@ -2899,17 +2891,17 @@ function renderGfeedBody(group){
     const memberName=memberNames[uid]||'חבר';
     const safeUid=uid.replace(/'/g,"\\'");
     const safeMemberName=memberName.replace(/'/g,"\\'");
-    const gmPhotoHTML=photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${memberName[0]||'?'}</span>`;
-    const gmNudgeKey='nudgeSent_'+currentUser.uid+'_'+uid;
-    const gmNudgeSent=localStorage.getItem(gmNudgeKey)?'nudge-sent':'';
-    const gmNudgeInner=localStorage.getItem(gmNudgeKey)?'✓':'👋';
-    const gmRndEmoji=RANDOM_BTN_EMOJIS[Math.abs(uid.charCodeAt(0)+(uid.charCodeAt(1)||0))%RANDOM_BTN_EMOJIS.length];
-    return `<div class="postcard postcard-friend" style="margin-bottom:10px;border-color:rgba(180,140,40,0.55)" onclick="openFriendProfile('${safeUid}')" >
-      <div class="pc-cap" style="border-color:rgba(180,140,40,0.55);background:rgba(180,140,40,0.14)">
-        <div class="pc-photo-img">${gmPhotoHTML}</div>
+    const gmPhoto=photoURL?`<img src="${photoURL}">`:`<span style="font-size:20px">${memberName[0]||'?'}</span>`;
+    const gmNK='nudgeSent_'+currentUser.uid+'_'+uid;
+    const gmNSent=localStorage.getItem(gmNK)?'nudge-sent':'';
+    const gmNIn=localStorage.getItem(gmNK)?'✓':'👋';
+    const gmEmoji=RANDOM_BTN_EMOJIS[Math.abs(uid.charCodeAt(0)+(uid.charCodeAt(1)||0))%RANDOM_BTN_EMOJIS.length];
+    return `<div class="postcard postcard-friend" style="margin-bottom:10px;border-color:rgba(180,140,40,0.55)" onclick="openFriendProfile('${safeUid}')">
+      <div class="pc-photo-col">
+        <div class="pc-photo-img-wrap" style="border-color:rgba(180,140,40,0.4)">${gmPhoto}</div>
         <span class="pc-name-friend" style="color:rgba(212,169,64,0.85)">${memberName}</span>
       </div>
-      <div class="pc-body">
+      <div class="pc-d" style="border-color:rgba(180,140,40,0.55);background:rgba(180,140,40,0.05)">
         <div class="pc-status-row">
           <div class="pc-texts">
             <div class="pc-status-txt ${isOk?'ok':isUnknown?'dim':'err'}">${statusTxt}</div>
@@ -2919,8 +2911,8 @@ function renderGfeedBody(group){
         </div>
         <div class="pc-friend-row" style="border-color:rgba(180,140,40,0.15)" onclick="event.stopPropagation()">
           <span class="pc-friend-name" style="color:#d4a940">${memberName}</span>
-          <button class="pc-nudge-btn ${gmNudgeSent}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${gmNudgeInner}</button>
-          <button class="pc-react-btn" onclick="openReactPicker('${safeUid}','${safeMemberName}')"><span>${gmRndEmoji}</span><span class="pc-react-btn-label">תגיב</span></button>
+          <button class="pc-nudge-btn ${gmNSent}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${gmNIn}</button>
+          <button class="pc-react-btn" onclick="openReactPicker('${safeUid}','${safeMemberName}')"><span>${gmEmoji}</span><span class="pc-react-btn-label">תגיב</span></button>
           <button class="wcard-action-btn wcard-trash" style="flex:0;padding:5px 7px;font-size:11px" onclick="confirmRemoveFromGroup('${safeGroupId}','${safeGroupName}','${safeUid}','${safeMemberName}')">✕</button>
         </div>
       </div>
@@ -4149,7 +4141,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v99';
+  var APP_BUILD='v100';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
@@ -4200,16 +4192,12 @@ if('serviceWorker'in navigator){
   <!-- COIN TOAST -->
 
   <div class="coin-toast" id="coinToast"></div>
-
-  <!-- REACT PICKER OVERLAY -->
-
   <div class="react-picker-overlay" id="reactPickerOverlay" onclick="closeReactPicker(event)">
     <div class="react-picker-panel" onclick="event.stopPropagation()">
-      <div class="react-picker-title" id="reactPickerTitle">תגיב לדיווח 😊</div>
+      <div class="react-picker-title" id="reactPickerTitle">תגיב 😊</div>
       <div class="react-picker-grid" id="reactPickerGrid"></div>
       <button class="react-picker-cancel" onclick="closeReactPicker()">ביטול</button>
     </div>
   </div>
-
 </body>
 </html>
