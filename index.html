@@ -141,7 +141,7 @@
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
     .wcard{background:rgba(10,18,28,0.55);border:1px solid rgba(126,207,255,0.1);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
     .wcard-top{display:flex;align-items:stretch;min-height:88px}
-    .wcard-identity{flex-shrink:0;width:70px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
+    .wcard-identity{flex-shrink:0;width:52px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
     .wcard-identity-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.15) 45%,transparent 100%)}
     .wcard-identity-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:4px 3px;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 100%);display:flex;justify-content:center;align-items:flex-end}
     .wcard-circle{width:43px;height:43px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0}
@@ -223,7 +223,7 @@
     /* gfeed wcard uses golden theme */
     .gfeed-wcard{background:rgba(10,18,28,0.65);border:1px solid rgba(180,140,40,0.2);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
     .gfeed-wcard-top{display:flex;align-items:stretch;min-height:80px;cursor:pointer}
-    .gfeed-identity{flex-shrink:0;width:70px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
+    .gfeed-identity{flex-shrink:0;width:52px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
     .gfeed-identity-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.15) 45%,transparent 100%)}
     .gfeed-identity-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:4px 3px;display:flex;justify-content:center;align-items:flex-end}
     .gfeed-circle{width:43px;height:43px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0;border:2px solid #d4a940}
@@ -846,7 +846,7 @@
     </div>
     <div class="group-photo-row">
       <div class="group-photo-circle" id="groupPhotoCircle" onclick="triggerGroupPhotoUpload()">
-        <img id="groupPhotoPreview" src="/avatars/group-default.png" alt="תמונת קבוצה">
+        <img id="groupPhotoPreview" src="/avatars/group-default.png" alt="תמונת קבוצה" onerror="this.style.display='none';this.parentElement.dataset.fallback='1';this.parentElement.innerHTML='<span style=\'font-size:32px\'>👥</span>'">
       </div>
       <div>
         <div class="group-photo-hint">לחץ על התמונה<br>לשינוי תמונת הקבוצה</div>
@@ -1746,6 +1746,7 @@ onAuthStateChanged(auth,async user=>{
     updateHeaderUserInfo();
     await checkFollowParam();
     await checkGroupParam();
+    await checkGroupNotifs();
     checkNotifPermission(); updateNotifToggleBtn(); updateAddHomeBtn();
     await loadWatching();
     await loadAndRenderGroups();
@@ -1966,21 +1967,36 @@ function startSelfStatusListener(){
   _selfStatusUnsub = onSnapshot(doc(db,'status',currentUser.uid), snap => {
     if(!snap.exists()) return;
     const sd = snap.data();
+    // שמור סטטוס עצמי ב-watchingStatuses לצורך כרטיס הפיד
+    watchingStatuses[currentUser.uid]={
+      isOk:sd.isOk,
+      timestamp:sd.timestamp?.toDate()||null,
+      moodEmoji:sd.moodEmoji||null,
+      sign:sd.sign||null,
+      customText:sd.customText||null,
+      photoURL:sd.profilePhotoURL?_fixPhotoUrl(sd.profilePhotoURL):null
+    };
+    updateSelfCardInFeed();
     let changed = false;
-    // אימוג׳י
     const newEmoji = sd.moodEmoji||null;
     if(newEmoji !== state.moodEmoji){ state.moodEmoji=newEmoji; state.moodLevel=2; localStorage.setItem('moodEmoji_'+currentUser.uid,newEmoji||''); changed=true; }
-    // סימן
     const newSign = sd.sign||null;
     if(newSign !== state.sign){ state.sign=newSign; if(newSign) localStorage.setItem('sign_'+currentUser.uid,newSign); else localStorage.removeItem('sign_'+currentUser.uid); document.querySelectorAll('.sign-cell').forEach(el=>el.classList.toggle('selected',el.dataset.sign===newSign)); changed=true; }
-    // טקסט חופשי
     const newText = sd.customText||null;
     if(newText !== state.customText){ state.customText=newText; if(newText){ localStorage.setItem('customText_'+currentUser.uid,newText); const inp=document.getElementById('signCustomInput'); if(inp) inp.value=newText; } else { localStorage.removeItem('customText_'+currentUser.uid); const inp=document.getElementById('signCustomInput'); if(inp){ inp.value=''; inp.dataset.unlocked=''; } } changed=true; }
-    // סאונד
     const newSound = (sd.soundId!==undefined&&sd.soundId!==null)?sd.soundId:null;
     if(newSound !== state.soundId){ state.soundId=newSound; if(newSound!==null){ localStorage.setItem('soundId_'+currentUser.uid,String(newSound)); const sBtn=document.getElementById('soundBtn'); if(sBtn){sBtn.textContent=SOUND_DEFS[newSound]?.emoji||'♪';sBtn.classList.add('has-sound');} } else { localStorage.removeItem('soundId_'+currentUser.uid); const sBtn=document.getElementById('soundBtn'); if(sBtn){sBtn.textContent='♪';sBtn.classList.remove('has-sound');} } changed=true; }
     if(changed) updateMainUI();
   });
+}
+
+function updateSelfCardInFeed(){
+  const el=document.getElementById('wrow-self');
+  if(!el) return;
+  const newHTML=buildSelfCardHTML(watchingStatuses);
+  const tmp=document.createElement('div');
+  tmp.innerHTML=newHTML;
+  el.replaceWith(tmp.firstElementChild);
 }
 
 async function initUser(){
@@ -2090,6 +2106,60 @@ function sortWatchingEntries(w,s){
   return[...w].sort((a,b)=>hrs(a.followingUid)-hrs(b.followingUid));
 }
 function renderWatchingList(w){renderWatchingWithStatuses(w,{});}
+function buildSelfCardHTML(statuses){
+  const now=Date.now();
+  const s=statuses[currentUser.uid]||null;
+  const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
+  const isOk=s?.isOk&&hrs<24;
+  const isUnknown=!s;
+  let circleInlineStyle='',circleGlowStyle='';
+  if(!isUnknown&&isOk){
+    const deg=Math.min(hrs/24,1)*360;
+    const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;
+    circleInlineStyle=`background:${conic};border-color:#4cde80;color:#fff;`;
+    circleGlowStyle=`box-shadow:0 0 0 3px rgba(76,222,128,0.38),0 0 18px rgba(40,200,100,0.5);`;
+  }else if(!isUnknown){
+    circleInlineStyle='background:rgba(220,40,40,0.22);border-color:#ff4444;color:#ff6666;';
+  }else{
+    circleInlineStyle='background:rgba(126,207,255,0.09);border-color:rgba(126,207,255,0.2);color:rgba(200,230,255,0.35);';
+  }
+  const circleContent=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
+  let statusHTML='';
+  if(isOk){
+    const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
+    const q=sign==='"';
+    const txt=q?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+    statusHTML=`<div class="wcard-status" style="font-size:17px;font-weight:800;text-align:left">${txt}</div>`;
+  }else if(!isUnknown){
+    statusHTML=`<div class="wcard-status err" style="font-size:13px;text-align:left">לא עדכנתי</div>`;
+  }else{
+    statusHTML=`<div class="wcard-status dim" style="text-align:left">טרם עדכנתי</div>`;
+  }
+  const photoURL=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
+  const identityStyle=photoURL?`background-image:url('${photoURL}');background-size:cover;background-position:center top;`:'';
+  const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
+  const myName=(currentUser.displayName||'אני').split(' ')[0];
+  return `<div class="wcard" id="wrow-self" style="background:rgba(180,140,40,0.08);border-color:rgba(180,140,40,0.35);">
+    <div class="wcard-top" style="flex-direction:row-reverse">
+      <div class="wcard-identity" style="${identityStyle}">
+        ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
+        <div class="wcard-identity-content"></div>
+      </div>
+      <div class="wcard-status-wrap" style="flex-direction:row-reverse">
+        <div class="wcard-circle" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
+        <div class="wcard-status-texts" style="align-items:flex-end">
+          ${statusHTML}
+          ${timeStr?`<div class="${isOk?'wcard-time-ok':'wcard-time'}" style="text-align:left">${timeStr}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="wcard-actions-row" style="flex-direction:row-reverse">
+      <div style="flex:1.6;min-width:0;display:flex;align-items:center;justify-content:flex-end;padding:0 2px 0 4px">
+        <span style="font-size:13px;font-weight:700;color:#d4a940">אני – ${myName}</span>
+      </div>
+    </div>
+  </div>`;
+}
 function renderWatchingWithStatuses(watching,statuses){
   const el=document.getElementById('watchingList');
   if(!watching.length && !userGroups.length){el.innerHTML='<p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>';updateChips();updateHeaderFriendsStrip();return;}
@@ -2100,7 +2170,8 @@ function renderWatchingWithStatuses(watching,statuses){
   const groupItems=userGroups.map(g=>({type:'group',data:g,sortTime:g.updatedAt?.toDate?.()?.getTime()||g.createdAt?.toDate?.()?.getTime()||0}));
   // Merge: groups sorted together with friends by their respective sort times (recent first)
   const combined=[...friendItems,...groupItems].sort((a,b)=>b.sortTime-a.sortTime);
-  el.innerHTML=combined.map(item=>{
+  const selfCard=buildSelfCardHTML(statuses);
+  el.innerHTML=selfCard+combined.map(item=>{
     if(item.type==='group') return buildGroupCardHTML(item.data);
     const w=item.data;
     const s=statuses[w.followingUid];
@@ -2342,18 +2413,20 @@ window.openGroupModal=(groupId,mode)=>{
   editingGroupId=groupId||null;
   groupModalPhotoData=null;
   const nameInput=document.getElementById('groupNameInput');
-  const photoPreview=document.getElementById('groupPhotoPreview');
+  const circle=document.getElementById('groupPhotoCircle');
   const title=document.querySelector('.group-modal-title');
+  // reset photo circle to img element
+  circle.innerHTML=`<img id="groupPhotoPreview" src="/avatars/group-default.png" alt="תמונת קבוצה" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'font-size:32px\\'>👥</span>'">`;
+  const photoPreview=document.getElementById('groupPhotoPreview');
   if(editingGroupId){
     const g=userGroups.find(g=>g.id===editingGroupId);
     if(g){
       nameInput.value=g.name||'';
-      photoPreview.src=g.photoURL||'/avatars/group-default.png';
+      if(g.photoURL) photoPreview.src=g.photoURL;
       title.textContent=mode==='addMembers'?'👥 הוסף חברים לקבוצה':'✏️ עריכת קבוצה';
     }
   }else{
     nameInput.value='';
-    photoPreview.src='/avatars/group-default.png';
     title.textContent='👥 קבוצה חדשה';
   }
   renderGroupMembersList(mode==='addMembers');
@@ -2376,7 +2449,6 @@ document.getElementById('groupPhotoInput').addEventListener('change',(e)=>{
   const file=e.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=(ev)=>{
-    // Compress to max 200px
     const img=new Image();
     img.onload=()=>{
       const max=200; let w=img.width,h=img.height;
@@ -2384,7 +2456,8 @@ document.getElementById('groupPhotoInput').addEventListener('change',(e)=>{
       const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       groupModalPhotoData=canvas.toDataURL('image/jpeg',0.75);
-      document.getElementById('groupPhotoPreview').src=groupModalPhotoData;
+      const circle=document.getElementById('groupPhotoCircle');
+      circle.innerHTML=`<img id="groupPhotoPreview" src="${groupModalPhotoData}" style="width:100%;height:100%;object-fit:cover">`;
     };
     img.src=ev.target.result;
   };
@@ -2433,13 +2506,23 @@ window.createGroup=async()=>{
   const name=document.getElementById('groupNameInput').value.trim();
   if(!name){alert('נא להזין שם קבוצה');return;}
   const checkboxes=document.querySelectorAll('#groupMembersChecklist .group-member-checkbox:checked');
-  const members=Array.from(checkboxes).map(cb=>cb.value);
-  const memberNames={};
-  Array.from(checkboxes).forEach(cb=>{memberNames[cb.value]=cb.dataset.name||'חבר';});
-  members.push(currentUser.uid);
-  memberNames[currentUser.uid]=currentUser.displayName||'אני';
-  const photoURL=groupModalPhotoData||null;
-  const groupData={ownerUid:currentUser.uid,name,photoURL,members,memberNames,updatedAt:serverTimestamp()};
+  const newlyCheckedUids=Array.from(checkboxes).map(cb=>cb.value);
+  const newlyCheckedNames={};
+  Array.from(checkboxes).forEach(cb=>{newlyCheckedNames[cb.value]=cb.dataset.name||'חבר';});
+
+  // In edit mode: preserve existing members + add new ones
+  let existingMembers=[], existingNames={};
+  if(editingGroupId){
+    const g=userGroups.find(g=>g.id===editingGroupId);
+    existingMembers=g?.members||[];
+    existingNames=g?.memberNames||{};
+  }
+  // Merge: existing + new (no duplicates)
+  const allMemberUids=[...new Set([...existingMembers,...newlyCheckedUids,currentUser.uid])];
+  const allMemberNames={...existingNames,...newlyCheckedNames,[currentUser.uid]:currentUser.displayName||'אני'};
+
+  const photoURL=groupModalPhotoData||(editingGroupId?(userGroups.find(g=>g.id===editingGroupId)?.photoURL||null):null);
+  const groupData={ownerUid:currentUser.uid,name,photoURL,members:allMemberUids,memberNames:allMemberNames,updatedAt:serverTimestamp()};
   let gid;
   if(editingGroupId){
     await setDoc(doc(db,'groups',editingGroupId),groupData,{merge:true});
@@ -2449,6 +2532,25 @@ window.createGroup=async()=>{
     const ref=await addDoc(collection(db,'groups'),groupData);
     gid=ref.id;
   }
+
+  // Push notification to newly added members
+  if(newlyCheckedUids.length){
+    try{
+      await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,
+          followerUids:newlyCheckedUids,type:'groupAdd',
+          message:`${currentUser.displayName||'מישהו'} הוסיף אותך לקבוצה ״${name}״ 👥`})});
+    }catch(e){}
+    // Store pending group notification in Firestore so members see banner on next open
+    for(const uid of newlyCheckedUids){
+      try{
+        await setDoc(doc(db,'groupNotifs',`${uid}_${gid}`),
+          {toUid:uid,groupId:gid,groupName:name,addedBy:currentUser.displayName||'חבר',
+           createdAt:serverTimestamp(),seen:false},{merge:true});
+      }catch(e){}
+    }
+  }
+
   closeGroupModal();
   await loadAndRenderGroups();
   if(!editingGroupId){
@@ -2703,6 +2805,28 @@ window.confirmRemoveFromGroup=(groupId,groupName,memberUid,memberName)=>{
   };
   document.getElementById('confirmModal').classList.add('show');
 };
+
+async function checkGroupNotifs(){
+  if(!currentUser)return;
+  try{
+    const q=query(collection(db,'groupNotifs'),where('toUid','==',currentUser.uid),where('seen','==',false));
+    const snaps=await getDocs(q);
+    if(snaps.empty)return;
+    const notifs=[];
+    snaps.forEach(snap=>notifs.push({id:snap.id,...snap.data()}));
+    // Mark all as seen
+    for(const n of notifs){
+      setDoc(doc(db,'groupNotifs',n.id),{seen:true},{merge:true}).catch(()=>{});
+    }
+    // Show banner for last one (most relevant)
+    const n=notifs[notifs.length-1];
+    const banner=document.getElementById('groupJoinBanner');
+    document.getElementById('groupJoinBannerText').textContent=
+      `${n.addedBy||'מישהו'} הוסיף אותך לקבוצה ״${n.groupName}״! 👥🟢`;
+    banner.style.display='block';
+    setTimeout(()=>{banner.style.display='none';},7000);
+  }catch(e){}
+}
 
 async function checkGroupParam(){
   const p=new URLSearchParams(window.location.search);
@@ -3857,7 +3981,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v95';
+  var APP_BUILD='v96';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
