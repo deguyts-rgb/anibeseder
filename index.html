@@ -829,7 +829,7 @@
         <div class="gfeed-header-name" id="gfeedHeaderName"></div>
         <div class="gfeed-header-count" id="gfeedHeaderCount"></div>
       </div>
-      <button class="gfeed-edit-btn" id="gfeedEditBtn" onclick="gfeedOpenEdit()">✏️ ערוך</button>
+      <button class="gfeed-edit-btn" id="gfeedEditBtn" onclick="gfeedOpenAddMembers()">+ הוסף חברים</button>
       <button class="gfeed-close" onclick="closeGfeedPanel()">✕</button>
     </div>
     <div class="gfeed-body" id="gfeedBody"></div>
@@ -2338,7 +2338,7 @@ let userGroups=[];
 let groupModalPhotoData=null; // base64 or null (uses /avatars/group-default.png)
 let editingGroupId=null;
 
-window.openGroupModal=(groupId)=>{
+window.openGroupModal=(groupId,mode)=>{
   editingGroupId=groupId||null;
   groupModalPhotoData=null;
   const nameInput=document.getElementById('groupNameInput');
@@ -2349,14 +2349,14 @@ window.openGroupModal=(groupId)=>{
     if(g){
       nameInput.value=g.name||'';
       photoPreview.src=g.photoURL||'/avatars/group-default.png';
-      title.textContent='✏️ עריכת קבוצה';
+      title.textContent=mode==='addMembers'?'👥 הוסף חברים לקבוצה':'✏️ עריכת קבוצה';
     }
   }else{
     nameInput.value='';
     photoPreview.src='/avatars/group-default.png';
     title.textContent='👥 קבוצה חדשה';
   }
-  renderGroupMembersList();
+  renderGroupMembersList(mode==='addMembers');
   document.getElementById('groupModalOverlay').classList.add('show');
 };
 
@@ -2392,18 +2392,24 @@ document.getElementById('groupPhotoInput').addEventListener('change',(e)=>{
   e.target.value='';
 });
 
-function renderGroupMembersList(){
+function renderGroupMembersList(onlyNonMembers=false){
   const container=document.getElementById('groupMembersChecklist');
   if(!state.watching||!state.watching.length){
     container.innerHTML='<p style="font-size:12px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">אין חברים עדיין</p>';
     return;
   }
   const currentMembers=editingGroupId?(userGroups.find(g=>g.id===editingGroupId)?.members||[]):[];
-  container.innerHTML=state.watching.map(w=>{
+  let list=state.watching;
+  if(onlyNonMembers) list=list.filter(w=>!currentMembers.includes(w.followingUid));
+  if(!list.length){
+    container.innerHTML='<p style="font-size:12px;color:rgba(200,230,255,0.3);text-align:center;padding:8px 0">כל החברים כבר בקבוצה</p>';
+    return;
+  }
+  container.innerHTML=list.map(w=>{
     const s=watchingStatuses[w.followingUid];
     const photoURL=s?.photoURL||null;
     const avatarInner=photoURL?`<img src="${photoURL}" alt="">`:(w.followingName?.[0]||'?');
-    const checked=currentMembers.includes(w.followingUid)?'checked':'';
+    const checked=(!onlyNonMembers&&currentMembers.includes(w.followingUid))?'checked':'';
     return `<label class="group-member-check-row">
       <div class="group-member-check-avatar">${avatarInner}</div>
       <span class="group-member-check-name">${w.followingName||'חבר'}</span>
@@ -2445,19 +2451,19 @@ window.createGroup=async()=>{
   }
   closeGroupModal();
   await loadAndRenderGroups();
-  // After creation, offer to share invite
   if(!editingGroupId){
-    if(confirm(`הקבוצה ״${name}״ נוצרה! 🎉\nרוצה לשתף לינק הצטרפות עכשיו?`)){
-      doShareGroup(gid,name);
-    }
+    doShareGroup(gid,name);
   }
 };
 
 window.doShareGroup=(groupId,groupName)=>{
   const link=`https://anibeseder.com/?group=${groupId}`;
-  const text=`היי! ${currentUser.displayName||'חבר'} מזמין אותך להצטרף לקבוצה ״${groupName}״ ב״אני בסדר״.\nלחץ על הלינק:`;
-  if(navigator.share)navigator.share({title:'אני בסדר – '+groupName,text,url:link});
-  else navigator.clipboard.writeText(`${text}\n${link}`).then(()=>alert('✅ הועתק!')).catch(()=>alert('העתק:\n'+link));
+  const text=`היי! ${currentUser.displayName||'חבר'} מזמין אותך להצטרף לקבוצה ״${groupName}״ ב״אני בסדר״.`;
+  if(navigator.share){
+    navigator.share({title:`הצטרף לקבוצה ״${groupName}״`,text,url:link}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(`${text}\n${link}`).then(()=>alert('✅ לינק הועתק!')).catch(()=>alert('העתק:\n'+link));
+  }
 };
 
 async function loadAndRenderGroups(){
@@ -2510,13 +2516,13 @@ function buildGroupCardHTML(group){
     <div class="wcard-top" style="cursor:pointer" onclick="openGroupFeedPanel('${safeId}')">
       <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');background-size:cover;background-position:center top;">
         <div class="wcard-identity-overlay"></div>
-        <div class="wcard-identity-content"><span class="wcard-iname" style="color:#d4a940;background:rgba(0,0,0,0.65);border-radius:5px;padding:2px 5px">${group.name||''}</span></div>
+        <div class="wcard-identity-content"><span class="wcard-iname" style="color:rgba(212,169,64,0.7);font-size:8px">👥</span></div>
       </div>
       <div class="group-members-strip-wrap">${membersHTML}</div>
     </div>
     <div class="wcard-actions-row" onclick="event.stopPropagation()">
       <div style="flex:1.6;min-width:0;display:flex;align-items:center;padding:0 4px 0 2px"><span style="font-size:13px;font-weight:700;color:#d4a940">👥 ${group.name||''}</span></div>
-      <button class="wcard-action-btn wcard-nudge" style="color:#d4a940;border-color:rgba(180,140,40,0.3)" onclick="doShareGroup('${safeId}','${safeName}')">📤 <span style="font-size:8px">שתף</span></button>
+      <button class="wcard-action-btn wcard-nudge" style="color:#d4a940;border-color:rgba(180,140,40,0.3);font-size:9px" onclick="doShareGroup('${safeId}','${safeName}')">📤 <span style="font-size:8px">הוסף חברים</span></button>
       ${actionBtn}
     </div>
   </div>`;
@@ -2544,51 +2550,93 @@ window.closeGfeedPanel=()=>{
   currentGfeedGroupId=null;
 };
 window.handleGfeedOverlayClick=(e)=>{if(e.target===document.getElementById('gfeedOverlay'))closeGfeedPanel();};
-window.gfeedOpenEdit=()=>{closeGfeedPanel();if(currentGfeedGroupId)openGroupModal(currentGfeedGroupId);};
+window.gfeedOpenAddMembers=()=>{
+  if(!currentGfeedGroupId)return;
+  closeGfeedPanel();
+  // open group modal in "add members" mode — pre-filter to show only non-members
+  openGroupModal(currentGfeedGroupId,'addMembers');
+};
 
 function renderGfeedBody(group){
   const body=document.getElementById('gfeedBody');
   const now=Date.now();
-  const members=(group.members||[]).filter(uid=>uid!==currentUser.uid);
+  const allMembers=(group.members||[]);
+  const otherMembers=allMembers.filter(uid=>uid!==currentUser.uid);
   const memberNames=group.memberNames||{};
-  if(!members.length){
-    body.innerHTML='<p style="font-size:13px;color:rgba(212,169,64,0.35);text-align:center;padding:24px 0">אין חברים בקבוצה עדיין.</p>';
+  const safeGroupId=(group.id||'').replace(/'/g,"\\'");
+  const safeGroupName=(group.name||'').replace(/'/g,"\\'");
+
+  // Build self card
+  const selfStatus=watchingStatuses[currentUser.uid]||null;
+  let selfCardHTML='';
+  {
+    const s=selfStatus;
+    const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
+    const isOk=s?.isOk&&hrs<24;
+    const isUnknown=!s;
+    let circleStyle='border:2px solid #d4a940;background:rgba(180,140,40,0.15);color:#d4a940;';
+    if(!isUnknown&&isOk){const deg=Math.min(hrs/24,1)*360;const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;circleStyle=`background:${conic};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.3),0 0 14px rgba(40,200,100,0.4);`;}
+    else if(!isUnknown){circleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';}
+    const circleContent=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
+    let statusTxt='';
+    if(isOk){const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';const q=sign==='"';statusTxt=q?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;}
+    else if(!isUnknown)statusTxt='לא עדכנתי';
+    else statusTxt='טרם עדכנתי';
+    const photoURL=s?.photoURL||localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
+    const identityStyle=photoURL?`background-image:url('${photoURL}');background-size:cover;background-position:center top;`:'';
+    const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
+    const selfName=currentUser.displayName||'אני';
+    selfCardHTML=`<div class="gfeed-wcard" style="background:rgba(180,140,40,0.1);border-color:rgba(180,140,40,0.45);">
+      <div class="gfeed-wcard-top" style="flex-direction:row-reverse">
+        <div class="gfeed-identity" style="${identityStyle};flex-shrink:0;">
+          ${photoURL?'<div class="gfeed-identity-overlay"></div>':''}
+          <div class="gfeed-identity-content"></div>
+        </div>
+        <div class="gfeed-status-wrap" style="flex-direction:row-reverse;text-align:left">
+          <div class="gfeed-circle" style="${circleStyle}">${circleContent}</div>
+          <div class="gfeed-status-texts" style="text-align:left;align-items:flex-end">
+            <div class="gfeed-status-main" style="${isOk?'font-size:16px;font-weight:800':isUnknown?'color:rgba(200,230,255,0.3);font-size:12px':'color:#ff8888;font-size:13px'}">${statusTxt}</div>
+            ${timeStr?`<div class="${isOk?'gfeed-time-ok':'gfeed-time'}">${timeStr}</div>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="gfeed-name-row" style="color:#d4a940;text-align:left">אני – ${selfName}</div>
+    </div>`;
+  }
+
+  if(!otherMembers.length){
+    body.innerHTML=selfCardHTML+'<p style="font-size:13px;color:rgba(212,169,64,0.35);text-align:center;padding:16px 0">אין חברים נוספים בקבוצה.</p>';
     return;
   }
-  // sort: ok-recent first, then not-ok, then unknown
-  const sorted=[...members].sort((a,b)=>{
-    const sa=watchingStatuses[a], sb=watchingStatuses[b];
+  const sorted=[...otherMembers].sort((a,b)=>{
+    const sa=watchingStatuses[a],sb=watchingStatuses[b];
     const ha=sa?.timestamp?(now-sa.timestamp.getTime())/3600000:9999;
     const hb=sb?.timestamp?(now-sb.timestamp.getTime())/3600000:9999;
-    const okA=sa?.isOk&&ha<24, okB=sb?.isOk&&hb<24;
+    const okA=sa?.isOk&&ha<24,okB=sb?.isOk&&hb<24;
     if(okA&&!okB)return -1; if(!okA&&okB)return 1;
     return ha-hb;
   });
-  body.innerHTML=sorted.map(uid=>{
+  const memberCards=sorted.map(uid=>{
     const s=watchingStatuses[uid];
     const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
     const isOk=s?.isOk&&hrs<24;
     const isUnknown=!s;
     let circleStyle='border:2px solid #d4a940;background:rgba(180,140,40,0.15);color:#d4a940;';
-    if(!isUnknown&&isOk){
-      const deg=Math.min(hrs/24,1)*360;
-      const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;
-      circleStyle=`background:${conic};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.3),0 0 14px rgba(40,200,100,0.4);`;
-    }else if(!isUnknown){
-      circleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';
-    }
-    const circleContent=isOk?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
+    if(!isUnknown&&isOk){const deg=Math.min(hrs/24,1)*360;const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;circleStyle=`background:${conic};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.3),0 0 14px rgba(40,200,100,0.4);`;}
+    else if(!isUnknown){circleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';}
+    const circleContent=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
     let statusTxt='';
     if(isOk){const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';const q=sign==='"';statusTxt=q?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;}
     else if(!isUnknown)statusTxt='לא עדכן';
     else statusTxt='טרם עדכן';
-    const statusClass=isOk?'':'dim';
     const photoURL=s?.photoURL||null;
     const identityStyle=photoURL?`background-image:url('${photoURL}');background-size:cover;background-position:center top;`:'';
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const memberName=memberNames[uid]||'חבר';
+    const safeUid=uid.replace(/'/g,"\\'");
+    const safeMemberName=memberName.replace(/'/g,"\\'");
     return `<div class="gfeed-wcard">
-      <div class="gfeed-wcard-top" onclick="openFriendProfile('${uid}')">
+      <div class="gfeed-wcard-top" onclick="openFriendProfile('${safeUid}')">
         <div class="gfeed-identity" style="${identityStyle}">
           ${photoURL?'<div class="gfeed-identity-overlay"></div>':''}
           <div class="gfeed-identity-content"></div>
@@ -2601,16 +2649,21 @@ function renderGfeedBody(group){
           </div>
         </div>
       </div>
-      <div class="gfeed-name-row">${memberName}</div>
+      <div style="display:flex;align-items:center;padding:5px 8px 7px;border-top:1px solid rgba(180,140,40,0.1);gap:6px">
+        <span style="flex:1;font-size:13px;font-weight:700;color:#d4a940;padding-right:2px">${memberName}</span>
+        <button class="wcard-action-btn wcard-nudge" style="font-size:10px;padding:5px 8px" onclick="sendNudge('${safeUid}','${safeMemberName}')">👋 <span style="font-size:8px">נדנד</span></button>
+        <button class="wcard-action-btn wcard-trash" style="font-size:10px;padding:5px 8px" onclick="confirmRemoveFromGroup('${safeGroupId}','${safeGroupName}','${safeUid}','${safeMemberName}')">✕ <span style="font-size:8px">הוצא</span></button>
+      </div>
     </div>`;
   }).join('');
+  body.innerHTML=selfCardHTML+memberCards;
 }
 
 window.confirmDeleteGroup=(id,name)=>{
   document.getElementById('confirmTitle').textContent='מחק קבוצה';
   document.getElementById('confirmText').textContent=`למחוק את הקבוצה ״${name}״?`;
   document.getElementById('confirmOkBtn').textContent='כן, מחק';
-  pendingAction=async()=>{ await deleteDoc(doc(db,'groups',id)); userGroups=userGroups.filter(g=>g.id!==id); renderGroupsInFeed(); };
+  pendingAction=async()=>{ await deleteDoc(doc(db,'groups',id)); userGroups=userGroups.filter(g=>g.id!==id); renderWatchingWithStatuses(state.watching,watchingStatuses); };
   document.getElementById('confirmModal').classList.add('show');
 };
 
@@ -2625,7 +2678,28 @@ window.confirmLeaveGroup=(id,name)=>{
     const newMembers=(data.members||[]).filter(uid=>uid!==currentUser.uid);
     const newNames={...data.memberNames}; delete newNames[currentUser.uid];
     await setDoc(doc(db,'groups',id),{members:newMembers,memberNames:newNames},{merge:true});
-    userGroups=userGroups.filter(g=>g.id!==id); renderGroupsInFeed();
+    userGroups=userGroups.filter(g=>g.id!==id); renderWatchingWithStatuses(state.watching,watchingStatuses);
+  };
+  document.getElementById('confirmModal').classList.add('show');
+};
+
+window.confirmRemoveFromGroup=(groupId,groupName,memberUid,memberName)=>{
+  document.getElementById('confirmTitle').textContent='הוצא מקבוצה';
+  document.getElementById('confirmText').textContent=`להוציא את ${memberName} מהקבוצה ״${groupName}״?`;
+  document.getElementById('confirmOkBtn').textContent='כן, הוצא';
+  pendingAction=async()=>{
+    const snap=await getDoc(doc(db,'groups',groupId));
+    if(!snap.exists())return;
+    const data=snap.data();
+    const newMembers=(data.members||[]).filter(uid=>uid!==memberUid);
+    const newNames={...data.memberNames}; delete newNames[memberUid];
+    await setDoc(doc(db,'groups',groupId),{members:newMembers,memberNames:newNames,updatedAt:serverTimestamp()},{merge:true});
+    // update local
+    const g=userGroups.find(g=>g.id===groupId);
+    if(g){g.members=newMembers;g.memberNames=newNames;}
+    renderWatchingWithStatuses(state.watching,watchingStatuses);
+    // re-open the feed panel with updated group
+    if(g) openGroupFeedPanel(groupId);
   };
   document.getElementById('confirmModal').classList.add('show');
 };
@@ -3783,7 +3857,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v94';
+  var APP_BUILD='v95';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
