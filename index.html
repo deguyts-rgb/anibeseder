@@ -170,111 +170,122 @@
     .wcard-identity.group-identity{width:140px;min-width:140px}
 
 ```
-/* ══ POSTCARD v101 ══
-   מבנה נכון:
-   SELF:   [pc-content (ימין, חצי-עיגול ימין)] [pc-photo-wrap (שמאל, בתוך המסגרת, גולש שמאל)]
-           שם + ריאקציות מתחת, מחוץ למסגרת
-   FRIEND: [pc-photo-wrap (ימין, בתוך המסגרת, גולש ימין)] [pc-content (שמאל, חצי-עיגול שמאל)]
-           שם + כפתורים מתחת, מחוץ למסגרת
-════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   POSTCARD v103
+   גובה קבוע 90px. תמונה בתוך המסגרת.
+   RTL: ראשון=ימין, אחרון=שמאל.
 
-/* ─── OUTER WRAPPER ─── */
-.postcard-outer{margin-bottom:12px;display:flex;flex-direction:column}
-.postcard-outer-self{align-items:flex-start}
-.postcard-outer-friend{align-items:flex-end}
+   SELF:
+     .pc-body (ראשון→ימין): content + כפתורים,
+               border-right rounded כחצי-עיגול
+     .pc-img  (אחרון→שמאל): תמונה, width:82px,
+               גולש שמאלה (margin-left שלילי על הכרטיס),
+               אין border-left
 
-/* ─── CARD BASE ─── */
-.postcard{display:flex;align-items:stretch;height:100px;overflow:hidden;margin-bottom:10px}
+   FRIEND:
+     .pc-img  (ראשון→ימין): תמונה, width:82px,
+               גולש ימינה (margin-right שלילי על הכרטיס),
+               אין border-right
+     .pc-body (אחרון→שמאל): content + כפתורים,
+               border-left rounded כחצי-עיגול
+══════════════════════════════════════════════ */
 
-/* ─── SELF: גולש שמאל, חצי-עיגול ימין ─── */
-.postcard-self{
-  margin-left:-16px;
-  width:calc(100% + 16px);
+/* כרטיס בסיס */
+.pc{display:flex;height:90px;overflow:hidden;margin-bottom:10px;align-items:stretch}
+
+/* SELF – גבול ירוק, חצי-עיגול ימין, גולש שמאל */
+.pc-self{
+  margin-left:-18px;
   border:2px solid #4cde80;
   border-left:none;
   border-radius:0 999px 999px 0;
-  background:rgba(22,140,65,0.18)}
+  background:rgba(18,130,60,0.20)}
 
-/* ─── FRIEND: גולש ימין, חצי-עיגול שמאל ─── */
-.postcard-friend{
-  margin-right:-16px;
-  width:calc(100% + 16px);
-  border:2px solid rgba(210,230,220,0.42);
+/* FRIEND – גבול אוף-ווייט, חצי-עיגול שמאל, גולש ימין */
+.pc-friend{
+  margin-right:-18px;
+  border:2px solid rgba(210,232,220,0.44);
   border-right:none;
   border-radius:999px 0 0 999px;
-  background:rgba(210,230,220,0.09)}
+  background:rgba(210,232,220,0.10)}
 
-/* ─── PHOTO WRAP: תמונה בתוך המסגרת ─── */
-.pc-photo-wrap{
-  width:70px;min-width:70px;flex-shrink:0;
-  background:#0a1520;
+/* עמודת תמונה – רוחב קבוע, גובה מלא, crop */
+.pc-img{
+  width:82px;min-width:82px;flex-shrink:0;
+  position:relative;overflow:hidden;
+  background:#080f18}
+.pc-img img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top}
+.pc-img-emoji{
+  position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:24px;overflow:hidden}
-.pc-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+  font-size:26px}
+/* גרדיאנט כהה + שם בתחתית התמונה */
+.pc-img-grad{
+  position:absolute;bottom:0;left:0;right:0;z-index:3;
+  background:linear-gradient(to top,rgba(4,10,18,0.95) 0%,rgba(4,10,18,0.5) 50%,transparent 100%);
+  padding:3px 4px 4px;
+  display:flex;align-items:flex-end;justify-content:center}
+.pc-img-name{
+  font-size:11px;font-weight:700;line-height:1.2;
+  text-align:center;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:78px}
+.pc-img-name-self{color:rgba(100,245,155,0.95)}
+.pc-img-name-friend{color:rgba(220,240,230,0.92)}
 
-/* ─── CONTENT ─── */
-/* self: content מימין לתמונה → בצד ימין של הכרטיס (ב-RTL: ראשון = ימין) */
-.pc-content-self{
+/* עמודת תוכן */
+.pc-body{
   flex:1;min-width:0;
-  padding:10px 28px 10px 8px; /* ריפוד ימין לחצי-עיגול */
-  display:flex;flex-direction:column;justify-content:center;gap:5px}
-/* friend: content משמאל לתמונה → בצד שמאל של הכרטיס (ב-RTL: אחרון = שמאל) */
-.pc-content-friend{
-  flex:1;min-width:0;
-  padding:10px 8px 10px 28px; /* ריפוד שמאל לחצי-עיגול */
-  display:flex;flex-direction:column;justify-content:center;gap:5px}
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:10px 8px 8px}
+/* ריפוד צד חצי-עיגול */
+.pc-self .pc-body{padding-right:28px}
+.pc-friend .pc-body{padding-left:28px}
 
-/* ─── STATUS ROW בתוך content ─── */
-/* self: ב-RTL flex → ראשון=ימין, אחרון=שמאל.
-   סדר: <pc-texts>(ראשון/ימין) <pc-circle>(אחרון/שמאל=צמוד לתמונה).
-   ויזואלי: תמונה|עיגול|טקסט ✓ */
-.pc-sr-self{display:flex;align-items:center;gap:8px}
-/* friend: ב-RTL flex → ראשון=ימין, אחרון=שמאל.
-   סדר: <pc-circle>(ראשון/ימין=צמוד לתמונה) <pc-texts>(אחרון/שמאל).
-   ויזואלי: טקסט|עיגול|תמונה ✓ */
-.pc-sr-friend{display:flex;align-items:center;gap:8px}
-
-/* ─── ELEMENTS ─── */
-.pc-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
+/* שורת סטטוס */
+.pc-row{display:flex;align-items:center;gap:8px}
+.pc-circle{width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;flex-shrink:0}
 .pc-texts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-.pc-status-txt{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.4;word-break:break-word}
-.pc-status-txt.ok{font-size:17px;font-weight:800}
-.pc-status-txt.dim{font-size:12px;color:rgba(200,230,255,0.3);font-weight:400}
-.pc-status-txt.err{font-size:13px;color:#ff8888;font-weight:600}
-.pc-time-ok{font-size:12px;font-weight:700;color:rgba(76,222,128,0.85);margin-top:2px}
-.pc-time{font-size:10px;color:rgba(200,230,255,0.3);margin-top:2px}
+.pc-s{font-size:15px;font-weight:700;color:#e8f4f8;line-height:1.3;word-break:break-word}
+.pc-s.ok{font-size:17px;font-weight:800}
+.pc-s.dim{font-size:12px;color:rgba(200,230,255,0.3);font-weight:400}
+.pc-s.err{font-size:13px;color:#ff8888;font-weight:600}
+.pc-tok{font-size:11px;font-weight:700;color:rgba(76,222,128,0.85);margin-top:1px}
+.pc-t{font-size:10px;color:rgba(200,230,255,0.28);margin-top:1px}
 
-/* ─── REACTIONS (פוסט שלי, מתחת למסגרת) ─── */
-.pc-reactions-outer{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;
-  padding-top:4px;padding-right:2px}
-.pc-react-bubble{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
-.pc-react-circle{width:34px;height:34px;border-radius:50%;background:rgba(76,222,128,0.18);
-  border:1.5px solid rgba(76,222,128,0.5);display:flex;align-items:center;justify-content:center;font-size:18px}
-.pc-react-nudge-pill{display:flex;align-items:center;gap:4px;padding:5px 9px;border-radius:16px;
+/* כפתורי חבר (בתוך הכרטיס, תחתית) */
+.pc-btns{display:flex;gap:5px;align-items:center}
+.pc-nb{/* nudge btn */
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:24px;border-radius:7px;font-size:14px;
+  background:rgba(210,232,220,0.08);border:1.5px solid rgba(210,232,220,0.25);
+  cursor:pointer;font-family:inherit;transition:all 0.2s}
+.pc-nb.sent{background:rgba(76,222,128,0.15);border-color:rgba(76,222,128,0.5);color:#4cde80}
+.pc-rb{/* react btn */
+  display:flex;align-items:center;gap:3px;
+  padding:3px 8px;height:24px;border-radius:7px;
+  background:rgba(210,232,220,0.08);border:1.5px solid rgba(210,232,220,0.25);
+  cursor:pointer;font-size:13px;font-family:inherit;color:rgba(210,232,220,0.78)}
+.pc-rb span:last-child{font-size:9px;font-weight:700}
+
+/* תגובות (פוסט שלי, תחתית כרטיס) */
+.pc-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.pc-rb2{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
+.pc-rc{width:28px;height:28px;border-radius:50%;
+  background:rgba(76,222,128,0.18);border:1.5px solid rgba(76,222,128,0.5);
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.pc-rnp{display:flex;align-items:center;gap:3px;padding:3px 7px;border-radius:12px;
   background:rgba(190,150,0,0.2);border:1.5px solid rgba(200,160,20,0.5);cursor:pointer}
-.pc-react-nudge-txt{font-size:8.5px;color:rgba(255,220,100,0.9);font-weight:700;white-space:nowrap}
-.pc-react-sender{font-size:8px;color:rgba(200,230,255,0.42);text-align:center;
-  max-width:38px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-rnt{font-size:8px;color:rgba(255,220,100,0.9);font-weight:700;white-space:nowrap}
+.pc-rsn{font-size:7px;color:rgba(200,230,255,0.4);text-align:center;
+  max-width:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ─── NAME ROW (מחוץ למסגרת, מתחת לתמונה) ─── */
-.pc-name-lbl{font-size:9px;font-weight:700;line-height:1.2;margin-top:2px;display:block}
-.pc-name-lbl-self{color:rgba(76,222,128,0.88);padding-right:2px}
-.pc-name-lbl-friend{color:rgba(195,215,205,0.72);padding-left:2px}
-
-/* ─── FRIEND BUTTONS (מחוץ למסגרת, מתחת) ─── */
-.pc-btns{display:flex;gap:5px;margin-top:3px}
-.pc-nudge-btn{display:flex;align-items:center;justify-content:center;
-  width:32px;height:30px;border-radius:8px;
-  background:rgba(210,230,220,0.07);border:1.5px solid rgba(210,230,220,0.22);
-  cursor:pointer;font-size:16px;font-family:inherit;flex-shrink:0;transition:all 0.2s}
-.pc-nudge-btn.nudge-sent{background:rgba(76,222,128,0.15);border-color:rgba(76,222,128,0.5)}
-.pc-react-btn{display:flex;align-items:center;gap:3px;padding:4px 8px;border-radius:8px;
-  background:rgba(210,230,220,0.07);border:1.5px solid rgba(210,230,220,0.22);
-  cursor:pointer;font-size:13px;font-family:inherit;color:rgba(210,230,220,0.78);flex-shrink:0}
-.pc-react-btn-lbl{font-size:9px;font-weight:700}
-
-/* ─── REACT PICKER ─── */
+/* REACT PICKER */
 .react-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:300;
   display:none;align-items:flex-end;justify-content:center}
 .react-picker-overlay.show{display:flex}
@@ -288,7 +299,8 @@
   background:rgba(255,255,255,0.04);border:1px solid rgba(126,207,255,0.1);transition:transform 0.12s}
 .react-picker-cell:active{transform:scale(0.85)}
 .react-picker-cancel{background:rgba(255,255,255,0.06);border:none;border-radius:14px;
-  color:rgba(200,230,255,0.6);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+  color:rgba(200,230,255,0.6);padding:11px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit}
 .group-members-strip-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 8px 8px 6px;min-width:0}
 .group-members-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
 .group-members-strip::-webkit-scrollbar{display:none}
@@ -1518,11 +1530,10 @@ async function sendPushToFollowers(type='ok', message='') {
 let currentUser = null;
 let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:[], mutualUids:new Set(), moodEmoji:null, moodLevel:2, sign:null, customText:null, soundId:null, coins:0 };
 let statusListeners=[], watchingStatuses={};
-
-// ── REACTIONS v101 ─────────────────────────────────────────────
+// ── REACTIONS v103 ──────────────────────────────────────────
 let selfReactions={}, selfReactionsUnsub=null;
 const REACT_EMOJIS=['❤️','🙏','💪','😂','🔥','🫶','👍','😍','🥹','😎'];
-const RANDOM_BTN_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
+const RAND_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
 function loadSelfReactions(){
   if(!currentUser)return;
   if(selfReactionsUnsub){selfReactionsUnsub();selfReactionsUnsub=null;}
@@ -1530,14 +1541,14 @@ function loadSelfReactions(){
   selfReactionsUnsub=onSnapshot(q,snap=>{
     selfReactions={};
     snap.forEach(d=>{selfReactions[d.id]=d.data();});
-    const rEl=document.getElementById('pc-reactions-self');
-    if(rEl)rEl.innerHTML=buildReactionsHTML(selfReactions);
+    const el=document.getElementById('pc-reacts-self');
+    if(el)el.innerHTML=buildReactsHTML(selfReactions);
   });
 }
-function buildReactionsHTML(reactions){
+function buildReactsHTML(reactions){
   return Object.entries(reactions).map(([id,r])=>{
-    if(r.isNudge)return `<div class="pc-react-bubble" onclick="replyToNudge('${r.fromUid}','${(r.fromName||'').replace(/'/g,"\\'")}')"><div class="pc-react-nudge-pill"><span>👋</span><span class="pc-react-nudge-txt">הגב לנדנוד</span></div><span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span></div>`;
-    return `<div class="pc-react-bubble"><div class="pc-react-circle">${r.emoji||'❤️'}</div><span class="pc-react-sender">${(r.fromName||'').split(' ')[0]}</span></div>`;
+    if(r.isNudge)return `<div class="pc-rb2" onclick="replyToNudge('${r.fromUid}','${(r.fromName||'').replace(/'/g,"\\'")}')"><div class="pc-rnp"><span>👋</span><span class="pc-rnt">הגב</span></div><span class="pc-rsn">${(r.fromName||'').split(' ')[0]}</span></div>`;
+    return `<div class="pc-rb2"><div class="pc-rc">${r.emoji||'❤️'}</div><span class="pc-rsn">${(r.fromName||'').split(' ')[0]}</span></div>`;
   }).join('');
 }
 let _rUid=null,_rName='';
@@ -1555,14 +1566,14 @@ window.sendReaction=async(emoji)=>{
   try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${_rUid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:_rUid,emoji,isNudge:false,ts:serverTimestamp()});}catch(e){}
 };
 window.replyToNudge=(uid,name)=>{
-  _rUid=uid;_rName=name;
+  _rUid=uid;
   document.getElementById('reactPickerTitle').textContent=`הגב לנדנוד של ${name.split(' ')[0]} 👋`;
   document.getElementById('reactPickerGrid').innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
   document.getElementById('reactPickerOverlay').classList.add('show');
 };
 window.handleNudgeBtn=async(btn,uid,name)=>{
-  if(btn.classList.contains('nudge-sent'))return;
-  btn.classList.add('nudge-sent');btn.textContent='✓';
+  if(btn.classList.contains('sent'))return;
+  btn.classList.add('sent');btn.textContent='✓';
   localStorage.setItem('nudgeSent_'+currentUser.uid+'_'+uid,'1');
   try{
     await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
@@ -2287,39 +2298,40 @@ function buildSelfCardHTML(statuses){
   const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
   const isOk=s?.isOk&&hrs<24;
   const isUnknown=!s;
-  let circleStyle='background:rgba(76,222,128,0.09);border:2px solid rgba(76,222,128,0.3);color:rgba(76,222,128,0.5);';
+  let cs='background:rgba(76,222,128,0.09);border:2px solid rgba(76,222,128,0.3);color:rgba(76,222,128,0.5);';
   if(!isUnknown&&isOk){
     const deg=Math.min(hrs/24,1)*360;
-    const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;
-    circleStyle=`background:${conic};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
-  }else if(!isUnknown){circleStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';}
-  const circleContent=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
+    const co=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;
+    cs=`background:${co};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
+  }else if(!isUnknown){cs='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;';}
+  const cc=isOk?(s?.moodEmoji||'✓'):(isUnknown?'?':'!');
   let sc='dim',st='טרם עדכנתי';
   if(isOk){
-    const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
-    st=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+    const sign=s.sign,ct=s.customText||'',em=s.moodEmoji||'';
+    st=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${em?' '+em:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${em?' '+em:''}`;
     sc='ok';
   }else if(!isUnknown){sc='err';st='לא עדכנתי';}
   const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
   const myName=(currentUser.displayName||'אני').split(' ')[0];
   const rawPhoto=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
   const photoURL=rawPhoto?_fixPhotoUrl(rawPhoto):null;
-  const photoInner=photoURL
-    ?`<img src="${photoURL}"><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-self">אני – ${myName}</span></div>`
-    :`<span class="pc-photo-emoji">${(currentUser.displayName||'א')[0]}</span><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-self">אני – ${myName}</span></div>`;
-  const reactHTML=buildReactionsHTML(selfReactions);
-  return `<div class="postcard postcard-self" id="wrow-self">
-    <div class="pc-content-self">
-      <div class="pc-sr-self">
+  const reactHTML=buildReactsHTML(selfReactions);
+  /* RTL flex: pc-body=ראשון→ימין (חצי-עיגול), pc-img=אחרון→שמאל (גולש שמאל) */
+  return `<div class="pc pc-self" id="wrow-self">
+    <div class="pc-body">
+      <div class="pc-row">
         <div class="pc-texts">
-          <div class="pc-status-txt ${sc}">${st}</div>
-          ${timeStr?`<div class="${isOk?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
+          <div class="pc-s ${sc}">${st}</div>
+          ${timeStr?`<div class="${isOk?'pc-tok':'pc-t'}">${timeStr}</div>`:''}
         </div>
-        <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
+        <div class="pc-circle" style="${cs}">${cc}</div>
       </div>
-      <div class="pc-reactions-inner" id="pc-reactions-self">${reactHTML}</div>
+      <div class="pc-reacts" id="pc-reacts-self">${reactHTML}</div>
     </div>
-    <div class="pc-photo-wrap">${photoInner}</div>
+    <div class="pc-img">
+      ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${(currentUser.displayName||'א')[0]}</div>`}
+      <div class="pc-img-grad"><span class="pc-img-name pc-img-name-self">אני – ${myName}</span></div>
+    </div>
   </div>`;
 }
 
@@ -2342,46 +2354,45 @@ function renderWatchingWithStatuses(watching,statuses){
     const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
     const isOkStatus=s?.isOk&&hrs<24;
     const isUnknown=!s;
-    let fcStyle='background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35);';
+    let fcs='background:rgba(126,207,255,0.09);border:2px solid rgba(126,207,255,0.2);color:rgba(200,230,255,0.35);';
     if(!isUnknown&&isOkStatus){
       const d=Math.min(hrs/24,1)*360;
       const co=d<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${d.toFixed(2)}deg,#4cde80 ${d.toFixed(2)}deg 360deg)`;
-      fcStyle=`background:${co};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
-    }else if(!isUnknown){
-      fcStyle='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;';
-    }
-    const fcContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
+      fcs=`background:${co};border:2px solid #4cde80;color:#fff;box-shadow:0 0 0 3px rgba(76,222,128,0.35),0 0 14px rgba(40,200,100,0.45);`;
+    }else if(!isUnknown){fcs='background:rgba(220,40,40,0.22);border:2px solid #ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;';}
+    const fcc=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
     let fsc='dim',fst='טרם עדכן';
     if(isOkStatus){
-      const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
-      fst=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${emoji?' '+emoji:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${emoji?' '+emoji:''}`;
+      const sign=s.sign,ct=s.customText||'',em=s.moodEmoji||'';
+      fst=(sign==='"')?`״אני בסדר״${ct?' '+ct:''}${em?' '+em:''}`:`אני בסדר${sign||''}${ct?' '+ct:''}${em?' '+em:''}`;
       fsc='ok';
     }else if(!isUnknown){fsc='err';fst='לא עדכן';}
     const photoURL=s?.photoURL||null;
-    const fname=(w.followingName||'משתמש');
-    const fphotoInner=photoURL
-      ?`<img src="${photoURL}"><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-friend">${fname}</span></div>`
-      :`<span class="pc-photo-emoji">${fname[0]||'?'}</span><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-friend">${fname}</span></div>`;
+    const fname=w.followingName||'משתמש';
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const safeUid=w.followingUid.replace(/'/g,"\'");
     const safeName=fname.replace(/'/g,"\'");
-    const rndEmoji=RANDOM_BTN_EMOJIS[Math.abs(w.followingUid.charCodeAt(0)+(w.followingUid.charCodeAt(1)||0))%RANDOM_BTN_EMOJIS.length];
+    const rndE=RAND_EMOJIS[Math.abs(w.followingUid.charCodeAt(0)+(w.followingUid.charCodeAt(1)||0))%RAND_EMOJIS.length];
     const nKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
-    const nSentCls=localStorage.getItem(nKey)?'nudge-sent':'';
-    const nInner=localStorage.getItem(nKey)?'✓':'👋';
-    return `<div class="postcard postcard-friend" id="wrow-${w.followingUid}" onclick="openFriendProfile('${safeUid}')" style="cursor:pointer">
-      <div class="pc-photo-wrap">${fphotoInner}</div>
-      <div class="pc-content-friend">
-        <div class="pc-sr-friend">
-          <div class="pc-circle" style="${fcStyle}">${fcContent}</div>
+    const nSent=localStorage.getItem(nKey)?'sent':'';
+    const nIn=localStorage.getItem(nKey)?'✓':'👋';
+    /* RTL flex: pc-img=ראשון→ימין (גולש ימין), pc-body=אחרון→שמאל (חצי-עיגול) */
+    return `<div class="pc pc-friend" id="wrow-${w.followingUid}" onclick="openFriendProfile('${safeUid}')" style="cursor:pointer">
+      <div class="pc-img">
+        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${fname[0]||'?'}</div>`}
+        <div class="pc-img-grad"><span class="pc-img-name pc-img-name-friend">${fname}</span></div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-row">
+          <div class="pc-circle" style="${fcs}">${fcc}</div>
           <div class="pc-texts">
-            <div class="pc-status-txt ${fsc}">${fst}</div>
-            ${timeStr?`<div class="${isOkStatus?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
+            <div class="pc-s ${fsc}">${fst}</div>
+            ${timeStr?`<div class="${isOkStatus?'pc-tok':'pc-t'}">${timeStr}</div>`:''}
           </div>
         </div>
-        <div class="pc-btns-inner" onclick="event.stopPropagation()">
-          <button class="pc-nudge-btn ${nSentCls}" id="nbtn-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nInner}</button>
-          <button class="pc-react-btn" onclick="openReactPicker('${safeUid}','${safeName}')"><span>${rndEmoji}</span><span class="pc-react-btn-lbl">תגיב</span></button>
+        <div class="pc-btns" onclick="event.stopPropagation()">
+          <button class="pc-nb ${nSent}" id="nb-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nIn}</button>
+          <button class="pc-rb" onclick="openReactPicker('${safeUid}','${safeName}')"><span>${rndE}</span><span>תגיב</span></button>
         </div>
       </div>
     </div>`;
@@ -2843,19 +2854,19 @@ function renderGfeedBody(group){
     const identityStyle=photoURL?`background-image:url('${photoURL}');background-size:cover;background-position:center top;`:'';
     const timeStr=s?.timestamp?formatRelativeTimeOther(s.timestamp):'';
     const selfName=currentUser.displayName||'אני';
-    selfCardHTML=`<div class="postcard postcard-self" style="margin-bottom:10px">
-      <div class="pc-content-self">
-        <div class="pc-sr-self">
+    selfCardHTML=`<div class="pc pc-self" style="margin-bottom:10px">
+      <div class="pc-body">
+        <div class="pc-row">
           <div class="pc-texts">
-            <div class="pc-status-txt ${isOk?'ok':isUnknown?'dim':'err'}">${statusTxt}</div>
-            ${timeStr?`<div class="${isOk?'pc-time-ok':'pc-time'}">${timeStr}</div>`:''}
+            <div class="pc-s ${isOk?'ok':isUnknown?'dim':'err'}">${statusTxt}</div>
+            ${timeStr?`<div class="${isOk?'pc-tok':'pc-t'}">${timeStr}</div>`:''}
           </div>
           <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
         </div>
       </div>
-      <div class="pc-photo-wrap">
-        ${photoURL?`<img src="${photoURL}">`:`<span class="pc-photo-emoji">${(selfName||'א')[0]}</span>`}
-        <div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-self">אני – ${(selfName||'').split(' ')[0]}</span></div>
+      <div class="pc-img">
+        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${(selfName||'א')[0]}</div>`}
+        <div class="pc-img-grad"><span class="pc-img-name pc-img-name-self">אני – ${(selfName||'').split(' ')[0]}</span></div>
       </div>
     </div>`;
   }
@@ -2890,27 +2901,27 @@ function renderGfeedBody(group){
     const memberName=memberNames[uid]||'חבר';
     const safeUid=uid.replace(/'/g,"\\'");
     const safeMemberName=memberName.replace(/'/g,"\\'");
-    const gmPhotoInner=photoURL
-      ?`<img src="${photoURL}"><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-friend">${memberName}</span></div>`
-      :`<span class="pc-photo-emoji">${memberName[0]||'?'}</span><div class="pc-photo-gradient"><span class="pc-photo-name pc-photo-name-friend">${memberName}</span></div>`;
+    const gmE=RAND_EMOJIS[Math.abs(uid.charCodeAt(0)+(uid.charCodeAt(1)||0))%RAND_EMOJIS.length];
     const gmNK='nudgeSent_'+currentUser.uid+'_'+uid;
-    const gmNSent=localStorage.getItem(gmNK)?'nudge-sent':'';
+    const gmNSent=localStorage.getItem(gmNK)?'sent':'';
     const gmNIn=localStorage.getItem(gmNK)?'✓':'👋';
-    const gmEmoji=RANDOM_BTN_EMOJIS[Math.abs(uid.charCodeAt(0)+(uid.charCodeAt(1)||0))%RANDOM_BTN_EMOJIS.length];
-    return `<div class="postcard postcard-friend" style="margin-bottom:10px;border-color:rgba(180,140,40,0.55)" onclick="openFriendProfile('${safeUid}')">
-      <div class="pc-photo-wrap">${gmPhotoInner}</div>
-      <div class="pc-content-friend" style="background:rgba(180,140,40,0.04)">
-        <div class="pc-sr-friend">
+    return `<div class="pc pc-friend" style="margin-bottom:10px;border-color:rgba(180,140,40,0.55)" onclick="openFriendProfile('${safeUid}')">
+      <div class="pc-img" style="background:rgba(8,15,24,0.8)">
+        ${photoURL?`<img src="${photoURL}">`:`<div class="pc-img-emoji">${memberName[0]||'?'}</div>`}
+        <div class="pc-img-grad"><span class="pc-img-name" style="color:rgba(212,169,64,0.92)">${memberName}</span></div>
+      </div>
+      <div class="pc-body" style="background:rgba(180,140,40,0.04)">
+        <div class="pc-row">
           <div class="pc-circle" style="${circleStyle}">${circleContent}</div>
           <div class="pc-texts">
-            <div class="pc-status-txt ${isOk?'ok':isUnknown?'dim':'err'}">${statusTxt}</div>
-            ${timeStr?`<div class="${isOk?'pc-time-ok':'pc-time'}" style="${isOk?'color:rgba(212,169,64,0.85)':''}">${timeStr}</div>`:''}
+            <div class="pc-s ${isOk?'ok':isUnknown?'dim':'err'}">${statusTxt}</div>
+            ${timeStr?`<div class="${isOk?'pc-tok':'pc-t'}" style="${isOk?'color:rgba(212,169,64,0.85)':''}">${timeStr}</div>`:''}
           </div>
         </div>
-        <div class="pc-btns-inner" onclick="event.stopPropagation()">
-          <button class="pc-nudge-btn ${gmNSent}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${gmNIn}</button>
-          <button class="pc-react-btn" onclick="openReactPicker('${safeUid}','${safeMemberName}')"><span>${gmEmoji}</span><span class="pc-react-btn-lbl">תגיב</span></button>
-          <button class="wcard-action-btn wcard-trash" style="flex:0;padding:2px 6px;height:23px;font-size:11px" onclick="confirmRemoveFromGroup('${safeGroupId}','${safeGroupName}','${safeUid}','${safeMemberName}')">✕</button>
+        <div class="pc-btns" onclick="event.stopPropagation()">
+          <button class="pc-nb ${gmNSent}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${gmNIn}</button>
+          <button class="pc-rb" onclick="openReactPicker('${safeUid}','${safeMemberName}')"><span>${gmE}</span><span>תגיב</span></button>
+          <button class="wcard-action-btn wcard-trash" style="flex:0;padding:2px 6px;height:24px;font-size:11px" onclick="confirmRemoveFromGroup('${safeGroupId}','${safeGroupName}','${safeUid}','${safeMemberName}')">✕</button>
         </div>
       </div>
     </div>`;
@@ -4138,7 +4149,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v102';
+  var APP_BUILD='v103';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
