@@ -181,7 +181,7 @@
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
 .d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
-.d-wrap-self{align-items:flex-start;padding-left:20px}
+.d-wrap-self{align-items:flex-start}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
 /* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
@@ -2182,10 +2182,9 @@ function startSelfStatusListener(){
 }
 
 function updateSelfCardInFeed(){
-  // מוצא את ה-wrapper (d-wrap-self) או הכרטיס עצמו
-  const el=document.getElementById('wrow-self');
-  if(!el) return;
-  const wrapper=el.closest('.d-wrap-self')||el;
+  // Replace the full d-wrap-self wrapper (includes timelbl + card)
+  const wrapper=document.querySelector('.d-wrap-self');
+  if(!wrapper) return;
   const newHTML=buildSelfCardHTML(watchingStatuses);
   const tmp=document.createElement('div');
   tmp.innerHTML=newHTML;
@@ -4216,7 +4215,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v119';
+  var APP_BUILD='v120';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
