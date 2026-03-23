@@ -181,7 +181,7 @@
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
 .d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
-.d-wrap-self{align-items:flex-start;padding-left:0;margin-left:0;overflow:visible}
+.d-wrap-self{align-items:stretch;padding-left:0;margin-left:-20px;width:calc(100vw - 100px);overflow:visible}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
 /* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
@@ -191,7 +191,7 @@
   width:65px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start}
+.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-end}
 .d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start}
 
 /* ───────────────────────────────────────────────────────
@@ -201,10 +201,10 @@
    רוחב 87% + 11px = זהה לחבר
 ─────────────────────────────────────────────────────── */
 .wcard.d-self{
-  position:relative;
-  left:-20px;
+  position:static;
+  left:auto;
   margin-left:0;
-  width:calc(100vw - 100px);
+  width:100%;
   border-top:2px solid #4cde80 !important;
   border-bottom:2px solid #4cde80 !important;
   border-left:none !important;
@@ -4245,7 +4245,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v131';
+  var APP_BUILD='v132';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
