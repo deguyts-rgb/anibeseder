@@ -238,9 +238,10 @@
 .d-friend .wcard-status-wrap{
   display:flex !important;flex-direction:column !important;
   align-items:stretch;
-  justify-content:center;gap:4px;
-  padding-left:10px;padding-right:15px}
-.d-friend .d-status-row{flex-direction:row;width:100%;gap:10px}
+  justify-content:center;gap:0;
+  padding-left:10px;padding-right:15px;
+  padding-top:10px;padding-bottom:6px}
+.d-friend .d-status-row{flex-direction:row;width:100%;gap:10px;flex:1;align-items:center}
 .d-friend .wcard-circle{flex-shrink:0}
 
 /* ── תמונה: 65px, פינות 6pt ── */
@@ -262,7 +263,7 @@
 .d-friend .wcard-status{overflow:visible;text-overflow:unset;white-space:normal}
 
 /* ── כפתורים: מיד מתחת לשורת סטטוס ── */
-.d-btns{display:flex;gap:4px;align-items:center;padding-bottom:4px}
+.d-btns{display:flex;gap:4px;align-items:center;padding-bottom:4px;justify-content:flex-end}
 .d-nb{display:flex;align-items:center;justify-content:center;
   width:26px;height:20px;border-radius:5px;font-size:13px;
   background:none;border:1px solid rgba(150,180,160,0.2);
