@@ -181,7 +181,7 @@
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
 .d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
-.d-wrap-self{align-items:flex-start;padding-left:20px}
+.d-wrap-self{align-items:flex-start;padding-left:0}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
 /* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
@@ -202,7 +202,7 @@
 ─────────────────────────────────────────────────────── */
 .wcard.d-self{
   margin-left:-20px;
-  width:calc(87% + 20px);
+  width:100%;
   border-top:2px solid #4cde80 !important;
   border-bottom:2px solid #4cde80 !important;
   border-left:none !important;
@@ -216,7 +216,7 @@
   display:flex !important;flex-direction:column !important;
   justify-content:center;align-items:stretch;
   position:relative;
-  padding-right:10px;padding-left:15px;padding-bottom:0}
+  padding-right:21px;padding-left:15px;padding-bottom:0}
 /* d-status-row בתוך self: row → בRTL ראשון (עיגול) הולך לימין */
 .d-self .d-status-row{flex-direction:row;gap:10px;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
@@ -4216,7 +4216,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v123';
+  var APP_BUILD='v124';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
