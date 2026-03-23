@@ -181,7 +181,7 @@
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
 .d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
-.d-wrap-self{align-items:flex-start}
+.d-wrap-self{align-items:flex-start;padding-left:20px}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
 /* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
@@ -213,15 +213,15 @@
 .d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 /* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
 .d-self .wcard-status-wrap{
-  display:flex !important;flex-direction:row !important;
-  align-items:center;
+  display:flex !important;flex-direction:column !important;
+  justify-content:center;align-items:stretch;
   position:relative;
-  padding-right:10px;padding-left:15px;padding-bottom:28px}
-/* d-status-row בתוך self: row-reverse → circle שמאל (ליד תמונה שמאל) */
-.d-self .d-status-row{flex-direction:row-reverse;gap:10px;align-items:center;width:100%}
+  padding-right:10px;padding-left:15px;padding-bottom:0}
+/* d-status-row בתוך self: row → בRTL ראשון (עיגול) הולך לימין */
+.d-self .d-status-row{flex-direction:row;gap:10px;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
 .d-self .wcard-circle{flex-shrink:0}
-.d-self .d-btns{position:absolute;bottom:2px;left:79px}
+.d-self .d-btns{margin-top:2px;padding-right:0}
 
 /* ───────────────────────────────────────────────────────
    FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
@@ -261,23 +261,24 @@
 /* ── שורת סטטוס + טקסט ── */
 .d-status-row{display:flex;align-items:center}
 /* טקסט: ממלא שטח, לא עובר שורה */
-.d-self .wcard-status-texts{flex:1;min-width:0;text-align:left}
+.d-self .wcard-status-texts{flex:1;min-width:0;text-align:right}
 .d-friend .wcard-status-texts{flex:1;min-width:0;text-align:right}
 .d-self .wcard-status,
 .d-friend .wcard-status{overflow:visible;text-overflow:unset;white-space:normal}
 
 /* ── כפתורים: מיד מתחת לשורת סטטוס ── */
 .d-btns{display:flex;gap:3px;align-items:center}
-.d-nb{display:flex;align-items:center;justify-content:center;
-  width:19px;height:16px;border-radius:4px;font-size:11px;
+.d-nb{
+  display:flex;align-items:center;justify-content:center;
+  width:22px;height:19px;border-radius:4px;font-size:13px;
   background:none;border:1px solid rgba(150,180,160,0.2);
   cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(150,180,160,0.55)}
 .d-nb.sent{border-color:rgba(76,222,128,0.4);color:rgba(76,222,128,0.75)}
-.d-rb{display:flex;align-items:center;gap:2px;
-  padding:0px;width:23px;height:18px;justify-content:center;border-radius:4px;
+.d-rb{
+  display:flex;align-items:center;justify-content:center;
+  width:22px;height:19px;border-radius:4px;font-size:13px;
   background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-size:11px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
-.d-rb span:last-child{font-size:7px;font-weight:600}
+  cursor:pointer;font-family:inherit;color:rgba(150,180,160,0.55)}
 
 /* ── תגובות self ── */
 .d-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:4px}
@@ -4215,7 +4216,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v122';
+  var APP_BUILD='v123';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
