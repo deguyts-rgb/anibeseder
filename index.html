@@ -204,7 +204,7 @@
   position:relative;
   left:-20px;
   margin-left:0;
-  width:calc(100vw - 50px);
+  width:calc(100vw - 100px);
   border-top:2px solid #4cde80 !important;
   border-bottom:2px solid #4cde80 !important;
   border-left:none !important;
@@ -2300,12 +2300,25 @@ async function loadWatching(){
   const snaps=await getDocs(q); state.watching=[];
   snaps.forEach(d=>state.watching.push({...d.data()}));
   statusListeners.forEach(u=>u()); statusListeners=[]; watchingStatuses={};
-  // ── שחזר מיידית את הסטטוס העצמי מ-state המקומי (ללא המתנה לרשת) ──
+  // שחזר מיידית את הסטטוס העצמי מ-state המקומי
   {const _p=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
    watchingStatuses[currentUser.uid]={isOk:state.isOk,timestamp:state.lastConfirmed||null,moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null,photoURL:_p?_fixPhotoUrl(_p):null};}
   if(!state.watching.length){renderWatchingList([]);updateChips();return;}
-  state.watching.forEach(w=>{
+  // טעינה ראשונית: כל הstatuses במקביל, רנדר יחיד אחרי שהכל מוכן
+  await Promise.all(state.watching.map(async w=>{
     watchingStatuses[w.followingUid]=null;
+    try{
+      const snap=await getDoc(doc(db,'status',w.followingUid));
+      if(snap.exists()){
+        const d=snap.data();
+        watchingStatuses[w.followingUid]={isOk:d.isOk,timestamp:d.timestamp?.toDate(),name:d.name,moodEmoji:d.moodEmoji||null,sign:d.sign||null,customText:d.customText||null,photoURL:d.profilePhotoURL?_fixPhotoUrl(d.profilePhotoURL):null,soundId:(d.soundId!==undefined&&d.soundId!==null)?d.soundId:null};
+      }
+    }catch(e){}
+  }));
+  // רנדר יחיד מסודר
+  renderWatchingWithStatuses(state.watching,watchingStatuses);
+  // עכשיו onSnapshot לעדכונים בזמן אמת בלבד
+  state.watching.forEach(w=>{
     const unsub=onSnapshot(doc(db,'status',w.followingUid),snap=>{
       if(snap.exists()){
         const d=snap.data();
@@ -4232,7 +4245,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v130';
+  var APP_BUILD='v131';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
