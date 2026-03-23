@@ -180,22 +180,26 @@
 /* ── D-SHAPE v112 ── */
 
 /* Wrapper – מכיל time-label מעל + כרטיס */
-.d-wrap{display:flex;flex-direction:column;margin-bottom:44px}
+/* wrapper: גובה רווח כפול ועוד */
+.d-wrap{display:flex;flex-direction:column;margin-bottom:60px;width:100%}
 .d-wrap-self{align-items:flex-start}
 .d-wrap-friend{align-items:flex-end}
-/* תווית זמן מעל הכרטיס, מעל תמונת הפרופיל, מרחק מקצה מסך */
-.d-timelbl{font-size:10px;font-weight:600;line-height:1;padding-bottom:4px}
+/* תווית זמן מעל הכרטיס */
+.d-timelbl{font-size:13px;font-weight:700;line-height:1;padding-bottom:5px}
+/* self: תווית בצד שמאל (align-self:flex-end ב-RTL = שמאל) */
 .d-wrap-self .d-timelbl{
-  color:rgba(76,222,128,0.7);
-  padding-right:8px}     /* מרחק מקצה שמאל ≈ מרחק התמונה */
+  color:rgba(76,222,128,0.8);
+  align-self:flex-end;
+  padding-left:4px}
 .d-wrap-friend .d-timelbl{
-  color:rgba(200,230,255,0.4);
-  padding-left:8px}
+  color:rgba(200,230,255,0.45);
+  align-self:flex-start;
+  padding-right:4px}
 
 /* SELF: תמונה שמאל(גולש), חצי-עיגול ימין */
 .wcard.d-self{
   margin-left:-20px;
-  width:calc(87% + 20px);
+  width:calc(100% + 20px);   /* גולש עד קצה שמאל */
   border:2px solid #4cde80 !important;
   border-left:none !important;
   border-radius:0 999px 999px 0 !important;
@@ -2166,12 +2170,14 @@ function startSelfStatusListener(){
 }
 
 function updateSelfCardInFeed(){
+  // מוצא את ה-wrapper (d-wrap-self) או הכרטיס עצמו
   const el=document.getElementById('wrow-self');
   if(!el) return;
+  const wrapper=el.closest('.d-wrap-self')||el;
   const newHTML=buildSelfCardHTML(watchingStatuses);
   const tmp=document.createElement('div');
   tmp.innerHTML=newHTML;
-  el.replaceWith(tmp.firstElementChild);
+  wrapper.replaceWith(tmp.firstElementChild);
 }
 
 async function initUser(){
@@ -2552,6 +2558,9 @@ window.handleOkPress=async()=>{
   earnCoins(10,'press');
   await setDoc(doc(db,'users',currentUser.uid),{lastConfirmed:serverTimestamp(),okCount:state.okCount},{merge:true});
   await setDoc(doc(db,'status',currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName,isOk:true,timestamp:serverTimestamp(),moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null,soundId:state.soundId!==null?state.soundId:null},{merge:true});
+  // עדכון מיידי של הכרטיס לפני שה-listener מ-Firestore מגיע
+  watchingStatuses[currentUser.uid]={isOk:true,timestamp:new Date(),moodEmoji:state.moodEmoji||null,sign:state.sign||null,customText:state.customText||null,photoURL:watchingStatuses[currentUser.uid]?.photoURL||null};
+  updateSelfCardInFeed();
   updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
@@ -4181,7 +4190,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v112';
+  var APP_BUILD='v113';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
