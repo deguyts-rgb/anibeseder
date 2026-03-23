@@ -181,7 +181,7 @@
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
 .d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
-.d-wrap-self{align-items:flex-start}
+.d-wrap-self{align-items:flex-start;padding-left:20px}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
 /* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
@@ -191,7 +191,7 @@
   width:65px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-end}
+.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start}
 .d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start}
 
 /* ───────────────────────────────────────────────────────
@@ -201,14 +201,14 @@
    רוחב 87% + 11px = זהה לחבר
 ─────────────────────────────────────────────────────── */
 .wcard.d-self{
-  margin-left:-11px;
-  width:calc(87% + 11px);
-  border-top:2px solid rgba(40,80,50,0.6) !important;
-  border-bottom:2px solid rgba(40,80,50,0.6) !important;
+  margin-left:-20px;
+  width:calc(87% + 20px);
+  border-top:2px solid #4cde80 !important;
+  border-bottom:2px solid #4cde80 !important;
   border-left:none !important;
-  border-right:2px solid rgba(40,80,50,0.6) !important;
+  border-right:none !important;
   border-radius:0 999px 999px 0 !important;
-  background:rgba(18,130,60,0.18) !important;
+  background:rgba(18,130,60,0.22) !important;
   margin-bottom:0;overflow:hidden}
 .d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 /* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
@@ -274,9 +274,9 @@
   cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(150,180,160,0.55)}
 .d-nb.sent{border-color:rgba(76,222,128,0.4);color:rgba(76,222,128,0.75)}
 .d-rb{display:flex;align-items:center;gap:2px;
-  padding:0px;width:32px;height:26px;justify-content:center;border-radius:4px;
+  padding:0px;width:38px;height:30px;justify-content:center;border-radius:4px;
   background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-size:20px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
+  cursor:pointer;font-size:22px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
 .d-rb span:last-child{font-size:7px;font-weight:600}
 
 /* ── תגובות self ── */
@@ -2352,12 +2352,6 @@ function buildSelfCardHTML(statuses){
     ${timeStr?`<span class="d-timelbl">${timeStr}</span>`:''}
     <div class="wcard d-self" id="wrow-self">
       <div class="wcard-top">
-        <div class="wcard-identity" style="${idStyle}">
-          ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
-          <div class="wcard-identity-content">
-            <span class="wcard-iname">אני – ${myName}</span>
-          </div>
-        </div>
         <div class="wcard-status-wrap">
           <div class="d-status-row">
             <div class="wcard-circle" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
@@ -2367,6 +2361,12 @@ function buildSelfCardHTML(statuses){
           </div>
           <div class="d-btns">
             ${reactHTML?`<div class="d-reacts" id="d-reacts-self">${reactHTML}</div>`:`<div style="display:none" id="d-reacts-self"></div>`}
+          </div>
+        </div>
+        <div class="wcard-identity" style="${idStyle}">
+          ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
+          <div class="wcard-identity-content">
+            <span class="wcard-iname">אני – ${myName}</span>
           </div>
         </div>
       </div>
@@ -4216,7 +4216,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v118';
+  var APP_BUILD='v119';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
