@@ -202,7 +202,7 @@
 ─────────────────────────────────────────────────────── */
 .wcard.d-self{
   margin-left:-20px;
-  width:100%;
+  width:calc(100% - 50px);
   border-top:2px solid #4cde80 !important;
   border-bottom:2px solid #4cde80 !important;
   border-left:none !important;
@@ -257,6 +257,7 @@
   overflow:hidden !important;
   flex-shrink:0;
   border-radius:19px !important}
+.d-self .wcard-identity{background-color:transparent !important}
 
 /* ── שורת סטטוס + טקסט ── */
 .d-status-row{display:flex;align-items:center}
@@ -4216,7 +4217,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v124';
+  var APP_BUILD='v125';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
