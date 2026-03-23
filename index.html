@@ -1944,6 +1944,16 @@ onAuthStateChanged(auth,async user=>{
     checkNotifPermission(); updateNotifToggleBtn(); updateAddHomeBtn();
     // ── Listener על הסטטוס העצמי – לפני loadWatching כדי שהנתון יהיה מוכן בעת בניית הרשימה ──
     startSelfStatusListener();
+    // ── מאכלס מיידית את הסטטוס העצמי מ-state המקומי (localStorage) – ללא המתנה לFirestore ──
+    const _storedPhoto=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser.photoURL||null;
+    watchingStatuses[currentUser.uid]={
+      isOk:state.isOk,
+      timestamp:state.lastConfirmed||null,
+      moodEmoji:state.moodEmoji||null,
+      sign:state.sign||null,
+      customText:state.customText||null,
+      photoURL:_storedPhoto?_fixPhotoUrl(_storedPhoto):null
+    };
     await loadWatching();
     await loadAndRenderGroups();
     await ensureMutualFollows();
@@ -4219,7 +4229,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v128';
+  var APP_BUILD='v129';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
