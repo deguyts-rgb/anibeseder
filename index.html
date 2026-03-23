@@ -209,8 +209,8 @@
   border-right:none !important;
   border-radius:0 999px 999px 0 !important;
   background:rgba(18,130,60,0.22) !important;
-  height:84px;margin-bottom:0;overflow:visible}
-.d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch;overflow:hidden}
+  margin-bottom:0;overflow:hidden}
+.d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 /* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
 .d-self .wcard-status-wrap{
   display:flex !important;flex-direction:row !important;
@@ -221,7 +221,7 @@
 .d-self .d-status-row{flex-direction:row-reverse;gap:10px;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
 .d-self .wcard-circle{flex-shrink:0}
-.d-self .d-btns{position:absolute;bottom:2px;left:71px}
+.d-self .d-btns{position:absolute;bottom:2px;left:79px}
 
 /* ───────────────────────────────────────────────────────
    FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
@@ -246,7 +246,7 @@
 .d-friend .wcard-circle{flex-shrink:0}
 
 /* כפתורים: absolute תחתית, זזים שמאלה */
-.d-friend .d-btns{position:absolute;bottom:2px;right:71px}
+.d-friend .d-btns{position:absolute;bottom:2px;right:63px}
 
 .wcard.d-self,.wcard.d-friend{margin-bottom:0 !important}
 .d-self .wcard-identity,
@@ -267,16 +267,16 @@
 .d-friend .wcard-status{overflow:visible;text-overflow:unset;white-space:normal}
 
 /* ── כפתורים: מיד מתחת לשורת סטטוס ── */
-.d-btns{display:flex;gap:4px;align-items:center}
+.d-btns{display:flex;gap:3px;align-items:center}
 .d-nb{display:flex;align-items:center;justify-content:center;
-  width:28px;height:22px;border-radius:4px;font-size:16px;
+  width:19px;height:16px;border-radius:4px;font-size:11px;
   background:none;border:1px solid rgba(150,180,160,0.2);
   cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(150,180,160,0.55)}
 .d-nb.sent{border-color:rgba(76,222,128,0.4);color:rgba(76,222,128,0.75)}
 .d-rb{display:flex;align-items:center;gap:2px;
-  padding:0px;width:34px;height:22px;justify-content:center;border-radius:4px;
+  padding:0px;width:23px;height:18px;justify-content:center;border-radius:4px;
   background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-size:18px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
+  cursor:pointer;font-size:11px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
 .d-rb span:last-child{font-size:7px;font-weight:600}
 
 /* ── תגובות self ── */
@@ -2182,16 +2182,13 @@ function startSelfStatusListener(){
 }
 
 function updateSelfCardInFeed(){
+  // Replace the full d-wrap-self wrapper (includes timelbl + card)
   const wrapper=document.querySelector('.d-wrap-self');
+  if(!wrapper) return;
   const newHTML=buildSelfCardHTML(watchingStatuses);
   const tmp=document.createElement('div');
   tmp.innerHTML=newHTML;
-  if(wrapper){
-    wrapper.replaceWith(tmp.firstElementChild);
-  } else {
-    // פיד עדיין לא הוצג – נוסיף את כרטיס ה-self לרשימה
-    renderWatchingWithStatuses(state.watching,watchingStatuses);
-  }
+  wrapper.replaceWith(tmp.firstElementChild);
 }
 
 async function initUser(){
@@ -4218,7 +4215,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v121';
+  var APP_BUILD='v122';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
