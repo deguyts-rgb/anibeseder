@@ -219,7 +219,7 @@
   display:flex !important;flex-direction:column !important;
   justify-content:center;align-items:stretch;
   position:relative;
-  padding-right:21px;padding-left:15px;padding-bottom:0}
+  padding-right:10px;padding-left:5px;padding-bottom:0}
 /* d-status-row בתוך self: row → בRTL ראשון (עיגול) הולך לימין */
 .d-self .d-status-row{flex-direction:row;gap:10px;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
@@ -260,7 +260,7 @@
   overflow:hidden !important;
   flex-shrink:0;
   border-radius:19px !important}
-.d-self .wcard-identity{background-color:transparent !important}
+.d-self .wcard-identity{background-color:transparent !important;margin-right:25px}
 
 /* ── שורת סטטוס + טקסט ── */
 .d-status-row{display:flex;align-items:center}
@@ -4246,7 +4246,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v136';
+  var APP_BUILD='v137';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
