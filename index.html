@@ -177,52 +177,72 @@
 ═══════════════════════════════════════════════════════════ */
 
 /* SELF: תמונה שמאל (RTL row-reverse), גולש שמאל, חצי-עיגול ימין */
-/* ── D-SHAPE v114 ── */
+/* ── D-SHAPE v115 ── */
 
-/* Wrapper: מרווח 25pt בין כרטיסים */
-.d-wrap{display:flex;flex-direction:column;margin-bottom:25px;width:100%}
+/* Wrapper: מרווח 40pt בין כרטיסים */
+.d-wrap{display:flex;flex-direction:column;margin-bottom:40px;width:100%}
 .d-wrap-self{align-items:flex-start}
 .d-wrap-friend{align-items:flex-end}
 
-/* תווית זמן – מעל תמונת פרופיל, לא חורגת מגבולות רוחב התמונה */
+/* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
 .d-timelbl{
   font-size:11px;font-weight:600;line-height:1;
   padding-bottom:4px;
-  width:65px;            /* בדיוק רוחב התמונה */
+  width:65px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-end}
 .d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start}
 
-/* SELF: 11pt מקצה מסך, רוחב זהה לחבר (87%) */
+/* ───────────────────────────────────────────────────────
+   SELF: מבנה כמו FRIEND אבל הפוך (תמונה שמאל)
+   תמונה גולשת 11px שמאל + קווי מסגרת ממשיכים לשמאל
+   חצי-עיגול בימין
+   רוחב 87% + 11px = זהה לחבר
+─────────────────────────────────────────────────────── */
 .wcard.d-self{
   margin-left:-11px;
   width:calc(87% + 11px);
-  border:2px solid rgba(40,80,50,0.55) !important;
+  border-top:2px solid rgba(40,80,50,0.6) !important;
+  border-bottom:2px solid rgba(40,80,50,0.6) !important;
   border-left:none !important;
+  border-right:2px solid rgba(40,80,50,0.6) !important;
   border-radius:0 999px 999px 0 !important;
   background:rgba(18,130,60,0.18) !important;
-  margin-bottom:0}
+  margin-bottom:0;overflow:hidden}
 .d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
+/* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
 .d-self .wcard-status-wrap{
-  flex-direction:column;justify-content:center;
-  position:relative;padding-right:40px;padding-bottom:0}
+  display:flex !important;flex-direction:column !important;
+  justify-content:center;gap:4px;
+  padding-right:38px;padding-left:0}
+/* d-status-row בתוך self: row-reverse → circle מימין לטקסט (= שמאל, ליד תמונה) */
+.d-self .d-status-row{flex-direction:row-reverse}
+/* circle: margin-left 9px = מרחק קבוע מהתמונה */
+.d-self .wcard-circle{margin-left:9px;flex-shrink:0}
 
-/* FRIEND: 11pt מקצה מסך */
+/* ───────────────────────────────────────────────────────
+   FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
+─────────────────────────────────────────────────────── */
 .wcard.d-friend{
   margin-right:-11px;
   width:calc(87% + 11px);
-  border:2px solid rgba(30,50,40,0.5) !important;
+  border-top:2px solid rgba(30,50,40,0.55) !important;
+  border-bottom:2px solid rgba(30,50,40,0.55) !important;
   border-right:none !important;
+  border-left:2px solid rgba(30,50,40,0.55) !important;
   border-radius:999px 0 0 999px !important;
-  background:rgba(15,25,20,0.55) !important;
-  margin-bottom:0}
+  background:rgba(12,22,16,0.6) !important;
+  margin-bottom:0;overflow:hidden}
 .d-friend .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 .d-friend .wcard-status-wrap{
-  flex-direction:column;justify-content:center;
-  position:relative;padding-left:40px;padding-bottom:0}
+  display:flex !important;flex-direction:column !important;
+  justify-content:center;gap:4px;
+  padding-left:38px;padding-right:0}
+.d-friend .d-status-row{flex-direction:row}
+.d-friend .wcard-circle{margin-right:9px;flex-shrink:0}
 
-/* תמונה: 65px, פינות עגולות 2pt, מרחק 11pt מקצה מסך */
+/* ── תמונה: 65px, פינות 6pt ── */
 .d-self .wcard-identity,
 .d-friend .wcard-identity{
   width:65px !important;min-width:65px !important;
@@ -230,25 +250,18 @@
   background-size:cover !important;
   overflow:hidden !important;
   flex-shrink:0;
-  border-radius:2px !important}
+  border-radius:6px !important}
 
-/* שורת סטטוס: circle במרחק קבוע 9pt מתמונה */
-/* .wcard-status-wrap כבר מוגדר כ-flex-column, לכן d-status-row הוא row */
+/* ── שורת סטטוס + טקסט ── */
 .d-status-row{display:flex;align-items:center}
-.d-self .wcard-status-wrap{padding-right:40px}
-.d-friend .wcard-status-wrap{padding-left:40px}
-/* circle תמיד ראשון/אחרון בצמוד לתמונה – גישה: margin */
-.d-self .d-status-row{flex-direction:row-reverse}
-.d-friend .d-status-row{flex-direction:row}
-/* מרחק קבוע 9pt בין circle לתמונה */
-.d-self .wcard-circle{margin-left:9px;flex-shrink:0}
-.d-friend .wcard-circle{margin-right:9px;flex-shrink:0}
+/* טקסט: ממלא שטח, לא עובר שורה */
+.d-self .wcard-status-texts{flex:1;min-width:0;text-align:left}
+.d-friend .wcard-status-texts{flex:1;min-width:0;text-align:right}
+.d-self .wcard-status,
+.d-friend .wcard-status{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* כפתורים: מתחת לטקסט, בצמוד לקו תחתון */
-.d-btns{
-  display:flex;gap:4px;align-items:center;
-  padding-top:4px;
-  padding-bottom:5px}
+/* ── כפתורים: מיד מתחת לשורת סטטוס ── */
+.d-btns{display:flex;gap:4px;align-items:center;padding-bottom:4px}
 .d-nb{display:flex;align-items:center;justify-content:center;
   width:26px;height:20px;border-radius:5px;font-size:13px;
   background:none;border:1px solid rgba(150,180,160,0.2);
@@ -260,7 +273,7 @@
   cursor:pointer;font-size:11px;font-family:inherit;color:rgba(150,180,160,0.55)}
 .d-rb span:last-child{font-size:8px;font-weight:600}
 
-/* תגובות self */
+/* ── תגובות self ── */
 .d-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:4px}
 .d-rb2{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
 .d-rc{width:24px;height:24px;border-radius:50%;
@@ -4197,7 +4210,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v114';
+  var APP_BUILD='v115';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
