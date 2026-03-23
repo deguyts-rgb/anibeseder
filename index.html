@@ -209,8 +209,8 @@
   border-right:none !important;
   border-radius:0 999px 999px 0 !important;
   background:rgba(18,130,60,0.22) !important;
-  margin-bottom:0;overflow:hidden}
-.d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
+  height:84px;margin-bottom:0;overflow:visible}
+.d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch;overflow:hidden}
 /* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
 .d-self .wcard-status-wrap{
   display:flex !important;flex-direction:row !important;
@@ -269,14 +269,14 @@
 /* ── כפתורים: מיד מתחת לשורת סטטוס ── */
 .d-btns{display:flex;gap:4px;align-items:center}
 .d-nb{display:flex;align-items:center;justify-content:center;
-  width:32px;height:26px;border-radius:4px;font-size:18px;
+  width:28px;height:22px;border-radius:4px;font-size:16px;
   background:none;border:1px solid rgba(150,180,160,0.2);
   cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(150,180,160,0.55)}
 .d-nb.sent{border-color:rgba(76,222,128,0.4);color:rgba(76,222,128,0.75)}
 .d-rb{display:flex;align-items:center;gap:2px;
-  padding:0px;width:38px;height:30px;justify-content:center;border-radius:4px;
+  padding:0px;width:34px;height:22px;justify-content:center;border-radius:4px;
   background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-size:22px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
+  cursor:pointer;font-size:18px;line-height:1;font-family:inherit;color:rgba(150,180,160,0.55)}
 .d-rb span:last-child{font-size:7px;font-weight:600}
 
 /* ── תגובות self ── */
@@ -2182,13 +2182,16 @@ function startSelfStatusListener(){
 }
 
 function updateSelfCardInFeed(){
-  // Replace the full d-wrap-self wrapper (includes timelbl + card)
   const wrapper=document.querySelector('.d-wrap-self');
-  if(!wrapper) return;
   const newHTML=buildSelfCardHTML(watchingStatuses);
   const tmp=document.createElement('div');
   tmp.innerHTML=newHTML;
-  wrapper.replaceWith(tmp.firstElementChild);
+  if(wrapper){
+    wrapper.replaceWith(tmp.firstElementChild);
+  } else {
+    // פיד עדיין לא הוצג – נוסיף את כרטיס ה-self לרשימה
+    renderWatchingWithStatuses(state.watching,watchingStatuses);
+  }
 }
 
 async function initUser(){
@@ -4215,7 +4218,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v120';
+  var APP_BUILD='v121';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
