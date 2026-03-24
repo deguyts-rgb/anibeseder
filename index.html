@@ -230,7 +230,7 @@
    FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
 ─────────────────────────────────────────────────────── */
 .wcard.d-friend{
-  margin-right:0;
+  margin-right:-38px;
   width:calc(87% + 20px);
   border-top:2px solid #060c14 !important;
   border-bottom:2px solid #060c14 !important;
@@ -244,12 +244,13 @@
   display:flex !important;flex-direction:row !important;
   align-items:center;
   position:relative;
-  padding-left:10px;padding-right:15px}
+  padding-left:10px;padding-right:15px;
+  transform:translateY(-7px)}
 .d-friend .d-status-row{flex-direction:row;gap:10px;align-items:center;width:100%}
 .d-friend .wcard-circle{flex-shrink:0}
 
 /* כפתורים: absolute תחתית, זזים שמאלה */
-.d-friend .d-btns{position:absolute;bottom:2px;right:66px;display:flex;gap:9px;align-items:center}
+.d-friend .d-btns{position:absolute;bottom:3px;right:66px;display:flex;gap:9px;align-items:center}
 
 .wcard.d-self,.wcard.d-friend{margin-bottom:0 !important}
 .d-self .wcard-identity,
@@ -4246,7 +4247,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v141';
+  var APP_BUILD='v142';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
