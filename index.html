@@ -312,6 +312,11 @@
 .react-picker-cancel{background:rgba(255,255,255,0.06);border:none;border-radius:14px;
   color:rgba(200,230,255,0.6);padding:11px;font-size:14px;font-weight:700;
   cursor:pointer;font-family:inherit}
+/* ── picker top row ── */
+.react-picker-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.react-picker-random-btn{display:flex;align-items:center;gap:5px;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.2);border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px;color:rgba(200,230,255,0.75);flex:1;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.react-picker-random-lbl{font-size:10px;color:rgba(200,230,255,0.45);white-space:nowrap}
+.react-picker-remove-btn{background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.25);border-radius:10px;padding:6px 12px;cursor:pointer;font-size:12px;color:rgba(255,120,120,0.8);font-family:inherit;font-weight:700;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .group-members-strip-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 8px 8px 6px;min-width:0}
 .group-members-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
 .group-members-strip::-webkit-scrollbar{display:none}
@@ -1605,13 +1610,12 @@ function startMyReactionsListener(){
     }catch(e){}
   });
 }
-// ── עדכון מיידי של myReactions ברנדר ──
 function addMyReactionLocal(toUid,emoji,isNudge){
   if(!myReactions[toUid])myReactions[toUid]=[];
-  // הסר קיים מאותו סוג ← replace
-  myReactions[toUid]=myReactions[toUid].filter(r=>!(r.isNudge===isNudge&&!isNudge?r.emoji===emoji:true));
-  if(myReactions[toUid].length<4)
-    myReactions[toUid].unshift({emoji:isNudge?'👋':emoji,isNudge:!!isNudge});
+  // הסר קיים מאותו סוג
+  myReactions[toUid]=myReactions[toUid].filter(r=>r.isNudge!==isNudge);
+  if(myReactions[toUid].length<2)
+    myReactions[toUid].push({emoji:isNudge?'👋':emoji,isNudge:!!isNudge}); // push = newest leftmost (row-reverse)
   try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
   renderWatchingWithStatuses(state.watching,watchingStatuses);
 }
@@ -1675,10 +1679,19 @@ function startFriendReactionsListeners(){
     friendReactionUnsubs.push(unsub);
   });
 }
-let _rUid=null,_rName='';
-window.openReactPicker=(uid,name)=>{
-  _rUid=uid;_rName=name;
+let _rUid=null,_rName='',_rndECurrent='';
+window.openReactPicker=(uid,name,rndE)=>{
+  _rUid=uid;_rName=name;_rndECurrent=rndE||'';
   document.getElementById('reactPickerTitle').textContent=`תגיב ל-${name.split(' ')[0]} 😊`;
+  // top row: random + remove (if has emoji)
+  const hasEmoji=(myReactions[uid]||[]).some(r=>!r.isNudge);
+  const topEl=document.getElementById('reactPickerTop');
+  topEl.innerHTML=
+    `<button class="react-picker-random-btn" onclick="sendReaction('${rndE}')">`+
+      `<span style="font-size:20px">${rndE}</span>`+
+      `<span class="react-picker-random-lbl">שלח רנדומלי</span>`+
+    `</button>`+
+    (hasEmoji?`<button class="react-picker-remove-btn" onclick="removeMyEmoji()">הסר ✕</button>`:'');
   document.getElementById('reactPickerGrid').innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
   document.getElementById('reactPickerOverlay').classList.add('show');
   document.getElementById('moodPanel')?.classList.remove('show');
@@ -1687,17 +1700,40 @@ window.closeReactPicker=(e)=>{if(!e||e.target===document.getElementById('reactPi
 window.sendReaction=async(emoji)=>{
   if(!_rUid||!currentUser)return;
   document.getElementById('reactPickerOverlay').classList.remove('show');
+  // הסר תגובת אימוג'י קיימת קודם (replace)
+  if(myReactions[_rUid]) myReactions[_rUid]=myReactions[_rUid].filter(r=>r.isNudge);
   addMyReactionLocal(_rUid,emoji,false);
   try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${_rUid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:_rUid,emoji,isNudge:false,ts:serverTimestamp()});}catch(e){}
+};
+window.removeMyEmoji=async()=>{
+  if(!_rUid||!currentUser)return;
+  document.getElementById('reactPickerOverlay').classList.remove('show');
+  if(myReactions[_rUid]) myReactions[_rUid]=myReactions[_rUid].filter(r=>r.isNudge);
+  try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
+  renderWatchingWithStatuses(state.watching,watchingStatuses);
+  try{await deleteDoc(doc(db,'reactions',`${currentUser.uid}_to_${_rUid}`));}catch(e){}
 };
 window.replyToNudge=(uid,name)=>{
   _rUid=uid;
   document.getElementById('reactPickerTitle').textContent=`הגב לנדנוד של ${name.split(' ')[0]} 👋`;
+  const topEl=document.getElementById('reactPickerTop');
+  const hasEmoji=(myReactions[uid]||[]).some(r=>!r.isNudge);
+  topEl.innerHTML=hasEmoji?`<button class="react-picker-remove-btn" onclick="removeMyEmoji()">הסר ✕</button>`:'';
   document.getElementById('reactPickerGrid').innerHTML=REACT_EMOJIS.map(e=>`<div class="react-picker-cell" onclick="sendReaction('${e}')">${e}</div>`).join('');
   document.getElementById('reactPickerOverlay').classList.add('show');
 };
 window.handleNudgeBtn=async(btn,uid,name)=>{
-  if(btn.classList.contains('sent'))return;
+  if(btn.classList.contains('sent')){
+    // ביטול נדנוד
+    btn.classList.remove('sent');btn.textContent='👋';
+    localStorage.removeItem('nudgeSent_'+currentUser.uid+'_'+uid);
+    if(myReactions[uid]) myReactions[uid]=myReactions[uid].filter(r=>!r.isNudge);
+    try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
+    renderWatchingWithStatuses(state.watching,watchingStatuses);
+    try{await deleteDoc(doc(db,'reactions',`nudge_${currentUser.uid}_to_${uid}`));}catch(e){}
+    return;
+  }
+  // שליחת נדנוד
   btn.classList.add('sent');btn.textContent='✓';
   localStorage.setItem('nudgeSent_'+currentUser.uid+'_'+uid,'1');
   addMyReactionLocal(uid,'👋',true);
@@ -1706,6 +1742,14 @@ window.handleNudgeBtn=async(btn,uid,name)=>{
     await setDoc(doc(db,'reactions',`nudge_${currentUser.uid}_to_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:uid,emoji:'👋',isNudge:true,ts:serverTimestamp()});
     await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'nudge'})});
   }catch(e){}
+};
+// דאבל-קליק → לב אדום
+window.handleCardDblClick=async(uid)=>{
+  if(!currentUser)return;
+  if(myReactions[uid]) myReactions[uid]=myReactions[uid].filter(r=>r.isNudge);
+  addMyReactionLocal(uid,'❤️',false);
+  _rUid=uid;
+  try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:uid,emoji:'❤️',isNudge:false,ts:serverTimestamp()});}catch(e){}
 };
 
 const MOOD_OPTIONS=[
@@ -2587,23 +2631,23 @@ function renderWatchingWithStatuses(watching,statuses){
     return `<div class="d-wrap d-wrap-friend">
       ${timeStr?`<span class="d-timelbl">${timeStr}</span>`:''}
       <div class="wcard d-friend" id="wrow-${w.followingUid}">
-        <div class="wcard-top" onclick="openFriendProfile('${safeUid}')" style="cursor:pointer">
-          <div class="wcard-identity" style="${identityStyle}">
+        <div class="wcard-top">
+          <div class="wcard-identity" style="${identityStyle};cursor:pointer" onclick="openFriendProfile('${safeUid}')">
             ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
             <div class="wcard-identity-content">
               <span class="wcard-iname">${w.followingName||'משתמש'}</span>
             </div>
           </div>
-          <div class="wcard-status-wrap" style="display:flex;flex-direction:column;justify-content:center;gap:4px">
+          <div class="wcard-status-wrap" style="display:flex;flex-direction:column;justify-content:center;gap:4px" ondblclick="handleCardDblClick('${safeUid}')">
             <div class="d-status-row">
               <div class="wcard-circle ${circleClass}" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
               <div class="wcard-status-texts" style="flex:1">
                 ${statusHTML}
               </div>
             </div>
-            <div class="d-btns" onclick="event.stopPropagation()">
+            <div class="d-btns" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()">
               <button class="d-nb ${nSent}" id="dnb-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nIn}</button>
-              <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeName}')"><span>${rndE}</span></button>
+              <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeName}','${rndE}')"><span>${rndE}</span></button>
             </div>
           </div>
         </div>
@@ -4372,7 +4416,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v149';
+  var APP_BUILD='v150';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
@@ -4426,6 +4470,7 @@ if('serviceWorker'in navigator){
   <div class="react-picker-overlay" id="reactPickerOverlay" onclick="closeReactPicker(event)">
     <div class="react-picker-panel" onclick="event.stopPropagation()">
       <div class="react-picker-title" id="reactPickerTitle">תגיב 😊</div>
+      <div class="react-picker-top" id="reactPickerTop"></div>
       <div class="react-picker-grid" id="reactPickerGrid"></div>
       <button class="react-picker-cancel" onclick="closeReactPicker()">ביטול</button>
     </div>
