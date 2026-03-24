@@ -537,9 +537,9 @@
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
 /* ── REACTION BUBBLE STRIP ── */
 .d-react-strip{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;overflow:visible;position:absolute;z-index:10;bottom:-13px}
-/* כרטיס חבר: תמונה בצד ימין → בועות בימין-תחתון, מצטברות שמאלה */
+/* כרטיס חבר: תמונה בצד ימין → בועות בימין-תחתון, מצטברות שמאלה, מזוזות בועה אחת שמאלה */
 .d-wrap-friend{position:relative;overflow:visible}
-.d-wrap-friend .d-react-strip{right:6px;flex-direction:row-reverse}
+.d-wrap-friend .d-react-strip{right:37px;flex-direction:row-reverse}
 /* כרטיס עצמי: תמונה בצד שמאל → בועות בשמאל-תחתון, מצטברות ימינה */
 .d-wrap-self{position:relative;overflow:visible}
 .d-wrap-self .d-react-strip{left:6px;flex-direction:row}
@@ -4372,7 +4372,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v148';
+  var APP_BUILD='v149';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
