@@ -126,7 +126,8 @@
     .sign-text-input::placeholder{color:rgba(200,230,255,0.28);font-size:11px}
     .sign-text-input.premium::placeholder{color:rgba(200,160,40,0.5)}
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
-    .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:4px 0 8px}
+    .coins-bar{display:none !important}
+    .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:4px 0 4px}
     /* ── COINS BAR ── */
     .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:0;min-height:20px;direction:rtl}
     .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap;margin-right:2px}
@@ -139,7 +140,7 @@
     .coin-toast.show{opacity:1;transform:translate(-50%,-80%) scale(1)}
     .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-    .wcard{background:rgba(30,48,70,0.72);border:1px solid rgba(126,207,255,0.14);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
+    .wcard{background:rgba(42,62,88,0.78);border:1px solid rgba(126,207,255,0.16);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
     .wcard-top{display:flex;align-items:stretch;min-height:88px}
     .wcard-identity{flex-shrink:0;width:52px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
     .wcard-identity-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.15) 45%,transparent 100%)}
@@ -551,9 +552,9 @@
 /* כרטיס חבר: תמונה בצד ימין → בועות בימין-תחתון, מצטברות שמאלה, מזוזות בועה אחת שמאלה */
 .d-wrap-friend{position:relative;overflow:visible}
 .d-wrap-friend .d-react-strip{right:37px;flex-direction:row-reverse}
-/* כרטיס עצמי: תמונה בצד שמאל → בועות בשמאל-תחתון, מצטברות ימינה */
+/* כרטיס עצמי: בועות מתחילות בפינה ימנית-תחתונה של תמונת הפרופיל, ממשיכות שמאלה */
 .d-wrap-self{position:relative;overflow:visible}
-.d-wrap-self .d-react-strip{left:6px;flex-direction:row}
+.d-wrap-self .d-react-strip{right:4px;flex-direction:row-reverse}
 .d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(14,28,44,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.5)}
 .d-react-bubble:active{transform:scale(0.82)}
 .d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
@@ -2586,9 +2587,14 @@ function renderWatchingWithStatuses(watching,statuses){
   const selfSortTime=statuses[currentUser.uid]?.timestamp?.getTime()||0;
   const selfItem={type:'self',sortTime:selfSortTime};
   const combined=[...friendItems,...groupItems,selfItem].sort((a,b)=>b.sortTime-a.sortTime);
+  const renderedGroupIds=new Set();
   el.innerHTML=combined.map(item=>{
     if(item.type==='self') return buildSelfCardHTML(statuses);
-    if(item.type==='group') return buildGroupCardHTML(item.data);
+    if(item.type==='group'){
+      if(renderedGroupIds.has(item.data.id))return '';
+      renderedGroupIds.add(item.data.id);
+      return buildGroupCardHTML(item.data);
+    }
     const w=item.data;
     const s=statuses[w.followingUid];
     const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
@@ -2696,9 +2702,19 @@ window.followBack=async(uid,name)=>{
   state.mutualUids.add(uid);await loadWatching();renderFollowers();updateChips();
 };
 window.sendNudge=async(uid,name)=>{
-  await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
+  try{
+    await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
+    await setDoc(doc(db,'reactions',`nudge_${currentUser.uid}_to_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:uid,emoji:'👋',isNudge:true,ts:serverTimestamp()});
+  }catch(e){console.warn('nudge write error',e);}
   try{await fetch('https://send-push.deguyts.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senderUid:currentUser.uid,senderName:currentUser.displayName,followerUids:[uid],type:'nudge'})});}catch(e){}
-  alert(`נדנוד נשלח ל-${name}! 👋`);
+  // הצג toast
+  let toast=document.getElementById('nudgeToast');
+  if(!toast){toast=document.createElement('div');toast.id='nudgeToast';toast.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-80%) scale(1);background:rgba(10,28,44,0.97);border:1.5px solid rgba(255,200,50,0.65);border-radius:24px;padding:9px 22px;font-size:15px;font-weight:800;color:#ffd97d;pointer-events:none;z-index:600;opacity:0;transition:opacity 0.3s ease;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,0.55),0 0 16px rgba(255,200,50,0.2);direction:rtl';document.body.appendChild(toast);}
+  const firstName=(name||'').split(' ')[0];
+  toast.textContent=`👋 נדנוד נשלח ל-${firstName}!`;
+  toast.style.opacity='1';
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>{toast.style.opacity='0';},2500);
 };
 
 let pendingAction=null;
@@ -4430,7 +4446,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v155';
+  var APP_BUILD='v156';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
