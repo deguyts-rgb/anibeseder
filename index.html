@@ -48,7 +48,7 @@
     .submenu-bar{width:100%;max-width:480px;margin:0 auto;padding:2px 6px 3px;display:flex;align-items:center;justify-content:center;gap:0;direction:ltr;border-top:1px solid rgba(126,207,255,0.06)}
     .submenu-btn{background:none;border:none;color:rgba(200,230,255,0.48);font-size:12px;cursor:pointer;padding:5px 9px;border-radius:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:3px;transition:background 0.15s,color 0.15s;white-space:nowrap;direction:rtl;-webkit-tap-highlight-color:transparent;flex:0 0 auto}
     .submenu-btn:active{background:rgba(126,207,255,0.1);color:rgba(200,230,255,0.9)}
-    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:68px 20px 40px}
+    #main-content{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;padding:38px 20px 40px}
     .last-time-above{font-size:15px;font-weight:600;color:rgba(200,230,255,0.55);text-align:center;width:100%;margin-top:14px;margin-bottom:2px;display:none}
     .last-time-above.visible{display:block}
     .notif-bar{position:fixed;top:0;left:0;right:0;z-index:50;display:none;pointer-events:none}
@@ -126,7 +126,7 @@
     .sign-text-input::placeholder{color:rgba(200,230,255,0.28);font-size:11px}
     .sign-text-input.premium::placeholder{color:rgba(200,160,40,0.5)}
     .sign-clear-btn{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(200,230,255,0.4);padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
-    .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:4px 0 18px}
+    .home-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,207,255,0.18),transparent);margin:4px 0 8px}
     /* ── COINS BAR ── */
     .coins-bar{display:flex;align-items:center;justify-content:center;gap:7px;margin:0;min-height:20px;direction:rtl}
     .coins-label{font-size:12px;font-weight:400;color:rgba(200,230,255,0.45);white-space:nowrap;margin-right:2px}
@@ -139,7 +139,7 @@
     .coin-toast.show{opacity:1;transform:translate(-50%,-80%) scale(1)}
     .friends-section-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .friends-section-title{font-size:13px;font-weight:700;color:rgba(200,230,255,0.45);letter-spacing:0.3px}
-    .wcard{background:rgba(10,18,28,0.55);border:1px solid rgba(126,207,255,0.1);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
+    .wcard{background:rgba(22,36,54,0.65);border:1px solid rgba(126,207,255,0.13);border-radius:14px;margin-bottom:10px;width:100%;display:flex;flex-direction:column;overflow:hidden}
     .wcard-top{display:flex;align-items:stretch;min-height:88px}
     .wcard-identity{flex-shrink:0;width:52px;position:relative;overflow:hidden;background:#0a1520;background-size:cover;background-position:center top}
     .wcard-identity-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.15) 45%,transparent 100%)}
@@ -166,12 +166,13 @@
     .wcard-nudge{background:rgba(255,200,50,0.07);border:1px solid rgba(255,200,50,0.2);color:rgba(255,220,130,0.65)}
     .wcard-trash{background:rgba(255,80,80,0.07);border:1px solid rgba(255,80,80,0.18);color:rgba(255,120,120,0.55)}
     /* ── GROUP CARDS ── */
-    .wcard.group-card{border-color:rgba(180,140,40,0.55);box-shadow:0 0 18px rgba(180,140,40,0.22);margin-left:-20px;margin-right:-20px;width:calc(100% + 40px);border-radius:0;border-left:none;border-right:none;background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
+    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:3px}
+    .wcard.group-card{border-color:rgba(180,140,40,0.55);box-shadow:0 0 18px rgba(180,140,40,0.22);background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
     .wcard.group-card .wcard-top{min-height:unset !important;height:110px}
     .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important}
     .wcard.group-card .group-members-strip-wrap{justify-content:center}
-    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:2px 0 1px}
-    .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:5px 6px 4px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
+    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 0 0}
+    .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:6px 6px 3px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
     .group-card-name-text{font-size:11px;font-weight:800;color:#d4a940;display:block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:1.3}
 
 ```
@@ -962,7 +963,7 @@
 
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
 
-<div class="status-row" style="margin-top:18px">
+<div class="status-row" style="margin-top:4px">
   <span class="status-text-inline dim" id="statusText"></span>
 </div>
 
@@ -980,7 +981,7 @@
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
-<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:22px">
+<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:19px">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 
@@ -3055,8 +3056,9 @@ function buildGroupCardHTML(group){
     const mm=String(d.getMinutes()).padStart(2,'0');
     timeLabel=`${hh}:${mm}`;
   }
-  return `${timeLabel?`<div class="group-card-time-label">⏱ ${timeLabel}</div>`:''}
-  <div class="wcard group-card" id="gcard-${group.id}">
+  return `<div class="group-card-wrapper">
+    ${timeLabel?`<div class="group-card-time-label">${timeLabel}</div>`:''}
+    <div class="wcard group-card" id="gcard-${group.id}">
     <div class="wcard-top" style="cursor:pointer" onclick="openGroupFeedPanel('${safeId}')">
       <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');background-size:cover;background-position:center center;">
         <div class="wcard-identity-overlay"></div>
@@ -3066,7 +3068,7 @@ function buildGroupCardHTML(group){
       </div>
       <div class="group-members-strip-wrap">${membersHTML}</div>
     </div>
-  </div>`;
+  </div></div>`;
 }
 
 // ── GROUP FEED PANEL ──
@@ -4428,7 +4430,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v153';
+  var APP_BUILD='v154';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
