@@ -231,7 +231,7 @@
 ─────────────────────────────────────────────────────── */
 .wcard.d-friend{
   margin-right:-38px;
-  width:calc(87% + 20px);
+  width:calc(87% + 10px);
   border-top:2px solid #060c14 !important;
   border-bottom:2px solid #060c14 !important;
   border-right:none !important;
@@ -314,7 +314,7 @@
   cursor:pointer;font-family:inherit}
 /* ── picker top row ── */
 .react-picker-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.react-picker-random-btn{display:flex;align-items:center;gap:5px;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.2);border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px;color:rgba(200,230,255,0.75);flex:1;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.react-picker-random-btn{display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(126,207,255,0.07);border:1px solid rgba(126,207,255,0.2);border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px;color:rgba(200,230,255,0.75);flex:1;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .react-picker-random-lbl{font-size:10px;color:rgba(200,230,255,0.45);white-space:nowrap}
 .react-picker-remove-btn{background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.25);border-radius:10px;padding:6px 12px;cursor:pointer;font-size:12px;color:rgba(255,120,120,0.8);font-family:inherit;font-weight:700;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .group-members-strip-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 8px 8px 6px;min-width:0}
@@ -1614,8 +1614,10 @@ function addMyReactionLocal(toUid,emoji,isNudge){
   if(!myReactions[toUid])myReactions[toUid]=[];
   // הסר קיים מאותו סוג
   myReactions[toUid]=myReactions[toUid].filter(r=>r.isNudge!==isNudge);
-  if(myReactions[toUid].length<2)
-    myReactions[toUid].push({emoji:isNudge?'👋':emoji,isNudge:!!isNudge}); // push = newest leftmost (row-reverse)
+  const newItem={emoji:isNudge?'👋':emoji,isNudge:!!isNudge};
+  // סדר קבוע: נדנוד תמיד index 0 (ימין עם row-reverse), אימוג'י תמיד index 1 (שמאל)
+  if(isNudge) myReactions[toUid].unshift(newItem);
+  else myReactions[toUid].push(newItem);
   try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
   renderWatchingWithStatuses(state.watching,watchingStatuses);
 }
@@ -4416,7 +4418,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v150';
+  var APP_BUILD='v151';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
