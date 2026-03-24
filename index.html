@@ -167,12 +167,12 @@
     .wcard-nudge{background:rgba(255,200,50,0.07);border:1px solid rgba(255,200,50,0.2);color:rgba(255,220,130,0.65)}
     .wcard-trash{background:rgba(255,80,80,0.07);border:1px solid rgba(255,80,80,0.18);color:rgba(255,120,120,0.55)}
     /* ── GROUP CARDS ── */
-    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:3px}
-    .wcard.group-card{border:none;border-top:1px solid rgba(180,140,40,0.55);border-bottom:1px solid rgba(180,140,40,0.55);border-radius:0;box-shadow:0 0 18px rgba(180,140,40,0.18);background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
+    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:0}
+    .wcard.group-card{border:none !important;border-radius:0;box-shadow:none;background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
     .wcard.group-card .wcard-top{min-height:unset !important;height:110px}
     .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important}
     .wcard.group-card .group-members-strip-wrap{justify-content:center}
-    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 0 0}
+    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 0 2px}
     .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:3px 6px 6px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
     .group-card-name-text{font-size:11px;font-weight:800;color:#d4a940;display:block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:1.3}
 
@@ -244,7 +244,7 @@
   border-right:none !important;
   border-left:2px solid #060c14 !important;
   border-radius:999px 0 0 999px !important;
-  background:rgba(255,255,255,0.04) !important;
+  background:rgba(42,62,88,0.72) !important;
   margin-bottom:0;overflow:hidden}
 .d-friend .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 .d-friend .wcard-status-wrap{
@@ -552,9 +552,9 @@
 /* כרטיס חבר: תמונה בצד ימין → בועות בימין-תחתון, מצטברות שמאלה, מזוזות בועה אחת שמאלה */
 .d-wrap-friend{position:relative;overflow:visible}
 .d-wrap-friend .d-react-strip{right:37px;flex-direction:row-reverse}
-/* כרטיס עצמי: בועות מתחילות בפינה ימנית-תחתונה של תמונת הפרופיל, ממשיכות שמאלה */
+/* כרטיס עצמי: בועה ראשונה בפינה ימנית-תחתונה (מיקום ה-circle), שאר הבועות ממשיכות שמאלה */
 .d-wrap-self{position:relative;overflow:visible}
-.d-wrap-self .d-react-strip{right:4px;flex-direction:row-reverse}
+.d-wrap-self .d-react-strip{right:8px;flex-direction:row-reverse}
 .d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(14,28,44,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.5)}
 .d-react-bubble:active{transform:scale(0.82)}
 .d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
@@ -2125,7 +2125,7 @@ onAuthStateChanged(auth,async user=>{
       photoURL:_storedPhoto?_fixPhotoUrl(_storedPhoto):null
     };
     await loadWatching();
-    await loadAndRenderGroups();
+    await loadAndRenderGroups(); // loads groups, merges with checkGroupParam result if any
     await ensureMutualFollows();
     await checkPendingFollowRequests();
     renderAlerts(); checkInstallPrompt();
@@ -3020,21 +3020,33 @@ window.doShareGroup=(groupId,groupName)=>{
   }
 };
 
+let _groupsLoading=false;
 async function loadAndRenderGroups(){
   if(!currentUser)return;
+  if(_groupsLoading){return;} // מונע קריאות מקבילות שגורמות לכפילויות
+  _groupsLoading=true;
   try{
     const q=query(collection(db,'groups'),where('members','array-contains',currentUser.uid));
     const snaps=await getDocs(q);
     userGroups=[];
     const seenIds=new Set();
-    snaps.forEach(snap=>{if(!seenIds.has(snap.id)){seenIds.add(snap.id);userGroups.push({id:snap.id,...snap.data()});}});
+    const seenKeys=new Set();
+    snaps.forEach(snap=>{
+      const d=snap.data();
+      const contentKey=`${d.name||''}__${d.ownerUid||''}`;
+      if(!seenIds.has(snap.id)&&!seenKeys.has(contentKey)){
+        seenIds.add(snap.id);
+        seenKeys.add(contentKey);
+        userGroups.push({id:snap.id,...d});
+      }
+    });
     userGroups.sort((a,b)=>{
       const ta=a.updatedAt?.toDate?.()||a.createdAt?.toDate?.()||new Date(0);
       const tb=b.updatedAt?.toDate?.()||b.createdAt?.toDate?.()||new Date(0);
       return tb-ta;
     });
   }catch(e){console.warn('loadGroups error',e);userGroups=[];}
-  // re-render the whole watching list so groups are interleaved
+  finally{_groupsLoading=false;}
   renderWatchingWithStatuses(state.watching,watchingStatuses);
 }
 
@@ -3309,7 +3321,7 @@ async function checkGroupParam(){
       document.getElementById('groupJoinBannerText').textContent=`הצטרפת לקבוצת ${groupData.name}! 🟢`;
       banner.style.display='block';
       setTimeout(()=>{banner.style.display='none';},6000);
-      await loadAndRenderGroups();
+      // loadAndRenderGroups יקרא מיד אחרי checkGroupParam ב-auth flow - לא קוראים פה כדי למנוע כפילות
     }
   }catch(e){console.warn('checkGroupParam error',e);}
   window.history.replaceState({},'','/');
@@ -4446,7 +4458,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v156';
+  var APP_BUILD='v158';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
