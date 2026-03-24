@@ -191,7 +191,7 @@
   width:65px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0}
+.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0;margin-left:4px}
 .d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start}
 
 /* ───────────────────────────────────────────────────────
@@ -206,8 +206,8 @@
   margin-left:0;
   width:calc(100vw - 100px);
   direction:rtl;
-  border-top:2px solid #4cde80 !important;
-  border-bottom:2px solid #4cde80 !important;
+  border-top:2px solid #060c14 !important;
+  border-bottom:2px solid #060c14 !important;
   border-left:none !important;
   border-right:none !important;
   border-radius:0 999px 999px 0 !important;
@@ -219,9 +219,9 @@
   display:flex !important;flex-direction:column !important;
   justify-content:center;align-items:stretch;
   position:relative;
-  padding-right:23px;padding-left:5px;padding-bottom:0}
+  padding-right:23px;padding-left:2px;padding-bottom:0}
 /* d-status-row בתוך self */
-.d-self .d-status-row{flex-direction:row;gap:5px;align-items:center;width:100%}
+.d-self .d-status-row{flex-direction:row;gap:2px;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
 .d-self .wcard-circle{flex-shrink:0}
 .d-self .d-btns{margin-top:2px;padding-right:0}
@@ -4246,7 +4246,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v138';
+  var APP_BUILD='v139';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
