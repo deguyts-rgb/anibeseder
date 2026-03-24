@@ -167,10 +167,10 @@
     .wcard-nudge{background:rgba(255,200,50,0.07);border:1px solid rgba(255,200,50,0.2);color:rgba(255,220,130,0.65)}
     .wcard-trash{background:rgba(255,80,80,0.07);border:1px solid rgba(255,80,80,0.18);color:rgba(255,120,120,0.55)}
     /* ── GROUP CARDS ── */
-    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:0}
+    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:0;margin-top:16px}
     .wcard.group-card{border:none !important;border-radius:0;box-shadow:none;background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
     .wcard.group-card .wcard-top{min-height:unset !important;height:110px}
-    .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important}
+    .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important;border-radius:23px !important;background-color:rgba(180,140,40,0.28) !important;padding:15px;background-clip:content-box;background-origin:content-box}
     .wcard.group-card .group-members-strip-wrap{justify-content:center}
     .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 0 2px}
     .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:3px 6px 6px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
@@ -547,14 +547,17 @@
 .nudge-stat-chip.blue{background:rgba(126,207,255,0.07);border-color:rgba(126,207,255,0.2);color:rgba(200,230,255,0.6)}
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
-/* ── REACTION BUBBLE STRIP ── */
+/* ── INLINE NUDGE BUTTON (in late friend circle) ── */
+.d-circle-nudge-btn{background:none;border:none;color:rgba(200,230,255,0.75);font-size:8.5px;font-weight:800;cursor:pointer;font-family:inherit;line-height:1.1;text-align:center;padding:2px;width:100%;direction:rtl}
+.d-circle-nudge-btn:active{color:#fff}
+
 .d-react-strip{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;overflow:visible;position:absolute;z-index:10;bottom:-13px}
 /* כרטיס חבר: תמונה בצד ימין → בועות בימין-תחתון, מצטברות שמאלה, מזוזות בועה אחת שמאלה */
 .d-wrap-friend{position:relative;overflow:visible}
 .d-wrap-friend .d-react-strip{right:37px;flex-direction:row-reverse}
 /* כרטיס עצמי: בועה ראשונה בפינה ימנית-תחתונה (מיקום ה-circle), שאר הבועות ממשיכות שמאלה */
 .d-wrap-self{position:relative;overflow:visible}
-.d-wrap-self .d-react-strip{right:8px;flex-direction:row-reverse}
+.d-wrap-self .d-react-strip{left:52px;flex-direction:row}
 .d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(14,28,44,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.5)}
 .d-react-bubble:active{transform:scale(0.82)}
 .d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
@@ -2609,9 +2612,9 @@ function renderWatchingWithStatuses(watching,statuses){
       circleInlineStyle=`background:${conic};border-color:#4cde80;color:#fff;`;
       circleGlowStyle=`box-shadow:0 0 0 3px rgba(76,222,128,0.38),0 0 18px rgba(40,200,100,0.5);`;
     }else if(!isUnknown){
-      circleInlineStyle='background:rgba(220,40,40,0.22);border-color:#ff4444;color:#ff6666;animation:pulse-red 1.5s ease-in-out infinite;';
+      circleInlineStyle='background:rgba(220,230,255,0.08);border-color:rgba(200,220,255,0.25);color:rgba(200,230,255,0.7);';
     }
-    const circleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':'!');
+    const circleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':`<button class="d-circle-nudge-btn" onclick="event.stopPropagation();handleNudgeBtn(document.getElementById('dnb-${safeUid}'),'${safeUid}','${safeName}')">👋<br>נדנוד</button>`);
     let statusHTML='';
     if(isOkStatus){
       const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
@@ -3064,7 +3067,7 @@ function buildGroupCardHTML(group){
       const s=watchingStatuses[uid];
       const hrs=s?.timestamp?(now-s.timestamp.getTime())/3600000:999;
       const isOk=s?.isOk&&hrs<24;
-      let circleStyle=isOk?'border-color:#4cde80;':'border-color:#ff4444;background:rgba(220,40,40,0.22);';
+      let circleStyle=isOk?'border-color:#4cde80;':'border:none !important;background:transparent;box-shadow:none;';
       if(isOk){const deg=Math.min(hrs/24,1)*360;const conic=deg<=0.5?`conic-gradient(from -90deg,#4cde80 0deg 360deg)`:`conic-gradient(from -90deg,#e03030 0deg ${deg.toFixed(2)}deg,#4cde80 ${deg.toFixed(2)}deg 360deg)`;circleStyle=`background:${conic};border-color:#4cde80;`;}
       const memberPhoto=s?.photoURL||null;
       const content=memberPhoto?`<img src="${memberPhoto}" alt="">`:(isOk?(s?.moodEmoji||'✓'):'?');
@@ -4458,7 +4461,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v158';
+  var APP_BUILD='v159';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
