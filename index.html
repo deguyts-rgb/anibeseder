@@ -192,7 +192,7 @@
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0;margin-left:8px}
-.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start;margin-right:12px}
+.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start;margin-right:-24px}
 
 /* ───────────────────────────────────────────────────────
    SELF: מבנה כמו FRIEND אבל הפוך (תמונה שמאל)
@@ -230,7 +230,7 @@
    FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
 ─────────────────────────────────────────────────────── */
 .wcard.d-friend{
-  margin-right:-20px;
+  margin-right:0;
   width:calc(87% + 20px);
   border-top:2px solid #060c14 !important;
   border-bottom:2px solid #060c14 !important;
@@ -956,7 +956,7 @@
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
-<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:18px">
+<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:3px">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 
@@ -4246,7 +4246,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v140';
+  var APP_BUILD='v141';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
