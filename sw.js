@@ -1,4 +1,4 @@
-var CACHE_NAME = `ani-beseder-v155`;
+var CACHE_NAME = `ani-beseder-v156`;
 
 self.addEventListener(`install`, function(e) {
 e.waitUntil(self.skipWaiting());
