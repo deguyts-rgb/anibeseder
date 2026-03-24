@@ -180,7 +180,7 @@
 /* ── D-SHAPE v115 ── */
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
-.d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%}
+.d-wrap{display:flex;flex-direction:column;margin-bottom:18px;padding-bottom:0;width:100%}
 .d-wrap-self{direction:ltr;align-items:flex-start;padding-left:0;margin-left:-20px;overflow:visible}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
@@ -536,9 +536,11 @@
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
 /* ── REACTION BUBBLE STRIP ── */
-.d-react-strip{display:flex;gap:5px;align-items:center;position:relative;z-index:5;margin-top:-13px;flex-wrap:nowrap;min-height:0}
-.d-wrap-self .d-react-strip{padding-right:12px;justify-content:flex-end}
-.d-wrap-friend .d-react-strip{padding-left:14px}
+.d-react-strip{display:flex;gap:5px;align-items:center;position:relative;z-index:5;margin-top:-13px;flex-wrap:nowrap;min-height:0;overflow:visible}
+/* d-self: כיוון LTR — בועה ראשונה משמאל (ליד תמונתי), ממלא לימין */
+.d-wrap-self .d-react-strip{direction:ltr;justify-content:flex-start;padding-left:10px}
+/* d-friend: כיוון RTL — בועה ראשונה מימין (ליד תמונת החבר), ממלא לשמאל */
+.d-wrap-friend .d-react-strip{direction:rtl;justify-content:flex-start;padding-right:10px}
 .d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(30,50,70,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .d-react-bubble:active{transform:scale(0.82)}
 .d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
@@ -4300,7 +4302,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v143';
+  var APP_BUILD='v144';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
