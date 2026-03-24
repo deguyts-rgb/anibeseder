@@ -535,6 +535,15 @@
 .nudge-stat-chip.blue{background:rgba(126,207,255,0.07);border-color:rgba(126,207,255,0.2);color:rgba(200,230,255,0.6)}
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
+/* ── REACTION BUBBLE STRIP ── */
+.d-react-strip{display:flex;gap:5px;align-items:center;position:relative;z-index:5;margin-top:-13px;flex-wrap:nowrap;min-height:0}
+.d-wrap-self .d-react-strip{padding-right:12px;justify-content:flex-end}
+.d-wrap-friend .d-react-strip{padding-left:14px}
+.d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(30,50,70,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.d-react-bubble:active{transform:scale(0.82)}
+.d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
+.d-react-bubble-tip{position:fixed;background:#1a2a3a;border:1px solid rgba(126,207,255,0.3);border-radius:10px;padding:4px 10px;font-size:11px;color:#e8f4f8;z-index:500;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.55);opacity:0;transition:opacity 0.18s,transform 0.18s;transform:translateY(4px)}
+.d-react-bubble-tip.show{opacity:1;transform:translateY(0)}
 
 /* ── ADMIN SUB-MODALS ── */
 .admin-sub-modal{position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:120;display:none;align-items:flex-end;justify-content:center}
@@ -1543,6 +1552,7 @@ let state = { isOk:false, lastConfirmed:null, okCount:0, followers:[], watching:
 let statusListeners=[], watchingStatuses={};
 // ── REACTIONS v109 ──────────────────────────────────────────
 let selfReactions={}, selfReactionsUnsub=null;
+let myReactions={}, myReactionsUnsub=null; // תגובות ששלחתי → {[toUid]:[{emoji,isNudge}]}
 const REACT_EMOJIS=['❤️','🙏','💪','😂','🔥','🫶','👍','😍','🥹','😎'];
 const RAND_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
 function loadSelfReactions(){
@@ -1553,15 +1563,51 @@ function loadSelfReactions(){
     selfReactions={};
     snap.forEach(d=>{selfReactions[d.id]=d.data();});
     const el=document.getElementById('d-reacts-self');
-    if(el)el.innerHTML=buildDReactsHTML(selfReactions);
+    if(el) el.innerHTML=buildDReactsHTML(selfReactions);
   });
 }
 function buildDReactsHTML(reactions){
-  return Object.entries(reactions).map(([id,r])=>{
-    if(r.isNudge)return `<div class="d-rb2" onclick="replyToNudge('${r.fromUid}','${(r.fromName||'').replace(/'/g,"\\'")}')"><div class="d-rnp"><span>👋</span><span class="d-rnt">הגב</span></div><span class="d-rsn">${(r.fromName||'').split(' ')[0]}</span></div>`;
-    return `<div class="d-rb2"><div class="d-rc">${r.emoji||'❤️'}</div><span class="d-rsn">${(r.fromName||'').split(' ')[0]}</span></div>`;
+  // מציג עד 4 בועות תגובה שהתקבלו
+  return Object.entries(reactions).slice(0,4).map(([id,r])=>{
+    const fromFirst=(r.fromName||'').split(' ')[0]||'?';
+    const emoji=r.isNudge?'👋':(r.emoji||'❤️');
+    return `<div class="d-react-bubble${r.isNudge?' is-nudge':''}" onclick="showBubbleTip(this,'${fromFirst.replace(/'/g,"\\'")}','${emoji}')">${emoji}</div>`;
   }).join('');
 }
+// ── listener לתגובות שהמשתמש שלח ──
+function startMyReactionsListener(){
+  if(myReactionsUnsub){myReactionsUnsub();myReactionsUnsub=null;}
+  if(!currentUser)return;
+  const q=query(collection(db,'reactions'),where('fromUid','==',currentUser.uid),orderBy('ts','desc'),limit(100));
+  myReactionsUnsub=onSnapshot(q,snap=>{
+    myReactions={};
+    snap.forEach(d=>{
+      const r=d.data();
+      if(!r.toUid)return;
+      if(!myReactions[r.toUid])myReactions[r.toUid]=[];
+      // הוסף רק אם הuid הזה לא כבר קיים (אחת לחבר)
+      if(myReactions[r.toUid].length<4)
+        myReactions[r.toUid].push({id:d.id,emoji:r.emoji||'👋',isNudge:!!r.isNudge});
+    });
+    // רנדר מחדש כדי לעדכן בועות
+    if(state.watching.length) renderWatchingWithStatuses(state.watching,watchingStatuses);
+  });
+}
+// ── tooltip תגובה ──
+let _tipTimer=null;
+window.showBubbleTip=(el,name,emoji)=>{
+  let tip=document.getElementById('reactBubbleTip');
+  if(!tip){tip=document.createElement('div');tip.id='reactBubbleTip';tip.className='d-react-bubble-tip';document.body.appendChild(tip);}
+  clearTimeout(_tipTimer);
+  tip.classList.remove('show');
+  tip.textContent=`${emoji}  ${name}`;
+  const rect=el.getBoundingClientRect();
+  const tipLeft=Math.max(8,Math.min(rect.left-10, window.innerWidth-120));
+  tip.style.top=(rect.top-38)+'px';
+  tip.style.left=tipLeft+'px';
+  requestAnimationFrame(()=>tip.classList.add('show'));
+  _tipTimer=setTimeout(()=>tip.classList.remove('show'),2500);
+};
 let _rUid=null,_rName='';
 window.openReactPicker=(uid,name)=>{
   _rUid=uid;_rName=name;
@@ -1965,6 +2011,7 @@ onAuthStateChanged(auth,async user=>{
     if(isAdmin()) initAdminEmojiBar();
     saveDailyActivity();
     loadSelfReactions();
+    startMyReactionsListener();
   } else {
     currentUser=null;
     document.getElementById('login-screen').style.display='flex';
@@ -2390,9 +2437,6 @@ function buildSelfCardHTML(statuses){
               ${statusHTML}
             </div>
           </div>
-          <div class="d-btns">
-            ${reactHTML?`<div class="d-reacts" id="d-reacts-self">${reactHTML}</div>`:`<div style="display:none" id="d-reacts-self"></div>`}
-          </div>
         </div>
         <div class="wcard-identity" style="${idStyle}">
           ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
@@ -2402,6 +2446,7 @@ function buildSelfCardHTML(statuses){
         </div>
       </div>
     </div>
+    <div class="d-react-strip" id="d-reacts-self">${reactHTML}</div>
   </div>`;
 }
 
@@ -2459,6 +2504,13 @@ function renderWatchingWithStatuses(watching,statuses){
     const nKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
     const nSent=localStorage.getItem(nKey)?'sent':'';
     const nIn=localStorage.getItem(nKey)?'✓':'👋';
+    // בועות תגובות ששלחתי לחבר זה
+    const myReactsArr=myReactions[w.followingUid]||[];
+    const myReactsHTML=myReactsArr.slice(0,4).map(r=>{
+      const emoji=r.isNudge?'👋':r.emoji;
+      const myFirstName=(currentUser.displayName||'אני').split(' ')[0];
+      return `<div class="d-react-bubble${r.isNudge?' is-nudge':''}" onclick="showBubbleTip(this,'${myFirstName.replace(/'/g,"\\'")}','${emoji}')">${emoji}</div>`;
+    }).join('');
     // Friend card: wrapped with time-label above photo side
     return `<div class="d-wrap d-wrap-friend">
       ${timeStr?`<span class="d-timelbl">${timeStr}</span>`:''}
@@ -2484,6 +2536,7 @@ function renderWatchingWithStatuses(watching,statuses){
           </div>
         </div>
       </div>
+      ${myReactsHTML?`<div class="d-react-strip">${myReactsHTML}</div>`:''}
     </div>`;
   }).join('');
   updateChips();
@@ -4247,7 +4300,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v142';
+  var APP_BUILD='v143';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
