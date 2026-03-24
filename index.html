@@ -168,11 +168,11 @@
     /* ── GROUP CARDS ── */
     .wcard.group-card{border-color:rgba(180,140,40,0.55);box-shadow:0 0 18px rgba(180,140,40,0.22);margin-left:-20px;margin-right:-20px;width:calc(100% + 40px);border-radius:0;border-left:none;border-right:none;background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
     .wcard.group-card .wcard-top{min-height:unset !important;height:110px}
-    .wcard-identity.group-identity{width:110px;min-width:110px;background-position:top center !important}
+    .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important}
     .wcard.group-card .group-members-strip-wrap{justify-content:center}
+    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:2px 0 1px}
     .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:5px 6px 4px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
     .group-card-name-text{font-size:11px;font-weight:800;color:#d4a940;display:block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:1.3}
-    .group-card-time-text{font-size:8px;color:rgba(212,169,64,0.7);display:block;white-space:nowrap;line-height:1.3}
 
 ```
 /* ══ D-SHAPE v109 ══
@@ -980,7 +980,7 @@
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
-<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:26px">
+<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:22px">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 
@@ -2580,7 +2580,8 @@ function renderWatchingWithStatuses(watching,statuses){
   const now=Date.now();
   // Build combined list: friends + groups with a sort key
   const friendItems=sortWatchingEntries(watching,statuses).map(w=>({type:'friend',data:w,sortTime:statuses[w.followingUid]?.timestamp?.getTime()||0}));
-  const groupItems=userGroups.map(g=>{const gMembers=(g.members||[]).filter(uid=>uid!==currentUser.uid);const latestMemberReport=gMembers.reduce((best,uid)=>{const t=watchingStatuses[uid]?.timestamp?.getTime()||0;return t>best?t:best;},0);const sortTime=latestMemberReport||g.updatedAt?.toDate?.()?.getTime()||g.createdAt?.toDate?.()?.getTime()||0;return {type:'group',data:g,sortTime};});
+  const seenGroupIds=new Set();
+  const groupItems=userGroups.filter(g=>{if(seenGroupIds.has(g.id))return false;seenGroupIds.add(g.id);return true;}).map(g=>{const gMembers=(g.members||[]).filter(uid=>uid!==currentUser.uid);const latestMemberReport=gMembers.reduce((best,uid)=>{const t=watchingStatuses[uid]?.timestamp?.getTime()||0;return t>best?t:best;},0);const sortTime=latestMemberReport||g.updatedAt?.toDate?.()?.getTime()||g.createdAt?.toDate?.()?.getTime()||0;return {type:'group',data:g,sortTime};});
   const selfSortTime=statuses[currentUser.uid]?.timestamp?.getTime()||0;
   const selfItem={type:'self',sortTime:selfSortTime};
   const combined=[...friendItems,...groupItems,selfItem].sort((a,b)=>b.sortTime-a.sortTime);
@@ -3008,7 +3009,8 @@ async function loadAndRenderGroups(){
     const q=query(collection(db,'groups'),where('members','array-contains',currentUser.uid));
     const snaps=await getDocs(q);
     userGroups=[];
-    snaps.forEach(snap=>userGroups.push({id:snap.id,...snap.data()}));
+    const seenIds=new Set();
+    snaps.forEach(snap=>{if(!seenIds.has(snap.id)){seenIds.add(snap.id);userGroups.push({id:snap.id,...snap.data()});}});
     userGroups.sort((a,b)=>{
       const ta=a.updatedAt?.toDate?.()||a.createdAt?.toDate?.()||new Date(0);
       const tb=b.updatedAt?.toDate?.()||b.createdAt?.toDate?.()||new Date(0);
@@ -3043,18 +3045,23 @@ function buildGroupCardHTML(group){
     membersHTML=`<div class="group-members-strip">${dots}</div>`;
   }
   const safeId=group.id.replace(/'/g,"\\'");
-  // Compute last member report time for display
+  // Compute last member report time – show as HH:MM above card
   const memberTimestamps=members.map(uid=>{const s=watchingStatuses[uid];return s?.timestamp?.getTime()||0;});
   const lastReportMs=memberTimestamps.length?Math.max(...memberTimestamps):0;
-  let lastReportStr='';
-  if(lastReportMs>0){const diff=now-lastReportMs;const mins=Math.floor(diff/60000);const hrs2=Math.floor(diff/3600000);const days=Math.floor(diff/86400000);if(mins<2)lastReportStr='עכשיו';else if(mins<60)lastReportStr=`לפני ${mins} דק׳`;else if(hrs2<24)lastReportStr=`לפני ${hrs2} שע׳`;else lastReportStr=`לפני ${days} יום`;}
-  return `<div class="wcard group-card" id="gcard-${group.id}">
+  let timeLabel='';
+  if(lastReportMs>0){
+    const d=new Date(lastReportMs);
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    timeLabel=`${hh}:${mm}`;
+  }
+  return `${timeLabel?`<div class="group-card-time-label">⏱ ${timeLabel}</div>`:''}
+  <div class="wcard group-card" id="gcard-${group.id}">
     <div class="wcard-top" style="cursor:pointer" onclick="openGroupFeedPanel('${safeId}')">
-      <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');background-size:cover;background-position:top center;">
+      <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');background-size:cover;background-position:center center;">
         <div class="wcard-identity-overlay"></div>
         <div class="group-card-name-overlay">
-          <span class="group-card-name-text">👥 ${group.name||''}</span>
-          ${lastReportStr?`<span class="group-card-time-text">⏱ ${lastReportStr}</span>`:''}
+          <span class="group-card-name-text">${group.name||''}</span>
         </div>
       </div>
       <div class="group-members-strip-wrap">${membersHTML}</div>
@@ -4421,7 +4428,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v152';
+  var APP_BUILD='v153';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
