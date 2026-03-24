@@ -2614,7 +2614,9 @@ function renderWatchingWithStatuses(watching,statuses){
     }else if(!isUnknown){
       circleInlineStyle='background:rgba(220,230,255,0.08);border-color:rgba(200,220,255,0.25);color:rgba(200,230,255,0.7);';
     }
-    const circleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':`<button class="d-circle-nudge-btn" onclick="event.stopPropagation();handleNudgeBtn(document.getElementById('dnb-${safeUid}'),'${safeUid}','${safeName}')">👋<br>נדנוד</button>`);
+    const safeUidEarly=w.followingUid.replace(/'/g,"\\'");
+    const safeNameEarly=(w.followingName||'משתמש').replace(/'/g,"\\'");
+    const circleContent=isOkStatus?(s.moodEmoji||'✓'):(isUnknown?'?':`<button class="d-circle-nudge-btn" onclick="event.stopPropagation();handleNudgeBtn(document.getElementById('dnb-${safeUidEarly}'),'${safeUidEarly}','${safeNameEarly}')">👋<br>נדנוד</button>`);
     let statusHTML='';
     if(isOkStatus){
       const sign=s.sign,ct=s.customText||'',emoji=s.moodEmoji||'';
@@ -4461,7 +4463,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v159';
+  var APP_BUILD='v160';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
