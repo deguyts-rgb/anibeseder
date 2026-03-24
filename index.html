@@ -180,7 +180,7 @@
 /* ── D-SHAPE v115 ── */
 
 /* Wrapper: מרווח 40pt בין כרטיסים */
-.d-wrap{display:flex;flex-direction:column;margin-bottom:18px;padding-bottom:0;width:100%}
+.d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%;overflow:visible}
 .d-wrap-self{direction:ltr;align-items:flex-start;padding-left:0;margin-left:-20px;overflow:visible}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
@@ -536,12 +536,14 @@
 .nudge-hist-check-btn{background:rgba(126,207,255,0.06);border:1px solid rgba(126,207,255,0.18);border-radius:8px;color:#7ecfff;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px;font-weight:600}
 .nudge-hist-check-btn:active{background:rgba(126,207,255,0.16)}
 /* ── REACTION BUBBLE STRIP ── */
-.d-react-strip{display:flex;gap:5px;align-items:center;position:relative;z-index:5;margin-top:-13px;flex-wrap:nowrap;min-height:0;overflow:visible}
-/* d-self: כיוון LTR — בועה ראשונה משמאל (ליד תמונתי), ממלא לימין */
-.d-wrap-self .d-react-strip{direction:ltr;justify-content:flex-start;padding-left:10px}
-/* d-friend: כיוון RTL — בועה ראשונה מימין (ליד תמונת החבר), ממלא לשמאל */
-.d-wrap-friend .d-react-strip{direction:rtl;justify-content:flex-start;padding-right:10px}
-.d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(30,50,70,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.d-react-strip{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;overflow:visible;position:absolute;z-index:10;bottom:-13px}
+/* שלי (שמאל, d-friend) */
+.d-wrap-friend .d-react-mine{left:6px;flex-direction:row}
+/* של אחרים (ימין, d-friend) — ראשון מימין */
+.d-wrap-friend .d-react-others{right:6px;flex-direction:row-reverse;cursor:pointer}
+/* שלי — כרטיס עצמי (ימין) */
+.d-wrap-self .d-react-strip{right:6px;flex-direction:row-reverse}
+.d-react-bubble{width:26px;height:26px;border-radius:50%;background:rgba(14,28,44,0.97);border:1.5px solid rgba(200,230,255,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,0.5)}
 .d-react-bubble:active{transform:scale(0.82)}
 .d-react-bubble.is-nudge{border-color:rgba(255,200,50,0.55)}
 .d-react-bubble-tip{position:fixed;background:#1a2a3a;border:1px solid rgba(126,207,255,0.3);border-radius:10px;padding:4px 10px;font-size:11px;color:#e8f4f8;z-index:500;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.55);opacity:0;transition:opacity 0.18s,transform 0.18s;transform:translateY(4px)}
@@ -968,7 +970,7 @@
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
-<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:18px">
+<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:26px">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 
@@ -1555,6 +1557,7 @@ let statusListeners=[], watchingStatuses={};
 // ── REACTIONS v109 ──────────────────────────────────────────
 let selfReactions={}, selfReactionsUnsub=null;
 let myReactions={}, myReactionsUnsub=null; // תגובות ששלחתי → {[toUid]:[{emoji,isNudge}]}
+let friendReactions={}, friendReactionUnsubs=[]; // תגובות שאחרים שלחו לחברים שאני עוקב → {[friendUid]:[{fromUid,fromName,emoji,isNudge}]}
 const REACT_EMOJIS=['❤️','🙏','💪','😂','🔥','🫶','👍','😍','🥹','😎'];
 const RAND_EMOJIS=['😜','🤩','🫶','💫','🙈','🥳','🎉','😇','🌟','😆'];
 function loadSelfReactions(){
@@ -1612,7 +1615,7 @@ function addMyReactionLocal(toUid,emoji,isNudge){
   try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
   renderWatchingWithStatuses(state.watching,watchingStatuses);
 }
-// ── tooltip תגובה ──
+// ── tooltip תגובה (בועה בודדת) ──
 let _tipTimer=null;
 window.showBubbleTip=(el,name,emoji)=>{
   let tip=document.getElementById('reactBubbleTip');
@@ -1627,6 +1630,51 @@ window.showBubbleTip=(el,name,emoji)=>{
   requestAnimationFrame(()=>tip.classList.add('show'));
   _tipTimer=setTimeout(()=>tip.classList.remove('show'),2500);
 };
+// ── חלונית תגובות של אחרים ──
+window.showFriendReactPanel=(el,uid)=>{
+  const reacts=friendReactions[uid]||[];
+  if(!reacts.length)return;
+  let panel=document.getElementById('friendReactPanel');
+  if(!panel){
+    panel=document.createElement('div');
+    panel.id='friendReactPanel';
+    panel.style.cssText='position:fixed;background:#0e1c2c;border:1.5px solid rgba(126,207,255,0.22);border-radius:14px;padding:10px 12px;z-index:500;box-shadow:0 8px 28px rgba(0,0,0,0.6);min-width:140px;max-width:210px;direction:rtl';
+    panel.innerHTML='';
+    document.body.appendChild(panel);
+    document.addEventListener('click',()=>panel.style.display='none',{once:true});
+  }
+  panel.innerHTML=reacts.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(126,207,255,0.07);font-size:13px;color:#e8f4f8"><span style="font-size:17px">${r.isNudge?'👋':r.emoji}</span><span style="font-weight:600">${r.fromName||'?'}</span></div>`).join('');
+  const rect=el.getBoundingClientRect();
+  panel.style.display='block';
+  const pW=panel.offsetWidth||150;
+  let left=rect.left-pW/2;
+  left=Math.max(8,Math.min(left,window.innerWidth-pW-8));
+  const top=rect.top-reacts.length*34-18;
+  panel.style.left=left+'px';
+  panel.style.top=Math.max(8,top)+'px';
+};
+// ── listener לתגובות שקיבל חבר מסוים ──
+function startFriendReactionsListeners(){
+  friendReactionUnsubs.forEach(u=>u());
+  friendReactionUnsubs=[];
+  if(!currentUser||!state.watching.length)return;
+  state.watching.forEach(w=>{
+    const fuid=w.followingUid;
+    const q=query(collection(db,'reactions'),where('toUid','==',fuid),limit(8));
+    const unsub=onSnapshot(q,snap=>{
+      friendReactions[fuid]=[];
+      snap.forEach(d=>{
+        const r=d.data();
+        // אל תציג את התגובות שלי — הן מוצגות בצד שמאל
+        if(r.fromUid===currentUser.uid)return;
+        if(friendReactions[fuid].length<4)
+          friendReactions[fuid].push({fromUid:r.fromUid,fromName:(r.fromName||'?').split(' ')[0],emoji:r.emoji||'❤️',isNudge:!!r.isNudge});
+      });
+      renderWatchingWithStatuses(state.watching,watchingStatuses);
+    },()=>{});
+    friendReactionUnsubs.push(unsub);
+  });
+}
 let _rUid=null,_rName='';
 window.openReactPicker=(uid,name)=>{
   _rUid=uid;_rName=name;
@@ -2404,6 +2452,7 @@ async function loadWatching(){
     });
     statusListeners.push(unsub);
   });
+  startFriendReactionsListeners();
   updateChips();
 }
 function sortWatchingEntries(w,s){
@@ -2527,12 +2576,18 @@ function renderWatchingWithStatuses(watching,statuses){
     const nKey='nudgeSent_'+currentUser.uid+'_'+w.followingUid;
     const nSent=localStorage.getItem(nKey)?'sent':'';
     const nIn=localStorage.getItem(nKey)?'✓':'👋';
-    // בועות תגובות ששלחתי לחבר זה
+    // בועות שלי — שמאל (מקס 2)
     const myReactsArr=myReactions[w.followingUid]||[];
-    const myReactsHTML=myReactsArr.slice(0,4).map(r=>{
+    const myReactsHTML=myReactsArr.slice(0,2).map(r=>{
       const emoji=r.isNudge?'👋':r.emoji;
       const myFirstName=(currentUser.displayName||'אני').split(' ')[0];
       return `<div class="d-react-bubble${r.isNudge?' is-nudge':''}" onclick="showBubbleTip(this,'${myFirstName.replace(/'/g,"\\'")}','${emoji}')">${emoji}</div>`;
+    }).join('');
+    // בועות של אחרים — ימין (מקס 4)
+    const othersArr=friendReactions[w.followingUid]||[];
+    const othersHTML=othersArr.slice(0,4).map(r=>{
+      const emoji=r.isNudge?'👋':r.emoji;
+      return `<div class="d-react-bubble${r.isNudge?' is-nudge':''}">${emoji}</div>`;
     }).join('');
     // Friend card: wrapped with time-label above photo side
     return `<div class="d-wrap d-wrap-friend">
@@ -2559,7 +2614,8 @@ function renderWatchingWithStatuses(watching,statuses){
           </div>
         </div>
       </div>
-      ${myReactsHTML?`<div class="d-react-strip">${myReactsHTML}</div>`:''}
+      ${myReactsHTML?`<div class="d-react-strip d-react-mine">${myReactsHTML}</div>`:''}
+      ${othersHTML?`<div class="d-react-strip d-react-others" onclick="event.stopPropagation();showFriendReactPanel(this,'${safeUid}')">${othersHTML}</div>`:''}
     </div>`;
   }).join('');
   updateChips();
@@ -4323,7 +4379,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v145';
+  var APP_BUILD='v147';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
