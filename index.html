@@ -376,16 +376,47 @@
 .gfeed-header-count{font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px}
 .gfeed-close{background:rgba(0,0,0,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;font-family:inherit;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
 .gfeed-edit-btn{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:9px;color:#fff;font-size:11px;padding:5px 10px;cursor:pointer;font-family:inherit;font-weight:700;white-space:nowrap}
-/* שינוי 1: רקע ירוק-זהוב בהיר */
-.gfeed-body{overflow-y:auto;overflow-x:visible;flex:1;padding:10px 14px 40px;background:linear-gradient(180deg,rgba(120,200,100,0.13) 0%,rgba(180,150,30,0.09) 50%,rgba(100,200,120,0.11) 100%)}
+/* שינוי 1: רקע לבן עם ערפל עננים ירוק-זהוב */
+.gfeed-body{
+  overflow-y:auto;overflow-x:visible;flex:1;padding:10px 14px 40px;
+  background:#f0f8f0;
+  background-image:
+    radial-gradient(ellipse 170px 95px at 15% 10%, rgba(100,190,70,0.22) 0%,transparent 70%),
+    radial-gradient(ellipse 130px 75px at 80% 6%,  rgba(210,175,35,0.18) 0%,transparent 70%),
+    radial-gradient(ellipse 150px 85px at 50% 35%, rgba(90,185,90,0.15)  0%,transparent 70%),
+    radial-gradient(ellipse 190px 65px at 8%  62%, rgba(185,160,25,0.14) 0%,transparent 70%),
+    radial-gradient(ellipse 110px 95px at 88% 52%, rgba(90,210,80,0.17)  0%,transparent 70%),
+    radial-gradient(ellipse 155px 72px at 38% 78%, rgba(210,180,28,0.13) 0%,transparent 70%),
+    radial-gradient(ellipse 125px 85px at 92% 88%, rgba(105,200,95,0.15) 0%,transparent 70%),
+    radial-gradient(ellipse 145px 60px at 60% 95%, rgba(175,155,20,0.12) 0%,transparent 70%)}
+
+/* שינוי 2: self צמוד לשמאל בתוך gfeed */
+.gfeed-body .d-wrap-self{
+  direction:ltr;
+  align-items:flex-start;
+  margin-left:0;
+  padding-left:0}
+/* ביטול bleed שמאל של gfeed-self */
+.gfeed-body .wcard.d-self{
+  margin-left:0 !important}
+
 /* שינויים 2,4,6: הסתרת גבולות, הקטנה 20%, מרווח מהקצה */
 .gfeed-body .d-wrap{margin:0 10px 0 10px}
 .gfeed-body .d-wrap-friend{padding-right:10px}
 /* שינוי 2: ביטול קווי מסגרת על פוסטים */
 .gfeed-body .wcard.d-friend{border-top:none !important;border-bottom:none !important;border-left:none !important;border-right:none !important}
 .gfeed-body .wcard.d-self{border-top:none !important;border-bottom:none !important;border-left:none !important;border-right:none !important}
+
+/* שינוי 3: קיצור רוחב 20%
+   friend: קצר לכיוון ימין — הסר bleed ימין, הקטן רוחב
+   self:   קצר לכיוון שמאל — הגבל רוחב, אל תגלוש */
+.gfeed-body .wcard.d-friend{
+  width:calc(69% + 8px) !important;
+  margin-right:0 !important}
+.gfeed-body .wcard.d-self{
+  width:calc(80% - 10px) !important}
+
 /* שינוי 4: הקטנה 20% — גבהי כרטיסים */
-.gfeed-body .wcard.d-friend .wcard-top,.gfeed-body .wcard.d-self .d-self .wcard-top{height:67px !important}
 .gfeed-body .d-friend .wcard-top{height:67px !important}
 .gfeed-body .d-self .wcard-top{height:67px !important}
 /* תמונת פרופיל */
@@ -4482,7 +4513,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v162';
+  var APP_BUILD='v163';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
