@@ -968,7 +968,7 @@
 </div>
 <span id="watchingTitle" style="display:none"></span>
 <div id="watchingBarWrap" style="display:none"><div id="watchingBarLabel"></div><div><div id="barGreen"></div><div id="barRed"></div></div></div>
-<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:3px">
+<div id="watchingList" style="width:100%;background:transparent;padding:8px 0 4px;display:flex;flex-direction:column;gap:18px">
   <p style="font-size:13px;color:rgba(200,230,255,0.3);text-align:center;padding:16px 0">עדיין אינך עוקב אחרי אף אחד.<br>לחץ על לינק של מישהו כדי להתחיל.</p>
 </div>
 
@@ -1580,20 +1580,37 @@ function buildDReactsHTML(reactions){
 function startMyReactionsListener(){
   if(myReactionsUnsub){myReactionsUnsub();myReactionsUnsub=null;}
   if(!currentUser)return;
-  const q=query(collection(db,'reactions'),where('fromUid','==',currentUser.uid),orderBy('ts','desc'),limit(100));
+  // ללא orderBy — כדי לא לדרוש composite index ב-Firestore
+  const q=query(collection(db,'reactions'),where('fromUid','==',currentUser.uid),limit(100));
   myReactionsUnsub=onSnapshot(q,snap=>{
     myReactions={};
     snap.forEach(d=>{
       const r=d.data();
       if(!r.toUid)return;
       if(!myReactions[r.toUid])myReactions[r.toUid]=[];
-      // הוסף רק אם הuid הזה לא כבר קיים (אחת לחבר)
       if(myReactions[r.toUid].length<4)
-        myReactions[r.toUid].push({id:d.id,emoji:r.emoji||'👋',isNudge:!!r.isNudge});
+        myReactions[r.toUid].push({id:d.id,emoji:r.isNudge?'👋':(r.emoji||'❤️'),isNudge:!!r.isNudge});
     });
-    // רנדר מחדש כדי לעדכן בועות
+    // גם שמור ב-localStorage לטעינה מיידית בפעם הבאה
+    try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
     if(state.watching.length) renderWatchingWithStatuses(state.watching,watchingStatuses);
+  },err=>{
+    // fallback: טען מ-localStorage אם Firestore נכשל
+    try{
+      const cached=localStorage.getItem('myReactions_'+currentUser.uid);
+      if(cached){ myReactions=JSON.parse(cached); if(state.watching.length) renderWatchingWithStatuses(state.watching,watchingStatuses); }
+    }catch(e){}
   });
+}
+// ── עדכון מיידי של myReactions ברנדר ──
+function addMyReactionLocal(toUid,emoji,isNudge){
+  if(!myReactions[toUid])myReactions[toUid]=[];
+  // הסר קיים מאותו סוג ← replace
+  myReactions[toUid]=myReactions[toUid].filter(r=>!(r.isNudge===isNudge&&!isNudge?r.emoji===emoji:true));
+  if(myReactions[toUid].length<4)
+    myReactions[toUid].unshift({emoji:isNudge?'👋':emoji,isNudge:!!isNudge});
+  try{localStorage.setItem('myReactions_'+currentUser.uid,JSON.stringify(myReactions));}catch(e){}
+  renderWatchingWithStatuses(state.watching,watchingStatuses);
 }
 // ── tooltip תגובה ──
 let _tipTimer=null;
@@ -1622,6 +1639,7 @@ window.closeReactPicker=(e)=>{if(!e||e.target===document.getElementById('reactPi
 window.sendReaction=async(emoji)=>{
   if(!_rUid||!currentUser)return;
   document.getElementById('reactPickerOverlay').classList.remove('show');
+  addMyReactionLocal(_rUid,emoji,false);
   try{await setDoc(doc(db,'reactions',`${currentUser.uid}_to_${_rUid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:_rUid,emoji,isNudge:false,ts:serverTimestamp()});}catch(e){}
 };
 window.replyToNudge=(uid,name)=>{
@@ -1634,6 +1652,7 @@ window.handleNudgeBtn=async(btn,uid,name)=>{
   if(btn.classList.contains('sent'))return;
   btn.classList.add('sent');btn.textContent='✓';
   localStorage.setItem('nudgeSent_'+currentUser.uid+'_'+uid,'1');
+  addMyReactionLocal(uid,'👋',true);
   try{
     await setDoc(doc(db,'nudges',`${currentUser.uid}_${uid}_${Date.now()}`),{fromUid:currentUser.uid,fromName:currentUser.displayName,toUid:uid,message:'אתה בסדר? 👋',timestamp:serverTimestamp()});
     await setDoc(doc(db,'reactions',`nudge_${currentUser.uid}_to_${uid}`),{fromUid:currentUser.uid,fromName:currentUser.displayName||'',toUid:uid,emoji:'👋',isNudge:true,ts:serverTimestamp()});
@@ -2014,6 +2033,8 @@ onAuthStateChanged(auth,async user=>{
     saveDailyActivity();
     loadSelfReactions();
     startMyReactionsListener();
+    // טעינה מיידית מ-localStorage לפני שFirestore מגיב
+    try{const cached=localStorage.getItem('myReactions_'+currentUser.uid);if(cached){myReactions=JSON.parse(cached);}}catch(e){}
   } else {
     currentUser=null;
     document.getElementById('login-screen').style.display='flex';
@@ -4302,7 +4323,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v144';
+  var APP_BUILD='v145';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
