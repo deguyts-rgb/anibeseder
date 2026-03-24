@@ -191,8 +191,8 @@
   width:65px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0;margin-left:4px}
-.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start}
+.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0;margin-left:8px}
+.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start;margin-right:12px}
 
 /* ───────────────────────────────────────────────────────
    SELF: מבנה כמו FRIEND אבל הפוך (תמונה שמאל)
@@ -219,9 +219,9 @@
   display:flex !important;flex-direction:column !important;
   justify-content:center;align-items:stretch;
   position:relative;
-  padding-right:23px;padding-left:2px;padding-bottom:0}
+  padding-right:23px;padding-left:0;padding-bottom:0}
 /* d-status-row בתוך self */
-.d-self .d-status-row{flex-direction:row;gap:2px;align-items:center;width:100%}
+.d-self .d-status-row{flex-direction:row;gap:0;align-items:center;width:100%}
 /* circle: margin-left 9px = מרחק קבוע מהתמונה */
 .d-self .wcard-circle{flex-shrink:0}
 .d-self .d-btns{margin-top:2px;padding-right:0}
@@ -237,7 +237,7 @@
   border-right:none !important;
   border-left:2px solid #060c14 !important;
   border-radius:999px 0 0 999px !important;
-  background:#060c14 !important;
+  background:rgba(255,255,255,0.04) !important;
   margin-bottom:0;overflow:hidden}
 .d-friend .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
 .d-friend .wcard-status-wrap{
@@ -249,7 +249,7 @@
 .d-friend .wcard-circle{flex-shrink:0}
 
 /* כפתורים: absolute תחתית, זזים שמאלה */
-.d-friend .d-btns{position:absolute;bottom:2px;right:63px}
+.d-friend .d-btns{position:absolute;bottom:2px;right:66px;display:flex;gap:9px;align-items:center}
 
 .wcard.d-self,.wcard.d-friend{margin-bottom:0 !important}
 .d-self .wcard-identity,
@@ -4246,7 +4246,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v139';
+  var APP_BUILD='v140';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
