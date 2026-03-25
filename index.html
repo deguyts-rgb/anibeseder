@@ -3027,7 +3027,10 @@ window.generateAndShareCard=async()=>{
     const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
     const fileRef=storageRef(storage,`og-cards/${currentUser.uid}`);
     await uploadBytes(fileRef,blob,{contentType:'image/png',cacheControl:'public,max-age=300'});
-    const imageUrl=await getDownloadURL(fileRef);
+    // URL ציבורי קבוע ללא token
+    const bucket='ani-beseder-57800.firebasestorage.app';
+    const path=encodeURIComponent(`og-cards/${currentUser.uid}`);
+    const imageUrl=`https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${path}?alt=media`;
 
     // שמור URL ב-Firestore כדי שהWorker יוכל לקרוא אותו
     await setDoc(doc(db,'status',currentUser.uid),{ogCardUrl:imageUrl},{merge:true});
@@ -4771,7 +4774,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v168';
+  var APP_BUILD='v169';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
