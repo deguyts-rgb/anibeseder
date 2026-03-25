@@ -97,6 +97,7 @@ headers: { ‘Content-Type’: ‘text/html; charset=utf-8’, ‘Cache-Control�
 });
 }
 
+
 async function getFirebaseAccessToken(serviceAccountJson) {
 const sa = JSON.parse(serviceAccountJson);
 const now = Math.floor(Date.now() / 1000);
