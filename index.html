@@ -80,6 +80,9 @@
     .btn-custom-text{font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);text-align:center;max-width:150px;line-height:1.2;margin-top:3px;display:none}
     .sent-badge{margin-top:16px;background:rgba(40,200,100,0.15);border:1px solid rgba(40,200,100,0.4);border-radius:20px;padding:7px 18px;font-size:13px;color:#4cde80;opacity:0;transform:translateY(8px);transition:all 0.4s ease;text-align:center}
     .sent-badge.show{opacity:1;transform:translateY(0)}
+    .share-status-btn{display:none;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:16px;padding:12px 28px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(37,211,102,0.28);margin-top:8px;width:100%;max-width:320px;transition:transform 0.15s}
+    .share-status-btn.show{display:flex}
+    .share-status-btn:active{transform:scale(0.97)}
     .mood-btn{position:absolute;bottom:-14px;right:-14px;width:46px;height:46px;border-radius:50%;background:rgba(20,38,55,0.97);border:2px solid rgba(126,207,255,0.4);cursor:pointer;font-size:22px;display:none;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 3px 14px rgba(0,0,0,0.45);z-index:6;line-height:1}
     .mood-btn:active{transform:scale(0.88)}
     .mood-btn.visible{display:flex}
@@ -1025,6 +1028,7 @@
 </div>
 
 <div class="sent-badge" id="sentBadge">✅ כל העוקבים קיבלו התראה!</div>
+<button class="share-status-btn" id="shareStatusBtn" onclick="generateAndShareCard()">📤 שתף שאתה בסדר</button>
 
 <div class="status-row" style="margin-top:4px">
   <span class="status-text-inline dim" id="statusText"></span>
@@ -2879,6 +2883,9 @@ window.handleOkPress=async()=>{
   updateMainUI();renderFollowers();
   document.getElementById('sentBadge').classList.add('show');
   setTimeout(()=>document.getElementById('sentBadge').classList.remove('show'),3500);
+  const _shareBtn=document.getElementById('shareStatusBtn');
+  if(_shareBtn){_shareBtn.classList.add('show');}
+  setTimeout(()=>generateAndShareCard(),500);
   logReport();
   saveDailyActivity(); // עדכן תאריך פעילות — חשוב אם המשתמש עבר חצות מאז הכניסה
   sendPushToFollowers('ok');
@@ -2908,6 +2915,124 @@ window.handleOkPress=async()=>{
       },1200);
     }
   }
+};
+
+window.generateAndShareCard=async()=>{
+  const btn=document.getElementById('shareStatusBtn');
+  const origText='📤 שתף שאתה בסדר';
+  if(btn)btn.textContent='⏳ מכין...';
+  try{
+    const canvas=document.createElement('canvas');
+    const W=900,H=1260;
+    canvas.width=W;canvas.height=H;
+    const ctx=canvas.getContext('2d');
+    const userName=currentUser?.displayName||'אני';
+    const moodEmoji=state.moodEmoji||'✅';
+    const sign=state.sign||'';
+    const rawPhoto=localStorage.getItem('profilePhoto_'+currentUser.uid)||currentUser?.photoURL||null;
+    const photoURL=rawPhoto?_fixPhotoUrl(rawPhoto):null;
+    const now=new Date();
+    const timeStr=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    // load avatar image
+    let avatarImg=null;
+    if(photoURL){
+      avatarImg=await new Promise(res=>{
+        const img=new Image();img.crossOrigin='anonymous';
+        img.onload=()=>res(img);img.onerror=()=>res(null);
+        img.src=photoURL;
+      });
+    }
+    // helper: rounded rect
+    const rr=(x,y,w,h,r)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();};
+    // 1. BG dark
+    const bgGrad=ctx.createLinearGradient(0,0,W,H);
+    bgGrad.addColorStop(0,'#091508');bgGrad.addColorStop(0.5,'#0d1a10');bgGrad.addColorStop(1,'#070f09');
+    ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
+    // avatar blurred bg
+    if(avatarImg){
+      ctx.save();
+      for(let ox=-24;ox<=24;ox+=12)for(let oy=-24;oy<=24;oy+=12){ctx.globalAlpha=0.04;ctx.drawImage(avatarImg,ox,oy,W,H);}
+      ctx.globalAlpha=1;ctx.restore();
+    }
+    // vignette
+    const vign=ctx.createRadialGradient(W/2,H*0.38,60,W/2,H*0.38,W*0.95);
+    vign.addColorStop(0,'rgba(0,0,0,0.1)');vign.addColorStop(1,'rgba(0,0,0,0.72)');
+    ctx.fillStyle=vign;ctx.fillRect(0,0,W,H);
+    // 2. EMOJI RAIN
+    ctx.save();
+    for(let i=0;i<26;i++){
+      const side=i%2===0;
+      const x=side?(30+Math.random()*360):(510+Math.random()*360);
+      const y=Math.random()*H*0.78;
+      const sz=18+Math.random()*30;
+      ctx.globalAlpha=0.12+Math.random()*0.42;
+      ctx.font=`${sz}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(moodEmoji,x,y);
+    }
+    ctx.globalAlpha=1;ctx.restore();
+    // 3. GREEN CIRCLE (bottom-right)
+    const cx=680,cy=940,cr=118;
+    // halos
+    [[195,0.10],[165,0.16],[140,0.22]].forEach(([r,a])=>{
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+      g.addColorStop(0,`rgba(74,222,128,${a})`);g.addColorStop(1,'rgba(74,222,128,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    });
+    // circle fill
+    const cg=ctx.createRadialGradient(cx-28,cy-28,8,cx,cy,cr);
+    cg.addColorStop(0,'#4ade80');cg.addColorStop(0.55,'#22c55e');cg.addColorStop(1,'#16a34a');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,cr,0,Math.PI*2);ctx.fill();
+    // circle glow ring
+    ctx.strokeStyle='rgba(74,222,128,0.45)';ctx.lineWidth=5;
+    ctx.beginPath();ctx.arc(cx,cy,cr+4,0,Math.PI*2);ctx.stroke();
+    // avatar clip inside circle
+    const avR=60,avCy=cy-18;
+    ctx.save();ctx.beginPath();ctx.arc(cx,avCy,avR,0,Math.PI*2);ctx.clip();
+    if(avatarImg){ctx.drawImage(avatarImg,cx-avR,avCy-avR,avR*2,avR*2);}
+    else{ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fillRect(cx-avR,avCy-avR,avR*2,avR*2);ctx.font=`${avR*1.05}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(moodEmoji,cx,avCy);}
+    ctx.restore();
+    // avatar border
+    ctx.strokeStyle='rgba(255,255,255,0.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,avCy,avR,0,Math.PI*2);ctx.stroke();
+    // name in circle
+    ctx.fillStyle='#fff';ctx.font='bold 25px "Segoe UI",Tahoma,Arial,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,0.45)';ctx.shadowBlur=6;
+    let dn=userName;if(ctx.measureText(dn).width>cr*1.75)dn=dn.substring(0,7)+'...';
+    ctx.fillText(dn,cx,cy+avR+22);ctx.shadowBlur=0;
+    // 4. STATUS TEXT (left side, RTL)
+    ctx.textAlign='right';
+    // "אני בסדר"
+    ctx.font='900 60px "Segoe UI",Tahoma,Arial,sans-serif';ctx.fillStyle='#fff';
+    ctx.shadowColor='rgba(0,0,0,0.95)';ctx.shadowBlur=18;ctx.fillText('אני בסדר',525,855);
+    // emoji + sign
+    ctx.shadowBlur=10;ctx.font='50px serif';ctx.fillText(`${moodEmoji} ${sign}`,525,930);
+    // time
+    ctx.shadowBlur=6;ctx.font='26px "Segoe UI",Tahoma,Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.62)';
+    ctx.fillText(`🕐 ${timeStr}`,525,985);ctx.shadowBlur=0;
+    // 5. BUTTON BAR
+    const bY=1060,bH=82,bX=40,bW=W-80;
+    ctx.fillStyle='rgba(255,255,255,0.12)';rr(bX,bY,bW,bH,22);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.26)';ctx.lineWidth=1.5;rr(bX,bY,bW,bH,22);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 32px "Segoe UI",Tahoma,Arial,sans-serif';
+    ctx.textAlign='center';ctx.shadowColor='rgba(0,0,0,0.3)';ctx.shadowBlur=4;
+    ctx.fillText('תגיבו ❤️',W/2,bY+bH/2+11);ctx.shadowBlur=0;
+    // 6. APP TAG
+    ctx.fillStyle='rgba(255,255,255,0.32)';ctx.font='21px "Segoe UI",Tahoma,Arial,sans-serif';
+    ctx.fillText('anibeseder.com',W/2,1205);
+    // SHARE
+    canvas.toBlob(async blob=>{
+      const file=new File([blob],'ani-beseder.png',{type:'image/png'});
+      try{
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          await navigator.share({files:[file],text:'הצטרפו אלי באפליקציה אני בסדר 🟢'});
+        } else if(navigator.share){
+          await navigator.share({title:'אני בסדר 🟢',text:'הצטרפו אלי! anibeseder.com',url:'https://anibeseder.com'});
+        } else {
+          alert('שיתוף לא נתמך בדפדפן זה.');
+        }
+      }catch(e){}
+      if(btn)btn.textContent=origText;
+    },'image/png');
+  }catch(err){console.error('shareCard',err);if(btn)btn.textContent=origText;}
 };
 
 window.doShare=()=>{
@@ -4513,7 +4638,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v163';
+  var APP_BUILD='v165';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
