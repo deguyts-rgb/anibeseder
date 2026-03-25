@@ -565,6 +565,11 @@
 .fhp-nudge-btn:active{background:rgba(255,200,50,0.22)}
 
 /* ── ADMIN PANEL ── */
+.silent-mode-toggle{display:none;position:fixed;top:88px;left:12px;z-index:25;background:rgba(255,100,100,0.12);border:1px solid rgba(255,100,100,0.3);border-radius:20px;padding:5px 11px 5px 8px;font-size:11px;color:rgba(255,180,180,0.7);cursor:pointer;font-family:inherit;align-items:center;gap:6px;transition:all 0.2s}
+.silent-mode-toggle.admin-visible{display:flex}
+.silent-mode-toggle.active{background:rgba(255,80,80,0.22);border-color:rgba(255,80,80,0.55);color:#ff9999}
+.silent-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,100,100,0.4);transition:background 0.2s}
+.silent-mode-toggle.active .silent-dot{background:#ff6666;box-shadow:0 0 6px #ff6666}
 .admin-open-btn{width:100%;background:linear-gradient(135deg,rgba(255,200,50,0.1),rgba(255,150,0,0.08));border:1px solid rgba(255,200,50,0.35);border-radius:12px;color:rgba(255,220,130,0.9);padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;display:none}
 .admin-open-btn:active{background:rgba(255,200,50,0.18)}
 .admin-badge{display:inline-block;background:rgba(255,200,50,0.2);border-radius:6px;padding:1px 6px;font-size:10px;color:#ffd97d;margin-right:4px;vertical-align:middle}
@@ -938,6 +943,10 @@
 <!-- APP -->
 
 <div id="app">
+<button class="silent-mode-toggle" id="silentModeToggle" onclick="toggleSilentMode()">
+  <div class="silent-dot"></div>
+  <span id="silentModeLabel">שקט</span>
+</button>
   <div id="header-wrapper">
     <div class="header">
       <img class="header-logo" src="icon-192.png" alt="אני בסדר" onclick="location.reload()"/>
@@ -1214,6 +1223,21 @@ const ADMIN_EMAILS = new Set(['deguyts@gmail.com']);
 // Example: ADMIN_EMAILS.add('deguyts@icloud.com');
 
 function isAdmin(){ return currentUser && ADMIN_EMAILS.has(currentUser.email); }
+
+let _silentMode = false;
+
+window.toggleSilentMode = () => {
+  _silentMode = !_silentMode;
+  const btn = document.getElementById('silentModeToggle');
+  const lbl = document.getElementById('silentModeLabel');
+  if(btn) btn.classList.toggle('active', _silentMode);
+  if(lbl) lbl.textContent = _silentMode ? 'שקט פעיל' : 'שקט';
+};
+
+function initSilentModeBtn() {
+  const btn = document.getElementById('silentModeToggle');
+  if(btn && isAdmin()) btn.classList.add('admin-visible');
+}
 
 const ADMIN_NUDGE_EMOJIS = ['👋','✅','⚠️','🙏','❤️','🔔','💪','🌟','😊','🤝'];
 
@@ -2200,6 +2224,7 @@ onAuthStateChanged(auth,async user=>{
     renderAlerts(); checkInstallPrompt();
     if(Notification.permission==='granted') registerFCMToken();
     if(isAdmin()) initAdminEmojiBar();
+    initSilentModeBtn();
     saveDailyActivity();
     loadSelfReactions();
     startMyReactionsListener();
@@ -2891,7 +2916,7 @@ window.handleOkPress=async()=>{
   setTimeout(()=>generateAndShareCard(),500);
   logReport();
   saveDailyActivity(); // עדכן תאריך פעילות — חשוב אם המשתמש עבר חצות מאז הכניסה
-  sendPushToFollowers('ok');
+  if(!_silentMode) sendPushToFollowers('ok');
   // אחרי לחיצה ראשונה — הרגע הטוב ביותר לבקש הרשאת התראות
   if(state.okCount===1&&'Notification'in window&&Notification.permission!=='granted'){
     const _isStandaloneNow=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
@@ -4774,7 +4799,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v169';
+  var APP_BUILD='v170';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
