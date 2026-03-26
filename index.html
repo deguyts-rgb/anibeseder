@@ -2963,7 +2963,6 @@ window.generateAndShareCard=async()=>{
     canvas.width=W;canvas.height=H;
     const ctx=canvas.getContext('2d');
 
-    // load avatar
     let avatarImg=null;
     if(photoURL){
       avatarImg=await new Promise(res=>{
@@ -2984,7 +2983,6 @@ window.generateAndShareCard=async()=>{
       for(let ox=-24;ox<=24;ox+=12)for(let oy=-24;oy<=24;oy+=12){ctx.globalAlpha=0.04;ctx.drawImage(avatarImg,ox,oy,W,H);}
       ctx.globalAlpha=1;ctx.restore();
     }
-    // vignette
     const vign=ctx.createRadialGradient(W/2,H*0.38,60,W/2,H*0.38,W*0.95);
     vign.addColorStop(0,'rgba(0,0,0,0.1)');vign.addColorStop(1,'rgba(0,0,0,0.72)');
     ctx.fillStyle=vign;ctx.fillRect(0,0,W,H);
@@ -3001,7 +2999,7 @@ window.generateAndShareCard=async()=>{
     }
     ctx.globalAlpha=1;ctx.restore();
 
-    // green circle (right side)
+    // green circle
     const cx=680,cy=940,cr=118;
     [[195,0.10],[165,0.16],[140,0.22]].forEach(([r,a])=>{
       const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
@@ -3014,7 +3012,6 @@ window.generateAndShareCard=async()=>{
     ctx.strokeStyle='rgba(74,222,128,0.45)';ctx.lineWidth=5;
     ctx.beginPath();ctx.arc(cx,cy,cr+4,0,Math.PI*2);ctx.stroke();
 
-    // avatar in circle
     const avR=60,avCy=cy-18;
     ctx.save();ctx.beginPath();ctx.arc(cx,avCy,avR,0,Math.PI*2);ctx.clip();
     if(avatarImg){ctx.drawImage(avatarImg,cx-avR,avCy-avR,avR*2,avR*2);}
@@ -3022,13 +3019,11 @@ window.generateAndShareCard=async()=>{
     ctx.restore();
     ctx.strokeStyle='rgba(255,255,255,0.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,avCy,avR,0,Math.PI*2);ctx.stroke();
 
-    // name in circle
     ctx.fillStyle='#fff';ctx.font='bold 25px "Segoe UI",Arial,sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=6;
     let dn=userName;if(ctx.measureText(dn).width>cr*1.7)dn=dn.substring(0,7)+'…';
     ctx.fillText(dn,cx,cy+avR+22);ctx.shadowBlur=0;
 
-    // status text (left side)
     ctx.textAlign='right';
     ctx.font='900 60px "Segoe UI",Arial,sans-serif';ctx.fillStyle='#fff';
     ctx.shadowColor='rgba(0,0,0,0.95)';ctx.shadowBlur=18;ctx.fillText('אני בסדר',525,855);
@@ -3036,45 +3031,49 @@ window.generateAndShareCard=async()=>{
     ctx.shadowBlur=6;ctx.font='26px "Segoe UI",Arial,sans-serif';ctx.fillStyle='rgba(255,255,255,0.62)';
     ctx.fillText(`🕐 ${timeStr}`,525,985);ctx.shadowBlur=0;
 
-    // react button bar
     const bY=1060,bH=82,bX=40,bW=W-80;
     ctx.fillStyle='rgba(255,255,255,0.12)';rr(bX,bY,bW,bH,22);ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,0.26)';ctx.lineWidth=1.5;rr(bX,bY,bW,bH,22);ctx.stroke();
     ctx.fillStyle='#fff';ctx.font='bold 32px "Segoe UI",Arial,sans-serif';
     ctx.textAlign='center';ctx.shadowColor='rgba(0,0,0,0.3)';ctx.shadowBlur=4;
     ctx.fillText('תגיבו ❤️',W/2,bY+bH/2+11);ctx.shadowBlur=0;
-
-    // app tag
     ctx.fillStyle='rgba(255,255,255,0.32)';ctx.font='21px "Segoe UI",Arial,sans-serif';
     ctx.fillText('anibeseder.com',W/2,1210);
 
     // ── 2. העלה ל-Firebase Storage ──
+    if(btn)btn.textContent='⏳ שומר...';
     const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-    const fileRef=storageRef(storage,`og-cards/${currentUser.uid}`);
+    const fileRef=storageRef(storage,`og-cards/${currentUser.uid}.png`);
     await uploadBytes(fileRef,blob,{contentType:'image/png',cacheControl:'public,max-age=300'});
-    // URL ציבורי קבוע ללא token
+    // URL ציבורי קבוע — ללא token כדי שווטסאפ יוכל לגשת
     const bucket='ani-beseder-57800.firebasestorage.app';
-    const path=encodeURIComponent(`og-cards/${currentUser.uid}`);
+    const path=encodeURIComponent(`og-cards/${currentUser.uid}.png`);
     const imageUrl=`https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${path}?alt=media`;
 
-    // שמור URL ב-Firestore כדי שהWorker יוכל לקרוא אותו
-    await setDoc(doc(db,'status',currentUser.uid),{ogCardUrl:imageUrl},{merge:true});
+    // ── 3. בנה Worker URL עם התמונה כפרמטר — Worker לא צריך לגשת ל-Firestore ──
+    const workerUrl=`https://send-push.deguyts.workers.dev/share`
+      +`?u=${encodeURIComponent(currentUser.uid)}`
+      +`&n=${encodeURIComponent(userName)}`
+      +`&e=${encodeURIComponent(moodEmoji)}`
+      +`&t=${encodeURIComponent(timeStr)}`
+      +`&img=${encodeURIComponent(imageUrl)}`;
 
-    // ── 3. שתף עם הלינק ──
-    const profileUrl=`https://send-push.deguyts.workers.dev/share?u=${currentUser.uid}`;
+    // ── 4. שתף ──
+    if(btn)btn.textContent='⏳ שולח...';
     const shareData={
       title:`${userName} ${moodEmoji} – אני בסדר 🟢`,
       text:`${userName} ${moodEmoji} שלח לך דיווח – הוא בסדר!\nתגיבו ❤️ והצטרפו:`,
-      url:profileUrl,
+      url:workerUrl,
     };
     if(navigator.share){
       await navigator.share(shareData).catch(()=>{});
     } else {
-      await navigator.clipboard.writeText(`${shareData.text}\n${profileUrl}`).then(()=>alert('✅ הועתק!')).catch(()=>alert(profileUrl));
+      await navigator.clipboard.writeText(`${shareData.text}\n${workerUrl}`)
+        .then(()=>alert('✅ הועתק!'))
+        .catch(()=>alert(workerUrl));
     }
-  }catch(err){console.error('share',err);}
-  const btn2=document.getElementById('shareStatusBtn');
-  if(btn2)btn2.textContent='📤 שתף שאתה בסדר';
+  }catch(err){console.error('share err:',err);alert('שגיאה בשיתוף:\n'+err.message);}
+  if(btn)btn.textContent='📤 שתף שאתה בסדר';
 };
 
 window._generateAndShareCard_img=async()=>{
@@ -4799,7 +4798,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v170';
+  var APP_BUILD='v172';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
