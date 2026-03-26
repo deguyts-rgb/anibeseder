@@ -3050,8 +3050,8 @@ window.generateAndShareCard=async()=>{
     const path=encodeURIComponent(`og-cards/${currentUser.uid}.png`);
     const imageUrl=`https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${path}?alt=media`;
 
-    // ── 3. בנה Worker URL עם התמונה כפרמטר — Worker לא צריך לגשת ל-Firestore ──
-    const workerUrl=`https://send-push.deguyts.workers.dev/share`
+    // ── 3. בנה URL ישיר לפרופיל — ללא Worker באמצע ──
+    const profileUrl=`https://anibeseder.com/profile.html`
       +`?u=${encodeURIComponent(currentUser.uid)}`
       +`&n=${encodeURIComponent(userName)}`
       +`&e=${encodeURIComponent(moodEmoji)}`
@@ -3063,14 +3063,14 @@ window.generateAndShareCard=async()=>{
     const shareData={
       title:`${userName} ${moodEmoji} – אני בסדר 🟢`,
       text:`${userName} ${moodEmoji} שלח לך דיווח – הוא בסדר!\nתגיבו ❤️ והצטרפו:`,
-      url:workerUrl,
+      url:profileUrl,
     };
     if(navigator.share){
       await navigator.share(shareData).catch(()=>{});
     } else {
-      await navigator.clipboard.writeText(`${shareData.text}\n${workerUrl}`)
+      await navigator.clipboard.writeText(`${shareData.text}\n${profileUrl}`)
         .then(()=>alert('✅ הועתק!'))
-        .catch(()=>alert(workerUrl));
+        .catch(()=>alert(profileUrl));
     }
   }catch(err){console.error('share err:',err);alert('שגיאה בשיתוף:\n'+err.message);}
   if(btn)btn.textContent='📤 שתף שאתה בסדר';
@@ -4798,7 +4798,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v172';
+  var APP_BUILD='v173';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
