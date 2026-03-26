@@ -297,67 +297,64 @@ function formatTime(ts) {
 async function load() {
   const params = new URLSearchParams(location.search);
   let uid = params.get('u') || params.get('uid') || params.get('follow');
-  // נקה את ה-UID אם הוא מכיל URL מלא
   if(uid && uid.includes('http')) {
     const m = uid.match(/[?&]u=([^&]+)/);
     uid = m ? m[1] : null;
   }
-  if(!uid) {
-    const parts = location.pathname.split('/').filter(Boolean);
-    uid = parts[parts.length-1];
-    if(uid === 'profile') uid = null;
-  }
-
   if(!uid){
     document.getElementById('loading').style.display = 'none';
     document.getElementById('not-found').style.display = 'flex';
     return;
   }
 
-  try{
-    const [statusSnap, userSnap] = await Promise.all([
-      getDoc(doc(db,'status',uid)),
-      getDoc(doc(db,'users',uid)),
-    ]);
+  // קבל נתונים מה-URL params (מהWorker) או מ-Firestore כגיבוי
+  const nameParam  = params.get('n');
+  const emojiParam = params.get('e');
+  const timeParam  = params.get('t');
+  const imgParam   = params.get('img');
 
-    if(!statusSnap.exists() && !userSnap.exists()){
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('not-found').style.display = 'flex';
-      return;
+  try{
+    let name, moodEmoji, timeStr, photoURL, sign = '';
+
+    if(nameParam) {
+      // נתונים הגיעו מהWorker דרך URL params – אין צורך ב-Firestore
+      name      = nameParam || 'משתמש';
+      moodEmoji = emojiParam || '✅';
+      timeStr   = timeParam  || '';
+      photoURL  = imgParam && !imgParam.includes('og-card') ? imgParam : null;
+    } else {
+      // גיבוי – קרא מ-Firestore
+      const [statusSnap, userSnap] = await Promise.all([
+        getDoc(doc(db,'status',uid)),
+        getDoc(doc(db,'users',uid)),
+      ]);
+      if(!statusSnap.exists() && !userSnap.exists()){
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('not-found').style.display = 'flex';
+        return;
+      }
+      const sd = statusSnap.data() || {};
+      const ud = userSnap.data()   || {};
+      name      = sd.name || ud.displayName || 'משתמש';
+      moodEmoji = sd.moodEmoji || '✅';
+      sign      = sd.sign || '';
+      photoURL  = sd.profilePhotoURL || ud.profilePhotoURL || null;
+      const ts  = sd.timestamp;
+      if(ts){ const d=ts.toDate();timeStr=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+      else timeStr = '';
     }
 
-    const sd = statusSnap.data() || {};
-    const ud = userSnap.data()   || {};
-
-    const name       = sd.name || ud.displayName || ud.name || 'משתמש';
-    const photoURL   = sd.profilePhotoURL || ud.profilePhotoURL || null;
-    const moodEmoji  = sd.moodEmoji || '✅';
-    const sign       = sd.sign      || '';
-    const timestamp  = sd.timestamp || null;
-    const isOk       = sd.isOk !== false;
-
-    // page title
     document.title = `${name} ${moodEmoji} – אני בסדר`;
-    document.getElementById('pageTitle').textContent = document.title;
-    document.getElementById('ogTitle').setAttribute('content', `${name} ${moodEmoji} – אני בסדר 🟢`);
-    document.getElementById('ogDesc').setAttribute('content', `${name} דיווח שהוא בסדר! הצטרף לאפליקציה`);
-    document.getElementById('ogUrl').setAttribute('content', location.href);
 
     // bg avatar
     const bgEl = document.getElementById('cardBgAvatar');
-    if(photoURL){
-      bgEl.innerHTML = `<img src="${photoURL}" alt=""/>`;
-    } else {
-      bgEl.textContent = moodEmoji;
-    }
+    if(photoURL){ bgEl.innerHTML = `<img src="${photoURL}" alt=""/>`; }
+    else { bgEl.textContent = moodEmoji; }
 
     // circle avatar
     const innerEl = document.getElementById('circleAvatarInner');
-    if(photoURL){
-      innerEl.innerHTML = `<img src="${photoURL}" alt=""/>`;
-    } else {
-      innerEl.textContent = moodEmoji;
-    }
+    if(photoURL){ innerEl.innerHTML = `<img src="${photoURL}" alt=""/>`; }
+    else { innerEl.textContent = moodEmoji; }
     document.getElementById('circleName').textContent = name;
 
     // halos
@@ -373,12 +370,12 @@ async function load() {
     emojiEl.textContent = moodEmoji;
     emojiEl.className = `status-emoji-main ${emojiAnim(moodEmoji)}`;
     document.getElementById('signEl').textContent = sign ? ` ${sign}` : '';
-    document.getElementById('timeEl').textContent = formatTime(timestamp);
+    document.getElementById('timeEl').textContent = timeStr ? `🕐 ${timeStr}` : '';
 
     // emoji rain
     buildRain(moodEmoji);
 
-    // join link with follow param
+    // join link
     const followUrl = `https://anibeseder.com/?follow=${uid}`;
     document.getElementById('joinBtn').href  = followUrl;
     document.getElementById('reactBtn').href = followUrl;
