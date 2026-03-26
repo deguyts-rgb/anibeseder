@@ -71,7 +71,12 @@ timeStr = String(dt.getHours()).padStart(2,‘0’) + ‘:’ + String(dt.getMin
 var safeName = name.replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);
 var title = safeName + ’ ’ + emoji + ’ - OK’;
 var desc = timeStr ? (timeStr + ’ - tap to reply’) : ‘tap to reply’;
-var followUrl = ‘https://anibeseder.com/profile.html?u=’ + uid;
+var followUrl = 'https://anibeseder.com/profile.html?u=' + uid
+  + '&n=' + encodeURIComponent(name)
+  + '&e=' + encodeURIComponent(emoji)
+  + '&t=' + encodeURIComponent(timeStr)
+  + '&img=' + encodeURIComponent(ogImage);
+
 var shareUrl = ‘https://send-push.deguyts.workers.dev/share?u=’ + uid;
 var html = ‘<!DOCTYPE html><html><head>’
 + ‘<meta charset="UTF-8">’
