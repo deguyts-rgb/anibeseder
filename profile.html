@@ -296,10 +296,13 @@ function formatTime(ts) {
 
 async function load() {
   const params = new URLSearchParams(location.search);
-  let uid = params.get('u') || params.get('uid');
-  // also support path: /profile/UID or /?follow=UID
-  if(!uid) uid = params.get('follow');
-  if(!uid){
+  let uid = params.get('u') || params.get('uid') || params.get('follow');
+  // נקה את ה-UID אם הוא מכיל URL מלא
+  if(uid && uid.includes('http')) {
+    const m = uid.match(/[?&]u=([^&]+)/);
+    uid = m ? m[1] : null;
+  }
+  if(!uid) {
     const parts = location.pathname.split('/').filter(Boolean);
     uid = parts[parts.length-1];
     if(uid === 'profile') uid = null;
