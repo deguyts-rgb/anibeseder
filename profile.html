@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#060c14"/>
+
+<!-- Open Graph – WhatsApp / social preview -->
+
+<meta property="og:site_name" content="אני בסדר"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" id="ogTitle" content="אני בסדר 🟢"/>
+<meta property="og:description" id="ogDesc" content="לחץ להוסיף כחבר באפליקציה"/>
+<meta property="og:image" content="https://anibeseder.com/icon-512.png"/>
+<meta property="og:url" id="ogUrl" content="https://anibeseder.com"/>
+<meta name="twitter:card" content="summary"/>
+
+<title id="pageTitle">אני בסדר 🟢</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet"/>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Heebo',sans-serif;
+  background:#060c14;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px;
+  direction:rtl;
+  color:#fff;
+}
+
+#loading{
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  color:rgba(200,230,255,0.5);font-size:15px;
+}
+.spinner{width:40px;height:40px;border:3px solid rgba(74,222,128,0.2);border-top-color:#4ade80;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#card-wrap{display:none;flex-direction:column;align-items:center;gap:20px;width:100%;max-width:340px}
+
+/* ── CARD ── */
+.card{
+  width:100%;
+  border-radius:28px;overflow:hidden;position:relative;
+  box-shadow:0 24px 64px rgba(0,0,0,0.85);
+  aspect-ratio:9/14;
+}
+
+.card-bg-avatar{
+  position:absolute;inset:0;z-index:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:200px;line-height:1;
+  filter:blur(22px) brightness(0.48) saturate(1.6);
+  transform:scale(1.2);user-select:none;
+  background:#0d1a10;
+}
+.card-bg-avatar img{width:100%;height:100%;object-fit:cover;filter:blur(22px) brightness(0.48) saturate(1.6);transform:scale(1.2)}
+
+.card-vignette{
+  position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse at 50% 35%,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.62) 100%);
+}
+
+/* EMOJI RAIN */
+.rain-layer{position:absolute;inset:0;overflow:hidden;border-radius:28px;z-index:2;pointer-events:none}
+.rain-drop{position:absolute;top:0;font-size:18px;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
+@keyframes rainDrop{
+  0%  {opacity:0;transform:translateY(-20px) translateX(var(--sx)) scale(0.4) rotate(0deg)}
+  12% {opacity:.9}
+  82% {opacity:.5}
+  100%{opacity:0;transform:translateY(var(--ey)) translateX(var(--ex)) scale(1.05) rotate(var(--er))}
+}
+
+/* card content */
+.card-content{
+  position:absolute;inset:0;z-index:4;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 0 18px;
+}
+
+.bottom-row{
+  display:flex;align-items:flex-end;
+  justify-content:space-between;
+  padding:0 16px;gap:10px;
+}
+
+/* GREEN CIRCLE */
+.circle-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.halo{position:absolute;border-radius:50%;animation:haloBreath 2.8s ease-in-out infinite}
+@keyframes haloBreath{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.13);opacity:1}}
+.green-circle{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(145deg,#4ade80,#22c55e,#16a34a);
+  box-shadow:0 0 0 3px rgba(74,222,128,0.35),0 0 28px rgba(74,222,128,0.55),0 6px 20px rgba(0,0,0,0.4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  position:relative;z-index:2;
+  animation:circleFloat 3.5s ease-in-out infinite;
+}
+@keyframes circleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.circle-avatar-inner{
+  width:48px;height:48px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.6);
+  background:rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;overflow:hidden;
+}
+.circle-avatar-inner img{width:100%;height:100%;object-fit:cover}
+.circle-name{
+  color:#fff;font-size:10px;font-weight:800;
+  text-shadow:0 1px 4px rgba(0,0,0,0.35);
+  max-width:78px;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  padding:0 3px;
+}
+
+/* STATUS TEXT */
+.status-text-block{flex:1;display:flex;flex-direction:column;gap:5px;padding-bottom:6px}
+.status-ok{color:#fff;font-size:26px;font-weight:900;text-shadow:0 2px 14px rgba(0,0,0,0.9);letter-spacing:-0.5px;line-height:1.1}
+.status-emojis{font-size:22px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7))}
+.status-emoji-main{display:inline-block}
+.anim-float {animation:eFloat  2.5s ease-in-out infinite}
+.anim-heart {animation:eHeart  1s   ease-in-out infinite}
+.anim-wave  {animation:eWave   1.2s ease-in-out infinite}
+.anim-spin  {animation:eSpin   3s   linear      infinite}
+.anim-shake {animation:eShake  0.7s ease-in-out infinite}
+.anim-bounce{animation:eBounce 1.4s ease-in-out infinite}
+@keyframes eFloat {0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.07)}}
+@keyframes eHeart {0%,100%{transform:scale(1)}14%{transform:scale(1.32)}28%{transform:scale(1)}42%{transform:scale(1.2)}}
+@keyframes eWave  {0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-10deg)}}
+@keyframes eSpin  {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes eShake {0%,100%{transform:translateX(0)}25%{transform:translateX(-5px) rotate(-7deg)}75%{transform:translateX(5px) rotate(7deg)}}
+@keyframes eBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}70%{transform:translateY(-3px)}}
+.status-time{color:rgba(255,255,255,0.62);font-size:12px;display:flex;align-items:center;gap:4px}
+
+/* REACT BUTTON inside card */
+.react-btn{
+  margin:12px 16px 0;width:calc(100% - 32px);
+  background:rgba(255,255,255,0.13);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.28);
+  border-radius:14px;padding:11px 16px;
+  color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,0.35);
+  text-decoration:none;
+  transition:background 0.15s;
+}
+.react-btn:active{background:rgba(255,255,255,0.22)}
+
+/* JOIN BUTTON below card */
+.join-btn{
+  width:100%;
+  background:linear-gradient(135deg,#1a9e50,#0d7a3a);
+  border:none;border-radius:18px;
+  padding:16px 24px;font-size:17px;font-weight:900;
+  color:#fff;cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(26,158,80,0.4);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  text-decoration:none;
+  transition:transform 0.15s;
+}
+.join-btn:active{transform:scale(0.97)}
+
+.app-tag{font-size:11px;color:rgba(255,255,255,0.3);text-align:center}
+
+/* not found */
+#not-found{display:none;flex-direction:column;align-items:center;gap:12px;text-align:center;color:rgba(200,230,255,0.5)}
+#not-found h2{font-size:20px;color:rgba(200,230,255,0.8)}
+</style>
+
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <span>טוען פרופיל…</span>
+</div>
+
+<div id="card-wrap">
+  <div class="card" id="mainCard">
+    <!-- bg -->
+    <div class="card-bg-avatar" id="cardBgAvatar"></div>
+    <div class="card-vignette"></div>
+
+```
+<!-- emoji rain -->
+<div class="rain-layer" id="rainLayer"></div>
+
+<!-- content -->
+<div class="card-content">
+  <div class="bottom-row">
+    <!-- right: green circle -->
+    <div class="circle-wrap" id="circleWrap">
+      <div class="halo" id="halo1"></div>
+      <div class="halo" id="halo2"></div>
+      <div class="halo" id="halo3"></div>
+      <div class="green-circle">
+        <div class="circle-avatar-inner" id="circleAvatarInner"></div>
+        <div class="circle-name" id="circleName"></div>
+      </div>
+    </div>
+    <!-- left: text -->
+    <div class="status-text-block">
+      <div class="status-ok">אני בסדר</div>
+      <div class="status-emojis">
+        <span class="status-emoji-main" id="mainEmojiEl"></span>
+        <span id="signEl"></span>
+      </div>
+      <div class="status-time" id="timeEl"></div>
+    </div>
+  </div>
+
+  <!-- react button -->
+  <a class="react-btn" id="reactBtn" href="https://anibeseder.com" target="_blank">
+    תגיבו ❤️
+  </a>
+</div>
+```
+
+  </div>
+
+  <!-- join button -->
+
+  <a class="join-btn" id="joinBtn" href="https://anibeseder.com">
+    ➕ הוסיפו אותי כחבר באפליקציה
+  </a>
+
+  <div class="app-tag">anibeseder.com</div>
+</div>
+
+<div id="not-found">
+  <h2>🔍 פרופיל לא נמצא</h2>
+  <p>הלינק אולי פג תוקף</p>
+  <a href="https://anibeseder.com" style="color:#4ade80;font-weight:700">עבור לאפליקציה →</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBdErGgHq1ens9kQiQzofowxFsyeS2hjNY",
+  authDomain: "ani-beseder-57800.firebaseapp.com",
+  projectId: "ani-beseder-57800",
+  storageBucket: "ani-beseder-57800.firebasestorage.app",
+  messagingSenderId: "596709424854",
+  appId: "1:596709424854:web:3aadf6233f4a9a84ac9377",
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// emoji → animation class
+const emojiAnim = (e) => {
+  if(['❤️','💕','💗','🌸'].includes(e)) return 'anim-heart';
+  if(['🌟','⭐','✨','⚡','💫'].includes(e)) return 'anim-spin';
+  if(['😊','👋','🙌'].includes(e)) return 'anim-wave';
+  if(['💪','🔥','👊','🤜'].includes(e)) return 'anim-shake';
+  if(['🎉','🥳','🎊','🎈'].includes(e)) return 'anim-bounce';
+  return 'anim-float';
+};
+
+function buildRain(emoji) {
+  const layer = document.getElementById('rainLayer');
+  layer.innerHTML = '';
+  for(let i = 0; i < 30; i++){
+    const side = i % 2 === 0;
+    const span = document.createElement('span');
+    span.className = 'rain-drop';
+    span.textContent = emoji;
+    span.style.left  = side ? `${3 + Math.random()*46}%` : `${51 + Math.random()*46}%`;
+    const sx = side ? `-${20+Math.random()*60}px` : `${20+Math.random()*60}px`;
+    const ex = side ? `-${40+Math.random()*90}px` : `${40+Math.random()*90}px`;
+    span.style.setProperty('--sx', sx);
+    span.style.setProperty('--ex', ex);
+    span.style.setProperty('--ey', `${120+Math.random()*220}px`);
+    span.style.setProperty('--er', `${(Math.random()-.5)*540}deg`);
+    span.style.animationDuration  = `${2.2+Math.random()*2.2}s`;
+    span.style.animationDelay     = `${Math.random()*3.5}s`;
+    span.style.fontSize = `${13+Math.random()*16}px`;
+    layer.appendChild(span);
+  }
+}
+
+function formatTime(ts) {
+  if(!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `🕐 ${h}:${m}`;
+}
+
+async function load() {
+  const params = new URLSearchParams(location.search);
+  let uid = params.get('u') || params.get('uid');
+  // also support path: /profile/UID or /?follow=UID
+  if(!uid) uid = params.get('follow');
+  if(!uid){
+    const parts = location.pathname.split('/').filter(Boolean);
+    uid = parts[parts.length-1];
+    if(uid === 'profile') uid = null;
+  }
+
+  if(!uid){
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('not-found').style.display = 'flex';
+    return;
+  }
+
+  try{
+    const [statusSnap, userSnap] = await Promise.all([
+      getDoc(doc(db,'status',uid)),
+      getDoc(doc(db,'users',uid)),
+    ]);
+
+    if(!statusSnap.exists() && !userSnap.exists()){
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('not-found').style.display = 'flex';
+      return;
+    }
+
+    const sd = statusSnap.data() || {};
+    const ud = userSnap.data()   || {};
+
+    const name       = sd.name || ud.displayName || ud.name || 'משתמש';
+    const photoURL   = sd.profilePhotoURL || ud.profilePhotoURL || null;
+    const moodEmoji  = sd.moodEmoji || '✅';
+    const sign       = sd.sign      || '';
+    const timestamp  = sd.timestamp || null;
+    const isOk       = sd.isOk !== false;
+
+    // page title
+    document.title = `${name} ${moodEmoji} – אני בסדר`;
+    document.getElementById('pageTitle').textContent = document.title;
+    document.getElementById('ogTitle').setAttribute('content', `${name} ${moodEmoji} – אני בסדר 🟢`);
+    document.getElementById('ogDesc').setAttribute('content', `${name} דיווח שהוא בסדר! הצטרף לאפליקציה`);
+    document.getElementById('ogUrl').setAttribute('content', location.href);
+
+    // bg avatar
+    const bgEl = document.getElementById('cardBgAvatar');
+    if(photoURL){
+      bgEl.innerHTML = `<img src="${photoURL}" alt=""/>`;
+    } else {
+      bgEl.textContent = moodEmoji;
+    }
+
+    // circle avatar
+    const innerEl = document.getElementById('circleAvatarInner');
+    if(photoURL){
+      innerEl.innerHTML = `<img src="${photoURL}" alt=""/>`;
+    } else {
+      innerEl.textContent = moodEmoji;
+    }
+    document.getElementById('circleName').textContent = name;
+
+    // halos
+    [[130,0],[110,0.35],[92,0.7]].forEach(([sz,del],i)=>{
+      const h = document.getElementById(`halo${i+1}`);
+      h.style.width = h.style.height = sz+'px';
+      h.style.background = 'radial-gradient(circle,rgba(74,222,128,0.22) 0%,transparent 70%)';
+      h.style.animationDelay = del+'s';
+    });
+
+    // status
+    const emojiEl = document.getElementById('mainEmojiEl');
+    emojiEl.textContent = moodEmoji;
+    emojiEl.className = `status-emoji-main ${emojiAnim(moodEmoji)}`;
+    document.getElementById('signEl').textContent = sign ? ` ${sign}` : '';
+    document.getElementById('timeEl').textContent = formatTime(timestamp);
+
+    // emoji rain
+    buildRain(moodEmoji);
+
+    // join link with follow param
+    const followUrl = `https://anibeseder.com/?follow=${uid}`;
+    document.getElementById('joinBtn').href  = followUrl;
+    document.getElementById('reactBtn').href = followUrl;
+
+    // show card
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('card-wrap').style.display = 'flex';
+
+  } catch(err){
+    console.error(err);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('not-found').style.display = 'flex';
+  }
+}
+
+load();
+</script>
+
+</body>
+</html>
