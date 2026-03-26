@@ -3062,7 +3062,7 @@ window.generateAndShareCard=async()=>{
     if(btn)btn.textContent='⏳ שולח...';
     const shareData={
       title:`${userName} ${moodEmoji} – אני בסדר 🟢`,
-      text:`${userName} ${moodEmoji} שלח לך דיווח – הוא בסדר!\nתגיבו ❤️ והצטרפו:`,
+      text:`מה ${userName} דיווח? תגיבו ❤️ והצטרפו`,
       url:profileUrl,
     };
     if(navigator.share){
@@ -4798,7 +4798,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v173';
+  var APP_BUILD='v175';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
