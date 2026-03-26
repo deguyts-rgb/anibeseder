@@ -3050,13 +3050,12 @@ window.generateAndShareCard=async()=>{
     const path=encodeURIComponent(`og-cards/${currentUser.uid}.png`);
     const imageUrl=`https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${path}?alt=media`;
 
-    // ── 3. בנה URL ישיר לפרופיל — ללא Worker באמצע ──
+    // ── 3. בנה URL קצר לפרופיל ──
     const profileUrl=`https://anibeseder.com/profile.html`
       +`?u=${encodeURIComponent(currentUser.uid)}`
       +`&n=${encodeURIComponent(userName)}`
       +`&e=${encodeURIComponent(moodEmoji)}`
-      +`&t=${encodeURIComponent(timeStr)}`
-      +`&img=${encodeURIComponent(imageUrl)}`;
+      +`&t=${encodeURIComponent(timeStr)}`;
 
     // ── 4. שתף ──
     if(btn)btn.textContent='⏳ שולח...';
@@ -4798,7 +4797,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v175';
+  var APP_BUILD='v176';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
