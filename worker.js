@@ -71,12 +71,11 @@ timeStr = String(dt.getHours()).padStart(2,‘0’) + ‘:’ + String(dt.getMin
 var safeName = name.replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);
 var title = safeName + ’ ’ + emoji + ’ - OK’;
 var desc = timeStr ? (timeStr + ’ - tap to reply’) : ‘tap to reply’;
-var followUrl = 'https://anibeseder.com/profile.html?u=' + uid
-  + '&n=' + encodeURIComponent(name)
-  + '&e=' + encodeURIComponent(emoji)
-  + '&t=' + encodeURIComponent(timeStr)
-  + '&img=' + encodeURIComponent(ogImage);
-
+var followUrl = ‘https://anibeseder.com/profile.html?u=’ + uid
++ ‘&n=’ + encodeURIComponent(name)
++ ‘&e=’ + encodeURIComponent(emoji)
++ ‘&t=’ + encodeURIComponent(timeStr)
++ ‘&img=’ + encodeURIComponent(ogImage);
 var shareUrl = ‘https://send-push.deguyts.workers.dev/share?u=’ + uid;
 var html = ‘<!DOCTYPE html><html><head>’
 + ‘<meta charset="UTF-8">’
@@ -90,18 +89,17 @@ var html = ‘<!DOCTYPE html><html><head>’
 + ‘<meta name="twitter:card" content="summary_large_image">’
 + ‘<meta name="twitter:image" content="' + ogImage + '">’
 + ‘<title>’ + title + ‘</title>’
-+ ‘<script>if(!/WhatsApp|facebookexternalhit|Googlebot/i.test(navigator.userAgent))location.replace(”’ + followUrl + ‘”);<’ + ‘/script>’
-+ ‘</head><body style="background:#060c14;color:#fff;font-family:Arial;text-align:center;padding:60px 24px">’
++ ‘</head><body style="background:#060c14;color:#fff;font-family:Arial;text-align:center;padding:60px 24px;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">’
 + ‘<p style="font-size:64px">’ + emoji + ‘</p>’
-+ ‘<h1>’ + safeName + ‘</h1>’
-+ ‘<p>’ + desc + ‘</p>’
-+ ‘<a href="' + followUrl + '" style="background:#22c55e;color:#fff;padding:14px 28px;border-radius:14px;text-decoration:none;font-weight:700;display:inline-block;margin-top:16px">Join App</a>’
++ ‘<h1 style="font-size:24px;font-weight:900;margin:0">’ + safeName + ’ - OK</h1>’
++ ‘<p style="color:rgba(255,255,255,0.55);font-size:16px;margin:8px 0">’ + desc + ‘</p>’
++ ‘<a href="' + followUrl + '" style="background:#22c55e;color:#fff;padding:14px 28px;border-radius:14px;text-decoration:none;font-weight:700;display:inline-block;margin-top:16px;font-size:16px">Join App</a>’
++ ‘<p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.2)">anibeseder.com</p>’
 + ‘</body></html>’;
 return new Response(html, {
 headers: { ‘Content-Type’: ‘text/html; charset=utf-8’, ‘Cache-Control’: ‘public, max-age=60’ }
 });
 }
-
 
 async function getFirebaseAccessToken(serviceAccountJson) {
 const sa = JSON.parse(serviceAccountJson);
