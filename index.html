@@ -170,14 +170,21 @@
     .wcard-nudge{background:rgba(255,200,50,0.07);border:1px solid rgba(255,200,50,0.2);color:rgba(255,220,130,0.65)}
     .wcard-trash{background:rgba(255,80,80,0.07);border:1px solid rgba(255,80,80,0.18);color:rgba(255,120,120,0.55)}
     /* ── GROUP CARDS ── */
-    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:0;margin-top:16px}
-    .wcard.group-card{border:none !important;border-radius:0;box-shadow:none;background:linear-gradient(135deg,rgba(180,140,40,0.25),rgba(120,85,10,0.18))}
-    .wcard.group-card .wcard-top{min-height:unset !important;height:110px}
-    .wcard-identity.group-identity{width:110px;min-width:110px;background-position:center center !important;border-radius:23px !important;background-color:rgba(180,140,40,0.28) !important;padding:15px;background-clip:content-box;background-origin:content-box}
+    @keyframes group-shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    .group-card-wrapper{width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;display:flex;flex-direction:column;gap:0;margin-top:8px;margin-bottom:6px}
+    .wcard.group-card{border:none !important;border-radius:0;box-shadow:none;position:relative;overflow:hidden;
+      background:linear-gradient(135deg,rgba(200,165,50,0.18) 0%,rgba(76,200,80,0.14) 50%,rgba(200,165,50,0.12) 100%)}
+    .wcard.group-card::after{content:'';position:absolute;inset:0;
+      background:linear-gradient(105deg,transparent 40%,rgba(255,235,140,0.13) 50%,transparent 60%);
+      background-size:200% 100%;animation:group-shimmer 3.2s ease-in-out infinite;pointer-events:none}
+    .wcard.group-card .wcard-top{min-height:unset !important;height:54px;align-items:center}
+    .wcard-identity.group-identity{width:54px !important;min-width:54px !important;height:54px !important;
+      background-position:center center !important;background-size:cover !important;
+      display:flex;align-items:center;justify-content:center;
+      background-color:rgba(180,140,40,0.25) !important;flex-shrink:0}
     .wcard.group-card .group-members-strip-wrap{justify-content:center}
-    .group-card-time-label{width:100%;text-align:center;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 0 2px}
-    .group-card-name-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:3px 6px 6px;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 100%);text-align:center}
-    .group-card-name-text{font-size:11px;font-weight:800;color:#d4a940;display:block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:1.3}
+    .group-card-time-label{width:100%;text-align:right;font-size:10px;color:rgba(212,169,64,0.75);font-weight:700;letter-spacing:0.3px;padding:0 8px 2px}
+    .group-card-name-below{font-size:10px;font-weight:800;color:rgba(212,169,64,0.9);text-align:center;width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;line-height:1.2;flex-shrink:0}
 
 ```
 /* ══ D-SHAPE v109 ══
@@ -189,111 +196,105 @@
 /* SELF: תמונה שמאל (RTL row-reverse), גולש שמאל, חצי-עיגול ימין */
 /* ── D-SHAPE v115 ── */
 
-/* Wrapper: מרווח 40pt בין כרטיסים */
-.d-wrap{display:flex;flex-direction:column;margin-bottom:0;padding-bottom:0;width:100%;overflow:visible}
+/* Wrapper: מרווח בין כרטיסים */
+.d-wrap{display:flex;flex-direction:column;margin-bottom:6px;padding-bottom:0;width:100%;overflow:visible}
 .d-wrap-self{direction:ltr;align-items:flex-start;padding-left:0;margin-left:-20px;overflow:visible}
 .d-wrap-friend{align-items:flex-end;padding-right:20px}
 
-/* תווית זמן – מעל תמונת פרופיל, רוחב = תמונה */
+/* תווית זמן – מעל עיגול תמונת פרופיל */
 .d-timelbl{
   font-size:11px;font-weight:600;line-height:1;
-  padding-bottom:4px;
-  width:65px;
+  padding-bottom:3px;
+  width:52px;
   text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:left;width:auto;padding-left:0;margin-left:8px}
-.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-start;margin-right:-24px}
+.d-wrap-self .d-timelbl{color:rgba(76,222,128,0.75);align-self:flex-start;text-align:center;width:52px;padding-left:0;margin-left:4px}
+.d-wrap-friend .d-timelbl{color:rgba(200,230,255,0.4);align-self:flex-end;margin-right:20px;text-align:center}
 
-/* ───────────────────────────────────────────────────────
-   SELF: מבנה כמו FRIEND אבל הפוך (תמונה שמאל)
-   תמונה גולשת 11px שמאל + קווי מסגרת ממשיכים לשמאל
-   חצי-עיגול בימין
-   רוחב 87% + 11px = זהה לחבר
-─────────────────────────────────────────────────────── */
+/* שם מתחת לעיגול הפרופיל */
+.d-iname{font-size:9px;font-weight:700;text-align:center;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(200,230,255,0.7);margin-top:3px;line-height:1.2}
+.d-iname-friend{align-self:flex-end;margin-right:20px}
+.d-iname-self{align-self:flex-start;margin-left:4px}
+
+/* עמודת סטטוס + כפתורים */
+.wcard-status-col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;justify-content:center}
+
+/* ═══ D-SHAPE v178 ═══
+   חצי-עיגול צר, עיגול פרופיל, שם מתחת
+═══════════════════════════════════════════ */
+
 .wcard.d-self{
-  position:static;
-  left:auto;
-  margin-left:0;
-  width:calc(100vw - 100px);
-  direction:rtl;
+  position:static;left:auto;margin-left:0;
+  width:calc(100vw - 100px);direction:rtl;
   border-top:2px solid #060c14 !important;
   border-bottom:2px solid #060c14 !important;
-  border-left:none !important;
-  border-right:none !important;
-  border-radius:0 999px 999px 0 !important;
+  border-left:none !important;border-right:none !important;
+  border-radius:0 27px 27px 0 !important;
   background:rgba(18,130,60,0.22) !important;
   margin-bottom:0;overflow:hidden}
-.d-self .wcard-top{min-height:unset !important;height:84px;align-items:stretch;direction:rtl}
-/* status-wrap: flex column, ריפוד לחצי-עיגול ימין, circle בסמוך לתמונה */
+.d-self .wcard-top{min-height:unset !important;height:54px;align-items:center;direction:rtl}
 .d-self .wcard-status-wrap{
-  display:flex !important;flex-direction:column !important;
-  justify-content:center;align-items:stretch;
-  position:relative;
-  padding-right:23px;padding-left:0;padding-bottom:0}
-/* d-status-row בתוך self */
-.d-self .d-status-row{flex-direction:row;gap:0;align-items:center;width:100%}
-/* circle: margin-left 9px = מרחק קבוע מהתמונה */
+  display:flex !important;flex-direction:row !important;
+  align-items:center;direction:ltr;
+  flex:1;padding-right:14px;padding-left:0;min-width:0}
+.d-self .d-status-row{flex-direction:row;gap:15px;align-items:center;width:100%}
 .d-self .wcard-circle{flex-shrink:0}
-.d-self .d-btns{margin-top:2px;padding-right:0}
 
-/* ───────────────────────────────────────────────────────
-   FRIEND: תמונה ימין, חצי-עיגול שמאל, גולש ימין 11px
-─────────────────────────────────────────────────────── */
 .wcard.d-friend{
-  margin-right:-38px;
-  width:calc(87% + 10px);
+  margin-right:-38px;width:calc(87% + 10px);
   border-top:2px solid #060c14 !important;
   border-bottom:2px solid #060c14 !important;
-  border-right:none !important;
-  border-left:2px solid #060c14 !important;
-  border-radius:999px 0 0 999px !important;
+  border-right:none !important;border-left:2px solid #060c14 !important;
+  border-radius:27px 0 0 27px !important;
   background:rgba(42,62,88,0.72) !important;
   margin-bottom:0;overflow:hidden}
-.d-friend .wcard-top{min-height:unset !important;height:84px;align-items:stretch}
+.d-friend .wcard-top{min-height:unset !important;height:54px;align-items:center}
 .d-friend .wcard-status-wrap{
   display:flex !important;flex-direction:row !important;
-  align-items:center;
-  position:relative;
-  padding-left:10px;padding-right:15px;
-  transform:translateY(-7px)}
-.d-friend .d-status-row{flex-direction:row;gap:10px;align-items:center;width:100%}
+  align-items:center;flex:1;
+  padding-left:10px;padding-right:12px;min-width:0}
+.d-friend .d-status-row{flex-direction:row;gap:15px;align-items:center;width:100%}
 .d-friend .wcard-circle{flex-shrink:0}
-
-/* כפתורים: absolute תחתית, זזים שמאלה */
-.d-friend .d-btns{position:absolute;bottom:3px;right:66px;display:flex;gap:9px;align-items:center}
 
 .wcard.d-self,.wcard.d-friend{margin-bottom:0 !important}
 .d-self .wcard-identity,
 .d-friend .wcard-identity{
-  width:65px !important;min-width:65px !important;
+  width:43px !important;min-width:43px !important;height:43px !important;
   background-position:center center !important;
   background-size:cover !important;
-  overflow:hidden !important;
-  flex-shrink:0;
-  border-radius:19px !important}
-.d-self .wcard-identity{background-color:transparent !important;margin-right:13px}
+  overflow:hidden !important;flex-shrink:0;
+  border-radius:50% !important;
+  display:flex;align-items:center;justify-content:center}
+.d-self .wcard-identity{background-color:rgba(18,130,60,0.3) !important;margin-right:15px}
+.d-friend .wcard-identity{background-color:rgba(42,62,88,0.5) !important}
 
 /* ── שורת סטטוס + טקסט ── */
 .d-status-row{display:flex;align-items:center}
-/* טקסט: ממלא שטח, לא עובר שורה */
-.d-self .wcard-status-texts{flex:1;min-width:0;text-align:right}
+.d-self .wcard-status-texts{flex:1;min-width:0;text-align:left}
 .d-friend .wcard-status-texts{flex:1;min-width:0;text-align:right}
 .d-self .wcard-status,
 .d-friend .wcard-status{overflow:visible;text-overflow:unset;white-space:normal}
 
-/* ── כפתורים: מיד מתחת לשורת סטטוס ── */
-.d-btns{display:flex;gap:3px;align-items:center}
+/* ── כפתורי בועות ── */
+.d-btns{display:flex;gap:6px;align-items:center;margin-top:2px}
+.d-friend .d-btns{display:flex;gap:6px;align-items:center}
 .d-nb{
   display:flex;align-items:center;justify-content:center;
-  width:22px;height:19px;border-radius:4px;font-size:13px;
-  background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(150,180,160,0.55)}
-.d-nb.sent{border-color:rgba(76,222,128,0.4);color:rgba(76,222,128,0.75)}
+  width:26px;height:26px;border-radius:50%;font-size:15px;
+  background:rgba(100,120,140,0.1);border:1.5px solid rgba(150,180,200,0.18);
+  cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(160,190,210,0.3)}
+.d-nb.sent{
+  background:rgba(255,200,50,0.14);
+  border-color:rgba(255,200,50,0.5);
+  color:rgba(255,210,80,0.9)}
 .d-rb{
   display:flex;align-items:center;justify-content:center;
-  width:22px;height:19px;border-radius:4px;font-size:13px;
-  background:none;border:1px solid rgba(150,180,160,0.2);
-  cursor:pointer;font-family:inherit;color:rgba(150,180,160,0.55)}
+  width:26px;height:26px;border-radius:50%;font-size:15px;
+  background:rgba(100,120,140,0.1);border:1.5px solid rgba(150,180,200,0.18);
+  cursor:pointer;font-family:inherit;transition:all 0.2s;color:rgba(160,190,210,0.35)}
+.d-rb.reacted{
+  background:rgba(76,222,128,0.14);
+  border-color:rgba(76,222,128,0.4)}
 
 /* ── תגובות self ── */
 .d-reacts{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:4px}
@@ -2652,19 +2653,17 @@ function buildSelfCardHTML(statuses){
         <div class="wcard-status-wrap">
           <div class="d-status-row">
             <div class="wcard-circle" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
-            <div class="wcard-status-texts" style="align-items:flex-end;flex:1">
-              ${statusHTML}
+            <div class="wcard-status-col">
+              <div class="wcard-status-texts">
+                ${statusHTML}
+              </div>
             </div>
           </div>
         </div>
-        <div class="wcard-identity" style="${idStyle}">
-          ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
-          <div class="wcard-identity-content">
-            <span class="wcard-iname">אני – ${myName}</span>
-          </div>
-        </div>
+        <div class="wcard-identity" style="${idStyle}"></div>
       </div>
     </div>
+    <span class="d-iname d-iname-self">אני – ${myName}</span>
     <div class="d-react-strip" id="d-reacts-self">${reactHTML}</div>
   </div>`;
 }
@@ -2743,26 +2742,24 @@ function renderWatchingWithStatuses(watching,statuses){
       ${timeStr?`<span class="d-timelbl">${timeStr}</span>`:''}
       <div class="wcard d-friend" id="wrow-${w.followingUid}">
         <div class="wcard-top">
-          <div class="wcard-identity" style="${identityStyle};cursor:pointer" onclick="openFriendProfile('${safeUid}')">
-            ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
-            <div class="wcard-identity-content">
-              <span class="wcard-iname">${w.followingName||'משתמש'}</span>
-            </div>
-          </div>
-          <div class="wcard-status-wrap" style="display:flex;flex-direction:column;justify-content:center;gap:4px" ondblclick="handleCardDblClick('${safeUid}')">
+          <div class="wcard-identity" style="${identityStyle};cursor:pointer" onclick="openFriendProfile('${safeUid}')"></div>
+          <div class="wcard-status-wrap" ondblclick="handleCardDblClick('${safeUid}')">
             <div class="d-status-row">
               <div class="wcard-circle ${circleClass}" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
-              <div class="wcard-status-texts" style="flex:1">
-                ${statusHTML}
+              <div class="wcard-status-col">
+                <div class="wcard-status-texts">
+                  ${statusHTML}
+                </div>
+                <div class="d-btns" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()">
+                  <button class="d-nb ${nSent}" id="dnb-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nIn}</button>
+                  <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeName}','${rndE}')"><span>${rndE}</span></button>
+                </div>
               </div>
-            </div>
-            <div class="d-btns" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()">
-              <button class="d-nb ${nSent}" id="dnb-${w.followingUid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeName}')">${nIn}</button>
-              <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeName}','${rndE}')"><span>${rndE}</span></button>
             </div>
           </div>
         </div>
       </div>
+      <span class="d-iname d-iname-friend">${w.followingName||'משתמש'}</span>
       ${myReactsHTML?`<div class="d-react-strip">${myReactsHTML}</div>`:''}
     </div>`;
   }).join('');
@@ -3430,17 +3427,18 @@ function buildGroupCardHTML(group){
   }
   return `<div class="group-card-wrapper">
     ${timeLabel?`<div class="group-card-time-label">${timeLabel}</div>`:''}
-    <div class="wcard group-card" id="gcard-${group.id}">
-    <div class="wcard-top" style="cursor:pointer" onclick="openGroupFeedPanel('${safeId}')">
-      <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');background-size:cover;background-position:center center;">
-        <div class="wcard-identity-overlay"></div>
-        <div class="group-card-name-overlay">
-          <span class="group-card-name-text">${group.name||''}</span>
+    <div style="display:flex;align-items:center;padding:0 8px">
+      <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+        <div class="wcard group-card" id="gcard-${group.id}" style="margin:0;overflow:visible;position:relative">
+          <div class="wcard-top" style="cursor:pointer" onclick="openGroupFeedPanel('${safeId}')">
+            <div class="wcard-identity group-identity" style="background-image:url('${photoSrc}');border-radius:50% !important;width:43px !important;min-width:43px !important;height:43px !important;margin:0 8px;"></div>
+            <div class="group-members-strip-wrap">${membersHTML}</div>
+          </div>
         </div>
+        <span class="group-card-name-below">${group.name||''}</span>
       </div>
-      <div class="group-members-strip-wrap">${membersHTML}</div>
     </div>
-  </div></div>`;
+  </div>`;
 }
 
 // ── GROUP FEED PANEL ──
@@ -3547,26 +3545,24 @@ function renderGfeedBody(group){
       ${timeStr?`<span class="d-timelbl">${timeStr}</span>`:''}
       <div class="wcard d-friend" id="gfrow-${uid}">
         <div class="wcard-top">
-          <div class="wcard-identity" style="${identityStyle};cursor:pointer" onclick="openFriendProfile('${safeUid}')">
-            ${photoURL?'<div class="wcard-identity-overlay"></div>':''}
-            <div class="wcard-identity-content">
-              <span class="wcard-iname">${memberName}</span>
-            </div>
-          </div>
-          <div class="wcard-status-wrap" style="display:flex;flex-direction:column;justify-content:center;gap:4px" ondblclick="handleCardDblClick('${safeUid}')">
+          <div class="wcard-identity" style="${identityStyle};cursor:pointer" onclick="openFriendProfile('${safeUid}')"></div>
+          <div class="wcard-status-wrap" ondblclick="handleCardDblClick('${safeUid}')">
             <div class="d-status-row">
               <div class="wcard-circle ${circleClass}" style="${circleInlineStyle}${circleGlowStyle}">${circleContent}</div>
-              <div class="wcard-status-texts" style="flex:1">
-                ${statusHTML}
+              <div class="wcard-status-col">
+                <div class="wcard-status-texts">
+                  ${statusHTML}
+                </div>
+                <div class="d-btns" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()">
+                  <button class="d-nb ${nSent}" id="dnbg-${uid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${nIn}</button>
+                  <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeMemberName}','${rndE}')"><span>${rndE}</span></button>
+                </div>
               </div>
-            </div>
-            <div class="d-btns" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()">
-              <button class="d-nb ${nSent}" id="dnbg-${uid}" onclick="handleNudgeBtn(this,'${safeUid}','${safeMemberName}')">${nIn}</button>
-              <button class="d-rb" onclick="openReactPicker('${safeUid}','${safeMemberName}','${rndE}')"><span>${rndE}</span></button>
             </div>
           </div>
         </div>
       </div>
+      <span class="d-iname d-iname-friend">${memberName}</span>
       ${myReactsHTML?`<div class="d-react-strip">${myReactsHTML}</div>`:''}
     </div>`;
   }).join('');
@@ -4793,7 +4789,7 @@ if('serviceWorker'in navigator){
 
 // ── AUTO UPDATE CHECK (for home screen PWA) ──────────────────
 (function(){
-  var APP_BUILD='v177';
+  var APP_BUILD='v178';
   function checkUpdate(){
     fetch('/?_='+Date.now(),{cache:'no-store',method:'GET'})
       .then(function(r){return r.text();})
