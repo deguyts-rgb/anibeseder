@@ -72,7 +72,7 @@ position:absolute;
 top:-30px;
 user-select:none;pointer-events:none;
 opacity:0;
-animation:rainFall var(–dur) linear var(–delay) infinite;
+animation:rainFall linear infinite;
 }
 @keyframes rainFall{
 0%  {opacity:0;transform:translateY(0) translateX(0) rotate(0deg) scale(0.5)}
@@ -279,8 +279,8 @@ function buildRain(emoji) {
     span.style.setProperty('--ex', `${(Math.random()-0.5)*80}px`);
     span.style.setProperty('--ey', `${400 + Math.random()*300}px`);
     span.style.setProperty('--er', `${(Math.random()-.5)*480}deg`);
-    span.style.setProperty('--dur', `${1.8 + Math.random()*3}s`);
-    span.style.setProperty('--delay', `${Math.random()*5}s`);
+    span.style.animationDuration = `${1.8 + Math.random()*3}s`;
+    span.style.animationDelay    = `${Math.random()*5}s`;
     span.style.fontSize = `${10 + Math.random()*22}px`;
     layer.appendChild(span);
   }
