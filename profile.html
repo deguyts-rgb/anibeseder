@@ -271,17 +271,13 @@ const emojiAnim = (e) => {
 function buildRain(emoji) {
   const layer = document.getElementById('rainLayer');
   layer.innerHTML = '';
-  // קרא גובה אחרי שהכרטיס מוצג
-  const cardEl = document.getElementById('mainCard');
-  const H = cardEl.offsetHeight || 480;
   for(let i = 0; i < 35; i++){
     const span = document.createElement('span');
     span.className = 'rain-drop';
     span.textContent = emoji;
     span.style.left = `${2 + Math.random()*94}%`;
-    const ex = (Math.random()-0.5)*80;
-    span.style.setProperty('--ex', `${ex}px`);
-    span.style.setProperty('--ey', `${H * 0.85 + Math.random() * H * 0.3}px`);
+    span.style.setProperty('--ex', `${(Math.random()-0.5)*80}px`);
+    span.style.setProperty('--ey', `${400 + Math.random()*300}px`);
     span.style.setProperty('--er', `${(Math.random()-.5)*480}deg`);
     span.style.setProperty('--dur', `${1.8 + Math.random()*3}s`);
     span.style.setProperty('--delay', `${Math.random()*5}s`);
