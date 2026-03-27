@@ -66,10 +66,10 @@ background:radial-gradient(ellipse at 50% 30%,rgba(0,0,0,0.0) 0%,rgba(0,0,0,0.72
 }
 
 /* EMOJI RAIN */
-.rain-layer{position:absolute;inset:0;overflow:hidden;z-index:2;pointer-events:none}
-.rain-drop{position:absolute;top:0;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
+.rain-layer{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:2;pointer-events:none}
+.rain-drop{position:absolute;top:-20px;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
 @keyframes rainDrop{
-0%  {opacity:0;transform:translateY(-20px) translateX(var(–sx)) scale(0.4) rotate(0deg)}
+0%  {opacity:0;transform:translateY(0) translateX(var(–sx)) scale(0.4) rotate(0deg)}
 12% {opacity:.9}
 82% {opacity:.5}
 100%{opacity:0;transform:translateY(var(–ey)) translateX(var(–ex)) scale(1.05) rotate(var(–er))}
@@ -265,6 +265,7 @@ const emojiAnim = (e) => {
 function buildRain(emoji) {
   const layer = document.getElementById('rainLayer');
   layer.innerHTML = '';
+  const cardH = document.getElementById('mainCard').offsetHeight || 500;
   for(let i = 0; i < 30; i++){
     const side = i % 2 === 0;
     const span = document.createElement('span');
@@ -273,10 +274,10 @@ function buildRain(emoji) {
     span.style.left = side ? `${3+Math.random()*46}%` : `${51+Math.random()*46}%`;
     span.style.setProperty('--sx', side ? `-${20+Math.random()*60}px` : `${20+Math.random()*60}px`);
     span.style.setProperty('--ex', side ? `-${40+Math.random()*90}px` : `${40+Math.random()*90}px`);
-    span.style.setProperty('--ey', `${120+Math.random()*220}px`);
+    span.style.setProperty('--ey', `${cardH * 0.7 + Math.random() * cardH * 0.3}px`);
     span.style.setProperty('--er', `${(Math.random()-.5)*540}deg`);
-    span.style.animationDuration = `${2.2+Math.random()*2.2}s`;
-    span.style.animationDelay    = `${Math.random()*3.5}s`;
+    span.style.animationDuration = `${2.5+Math.random()*2.5}s`;
+    span.style.animationDelay    = `${Math.random()*4}s`;
     span.style.fontSize = `${13+Math.random()*16}px`;
     layer.appendChild(span);
   }
@@ -344,7 +345,7 @@ async function load() {
     const emojiEl = document.getElementById('mainEmojiEl');
     emojiEl.textContent = moodEmoji;
     emojiEl.className = emojiAnim(moodEmoji);
-    document.getElementById('signEl').textContent = sign || '';
+    document.getElementById('signEl').textContent = (sign && sign !== '?' && sign !== '...') ? ` ${sign}` : '';
 
     // שעה — ללא אייקון
     document.getElementById('timeEl').textContent = timeStr || '';
