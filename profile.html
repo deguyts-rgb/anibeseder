@@ -5,9 +5,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="theme-color" content="#060c14"/>
-
-<!-- Open Graph – WhatsApp / social preview -->
-
 <meta property="og:site_name" content="אני בסדר"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="אני בסדר 🟢"/>
@@ -17,11 +14,8 @@
 <meta property="og:image:height" content="512"/>
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:image" content="https://anibeseder.com/icon-512.png"/>
-
-<title id="pageTitle">אני בסדר 🟢</title>
-
+<title>אני בסדר 🟢</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet"/>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{
@@ -30,100 +24,113 @@ body{
   min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:24px;
-  direction:rtl;
-  color:#fff;
+  padding:32px 24px;
+  direction:rtl;color:#fff;
 }
-
-#loading{
-  display:flex;flex-direction:column;align-items:center;gap:16px;
-  color:rgba(200,230,255,0.5);font-size:15px;
-}
+#loading{display:flex;flex-direction:column;align-items:center;gap:16px;color:rgba(200,230,255,0.5);font-size:15px}
 .spinner{width:40px;height:40px;border:3px solid rgba(74,222,128,0.2);border-top-color:#4ade80;border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+#card-wrap{display:none;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:340px}
 
-#card-wrap{display:none;flex-direction:column;align-items:center;gap:20px;width:100%;max-width:340px}
-
-/* ── CARD ── */
+/* CARD */
 .card{
-  width:100%;
-  border-radius:28px;overflow:hidden;position:relative;
-  box-shadow:0 24px 64px rgba(0,0,0,0.85);
-  aspect-ratio:9/14;
+width:100%;
+border-radius:28px;
+position:relative;
+box-shadow:0 24px 64px rgba(0,0,0,0.85);
+aspect-ratio:9/14;
+overflow:visible;
 }
-
+.card-inner{
+position:absolute;inset:0;
+border-radius:28px;overflow:hidden;
+}
 .card-bg-avatar{
-  position:absolute;inset:0;z-index:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:200px;line-height:1;
-  filter:blur(22px) brightness(0.48) saturate(1.6);
-  transform:scale(1.2);user-select:none;
-  background:#0d1a10;
+position:absolute;inset:0;z-index:0;
+display:flex;align-items:center;justify-content:center;
+background:#0d1a10;overflow:hidden;
 }
-.card-bg-avatar img{width:100%;height:100%;object-fit:cover;filter:blur(22px) brightness(0.48) saturate(1.6);transform:scale(1.2)}
-
+.card-bg-avatar img{
+width:100%;height:100%;object-fit:cover;
+filter:blur(24px) brightness(0.42) saturate(1.6);
+transform:scale(1.15);
+}
+.card-bg-emoji{
+font-size:200px;
+filter:blur(22px) brightness(0.42);
+transform:scale(1.2);
+}
 .card-vignette{
-  position:absolute;inset:0;z-index:1;
-  background:radial-gradient(ellipse at 50% 35%,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.62) 100%);
+position:absolute;inset:0;z-index:1;
+background:radial-gradient(ellipse at 50% 30%,rgba(0,0,0,0.0) 0%,rgba(0,0,0,0.72) 100%);
 }
 
 /* EMOJI RAIN */
-.rain-layer{position:absolute;inset:0;overflow:hidden;border-radius:28px;z-index:2;pointer-events:none}
-.rain-drop{position:absolute;top:0;font-size:18px;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
+.rain-layer{position:absolute;inset:0;overflow:hidden;z-index:2;pointer-events:none}
+.rain-drop{position:absolute;top:0;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
 @keyframes rainDrop{
-  0%  {opacity:0;transform:translateY(-20px) translateX(var(--sx)) scale(0.4) rotate(0deg)}
-  12% {opacity:.9}
-  82% {opacity:.5}
-  100%{opacity:0;transform:translateY(var(--ey)) translateX(var(--ex)) scale(1.05) rotate(var(--er))}
+0%  {opacity:0;transform:translateY(-20px) translateX(var(–sx)) scale(0.4) rotate(0deg)}
+12% {opacity:.9}
+82% {opacity:.5}
+100%{opacity:0;transform:translateY(var(–ey)) translateX(var(–ex)) scale(1.05) rotate(var(–er))}
 }
 
-/* card content */
-.card-content{
-  position:absolute;inset:0;z-index:4;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:0 0 18px;
+/* GREEN CIRCLE — top center, half outside */
+.circle-wrap{
+position:absolute;
+top:0;left:50%;
+transform:translate(-50%,-46%);
+z-index:10;
+display:flex;flex-direction:column;align-items:center;
 }
-
-.bottom-row{
-  display:flex;align-items:flex-end;
-  justify-content:space-between;
-  padding:0 16px;gap:10px;
+.halo{position:absolute;border-radius:50%;pointer-events:none;top:50%;left:50%;}
+@keyframes haloBreath{
+0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.4}
+50%{transform:translate(-50%,-50%) scale(1.2);opacity:0.8}
 }
-
-/* GREEN CIRCLE */
-.circle-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.halo{position:absolute;border-radius:50%;animation:haloBreath 2.8s ease-in-out infinite}
-@keyframes haloBreath{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.13);opacity:1}}
 .green-circle{
-  width:88px;height:88px;border-radius:50%;
-  background:linear-gradient(145deg,#4ade80,#22c55e,#16a34a);
-  box-shadow:0 0 0 3px rgba(74,222,128,0.35),0 0 28px rgba(74,222,128,0.55),0 6px 20px rgba(0,0,0,0.4);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  position:relative;z-index:2;
-  animation:circleFloat 3.5s ease-in-out infinite;
+width:100px;height:100px;border-radius:50%;
+background:linear-gradient(145deg,#4ade80,#22c55e,#16a34a);
+box-shadow:0 0 0 4px rgba(74,222,128,0.45),0 0 36px rgba(74,222,128,0.65),0 8px 24px rgba(0,0,0,0.5);
+display:flex;align-items:center;justify-content:center;
+position:relative;z-index:2;flex-shrink:0;
 }
-@keyframes circleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .circle-avatar-inner{
-  width:48px;height:48px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.6);
-  background:rgba(255,255,255,0.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;overflow:hidden;
+width:74px;height:74px;border-radius:50%;
+border:2.5px solid rgba(255,255,255,0.75);
+background:rgba(255,255,255,0.2);
+display:flex;align-items:center;justify-content:center;
+font-size:36px;overflow:hidden;
 }
 .circle-avatar-inner img{width:100%;height:100%;object-fit:cover}
-.circle-name{
-  color:#fff;font-size:10px;font-weight:800;
-  text-shadow:0 1px 4px rgba(0,0,0,0.35);
-  max-width:78px;text-align:center;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  padding:0 3px;
+
+/* CARD CONTENT */
+.card-content{
+position:absolute;inset:0;z-index:4;
+display:flex;flex-direction:column;
+align-items:center;justify-content:flex-end;
+padding:0 16px 16px;
+}
+.user-name{
+position:absolute;
+top:60px;left:0;right:0;
+text-align:center;
+font-size:26px;font-weight:900;
+color:#fff;
+text-shadow:0 2px 16px rgba(0,0,0,0.95);
+padding:0 12px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.status-time{
+font-size:16px;font-weight:700;
+color:rgba(255,255,255,0.78);
+text-align:center;
+margin-bottom:12px;
+text-shadow:0 1px 8px rgba(0,0,0,0.9);
+letter-spacing:0.5px;
 }
 
-/* STATUS TEXT */
-.status-text-block{flex:1;display:flex;flex-direction:column;gap:5px;padding-bottom:6px}
-.status-ok{color:#fff;font-size:26px;font-weight:900;text-shadow:0 2px 14px rgba(0,0,0,0.9);letter-spacing:-0.5px;line-height:1.1}
-.status-emojis{font-size:22px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7))}
-.status-emoji-main{display:inline-block}
+/* emoji animations */
 .anim-float {animation:eFloat  2.5s ease-in-out infinite}
 .anim-heart {animation:eHeart  1s   ease-in-out infinite}
 .anim-wave  {animation:eWave   1.2s ease-in-out infinite}
@@ -136,37 +143,41 @@ body{
 @keyframes eSpin  {from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes eShake {0%,100%{transform:translateX(0)}25%{transform:translateX(-5px) rotate(-7deg)}75%{transform:translateX(5px) rotate(7deg)}}
 @keyframes eBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}70%{transform:translateY(-3px)}}
-.status-time{color:rgba(255,255,255,0.62);font-size:12px;display:flex;align-items:center;gap:4px}
 
-/* REACT BUTTON inside card */
+/* REACT BUTTON — moving gradient */
 .react-btn{
-  margin:12px 16px 0;width:calc(100% - 32px);
-  background:linear-gradient(135deg,#1a9e50,#0d7a3a);
-  border:none;border-radius:18px;
-  padding:16px 24px;font-size:17px;font-weight:900;
-  color:#fff;cursor:pointer;font-family:inherit;
-  box-shadow:0 8px 28px rgba(26,158,80,0.4);
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  text-decoration:none;
-  transition:transform 0.15s;
+width:100%;
+border:none;border-radius:18px;
+padding:13px 24px 10px;
+color:#fff;cursor:pointer;font-family:inherit;
+box-shadow:0 8px 32px rgba(26,158,80,0.55);
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+text-decoration:none;
+transition:transform 0.15s;
+background:linear-gradient(135deg,#16a34a,#4ade80,#15803d,#22c55e);
+background-size:300% 300%;
+animation:gradMove 3s ease infinite;
+}
+@keyframes gradMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 .react-btn:active{transform:scale(0.97)}
-
-/* JOIN BUTTON below card */
-.join-btn{
-  width:100%;
-  background:linear-gradient(135deg,#1a9e50,#0d7a3a);
-  border:none;border-radius:18px;
-  padding:16px 24px;font-size:17px;font-weight:900;
-  color:#fff;cursor:pointer;font-family:inherit;
-  box-shadow:0 8px 28px rgba(26,158,80,0.4);
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  text-decoration:none;
-  transition:transform 0.15s;
+.btn-status-line{
+font-size:22px;font-weight:900;
+text-shadow:0 2px 8px rgba(0,0,0,0.35);
+display:flex;align-items:center;gap:6px;
+line-height:1.3;
+direction:rtl;
 }
-.join-btn:active{transform:scale(0.97)}
+.btn-react-line{
+font-size:13px;font-weight:700;
+color:rgba(255,255,255,0.88);
+letter-spacing:0.3px;
+}
 
-.app-tag{font-size:11px;color:rgba(255,255,255,0.3);text-align:center}
+.app-tag{font-size:11px;color:rgba(255,255,255,0.22);text-align:center;margin-top:2px}
 
 /* not found */
 #not-found{display:none;flex-direction:column;align-items:center;gap:12px;text-align:center;color:rgba(200,230,255,0.5)}
@@ -183,48 +194,40 @@ body{
 
 <div id="card-wrap">
   <div class="card" id="mainCard">
-    <!-- bg -->
-    <div class="card-bg-avatar" id="cardBgAvatar"></div>
-    <div class="card-vignette"></div>
 
-<!-- emoji rain -->
-
-<div class="rain-layer" id="rainLayer"></div>
-
-<!-- content -->
-
-<div class="card-content">
-  <div class="bottom-row">
-    <!-- right: green circle -->
-    <div class="circle-wrap" id="circleWrap">
-      <div class="halo" id="halo1"></div>
-      <div class="halo" id="halo2"></div>
-      <div class="halo" id="halo3"></div>
-      <div class="green-circle">
-        <div class="circle-avatar-inner" id="circleAvatarInner"></div>
-        <div class="circle-name" id="circleName"></div>
-      </div>
-    </div>
-    <!-- left: text -->
-    <div class="status-text-block">
-      <div class="status-ok">אני בסדר</div>
-      <div class="status-emojis">
-        <span class="status-emoji-main" id="mainEmojiEl"></span>
-        <span id="signEl"></span>
-      </div>
-      <div class="status-time" id="timeEl"></div>
-    </div>
+```
+<!-- עיגול ירוק — חצי מעל הכרטיס -->
+<div class="circle-wrap" id="circleWrap">
+  <div class="halo" id="halo1"></div>
+  <div class="halo" id="halo2"></div>
+  <div class="halo" id="halo3"></div>
+  <div class="green-circle">
+    <div class="circle-avatar-inner" id="circleAvatarInner"></div>
   </div>
-
-  <!-- react button -->
-
-  <a class="react-btn" id="reactBtn" href="https://anibeseder.com" target="_blank">
-    תגיבו ❤️ 🙄🫢
-  </a>
 </div>
 
-  </div>
+<!-- תוכן מקוצץ בגבולות הכרטיס -->
+<div class="card-inner">
+  <div class="card-bg-avatar" id="cardBgAvatar"></div>
+  <div class="card-vignette"></div>
+  <div class="rain-layer" id="rainLayer"></div>
 
+  <div class="card-content">
+    <div class="user-name" id="userName"></div>
+    <div class="status-time" id="timeEl"></div>
+    <a class="react-btn" id="reactBtn" href="https://anibeseder.com">
+      <div class="btn-status-line">
+        <span>אני בסדר</span>
+        <span id="mainEmojiEl"></span>
+        <span id="signEl"></span>
+      </div>
+      <div class="btn-react-line">תגיבו ❤️ 🙄🫢</div>
+    </a>
+  </div>
+</div>
+```
+
+  </div>
   <div class="app-tag">anibeseder.com</div>
 </div>
 
@@ -250,7 +253,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// emoji → animation class
 const emojiAnim = (e) => {
   if(['❤️','💕','💗','🌸'].includes(e)) return 'anim-heart';
   if(['🌟','⭐','✨','⚡','💫'].includes(e)) return 'anim-spin';
@@ -268,114 +270,92 @@ function buildRain(emoji) {
     const span = document.createElement('span');
     span.className = 'rain-drop';
     span.textContent = emoji;
-    span.style.left  = side ? `${3 + Math.random()*46}%` : `${51 + Math.random()*46}%`;
-    const sx = side ? `-${20+Math.random()*60}px` : `${20+Math.random()*60}px`;
-    const ex = side ? `-${40+Math.random()*90}px` : `${40+Math.random()*90}px`;
-    span.style.setProperty('--sx', sx);
-    span.style.setProperty('--ex', ex);
+    span.style.left = side ? `${3+Math.random()*46}%` : `${51+Math.random()*46}%`;
+    span.style.setProperty('--sx', side ? `-${20+Math.random()*60}px` : `${20+Math.random()*60}px`);
+    span.style.setProperty('--ex', side ? `-${40+Math.random()*90}px` : `${40+Math.random()*90}px`);
     span.style.setProperty('--ey', `${120+Math.random()*220}px`);
     span.style.setProperty('--er', `${(Math.random()-.5)*540}deg`);
-    span.style.animationDuration  = `${2.2+Math.random()*2.2}s`;
-    span.style.animationDelay     = `${Math.random()*3.5}s`;
+    span.style.animationDuration = `${2.2+Math.random()*2.2}s`;
+    span.style.animationDelay    = `${Math.random()*3.5}s`;
     span.style.fontSize = `${13+Math.random()*16}px`;
     layer.appendChild(span);
   }
 }
 
-function formatTime(ts) {
-  if(!ts) return '';
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
-  return `🕐 ${h}:${m}`;
-}
-
 async function load() {
   const params = new URLSearchParams(location.search);
   let uid = params.get('u') || params.get('uid') || params.get('follow');
-  if(uid && uid.includes('http')) {
-    const m = uid.match(/[?&]u=([^&]+)/);
-    uid = m ? m[1] : null;
-  }
   if(!uid){
     document.getElementById('loading').style.display = 'none';
     document.getElementById('not-found').style.display = 'flex';
     return;
   }
-
-  // קבל נתונים מה-URL params (מהWorker) או מ-Firestore כגיבוי
-  const nameParam  = params.get('n');
-  const emojiParam = params.get('e');
-  const timeParam  = params.get('t');
-  const imgParam   = params.get('img');
-
   try{
-    let name, moodEmoji, timeStr, photoURL, sign = '';
-
-    if(nameParam) {
-      // נתונים הגיעו מהWorker דרך URL params – אין צורך ב-Firestore
-      name      = nameParam || 'משתמש';
-      moodEmoji = emojiParam || '✅';
-      timeStr   = timeParam  || '';
-      photoURL  = imgParam && !imgParam.includes('og-card') ? imgParam : null;
-    } else {
-      // גיבוי – קרא מ-Firestore
-      const [statusSnap, userSnap] = await Promise.all([
-        getDoc(doc(db,'status',uid)),
-        getDoc(doc(db,'users',uid)),
-      ]);
-      if(!statusSnap.exists() && !userSnap.exists()){
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('not-found').style.display = 'flex';
-        return;
-      }
-      const sd = statusSnap.data() || {};
-      const ud = userSnap.data()   || {};
-      name      = sd.name || ud.displayName || 'משתמש';
-      moodEmoji = sd.moodEmoji || '✅';
-      sign      = sd.sign || '';
-      photoURL  = sd.profilePhotoURL || ud.profilePhotoURL || null;
-      const ts  = sd.timestamp;
-      if(ts){ const d=ts.toDate();timeStr=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
-      else timeStr = '';
+    const [statusSnap, userSnap] = await Promise.all([
+      getDoc(doc(db,'status',uid)),
+      getDoc(doc(db,'users',uid)),
+    ]);
+    if(!statusSnap.exists() && !userSnap.exists()){
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('not-found').style.display = 'flex';
+      return;
+    }
+    const sd = statusSnap.data() || {};
+    const ud = userSnap.data()   || {};
+    const name      = sd.name || ud.displayName || 'משתמש';
+    const moodEmoji = sd.moodEmoji || '✅';
+    const sign      = sd.sign || '';
+    const photoURL  = sd.profilePhotoURL || ud.profilePhotoURL || null;
+    let timeStr = '';
+    const ts = sd.timestamp;
+    if(ts){
+      const d = ts.toDate();
+      timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     }
 
     document.title = `${name} ${moodEmoji} – אני בסדר`;
 
-    // bg avatar
+    // רקע מטושטש
     const bgEl = document.getElementById('cardBgAvatar');
-    if(photoURL){ bgEl.innerHTML = `<img src="${photoURL}" alt=""/>`; }
-    else { bgEl.textContent = moodEmoji; }
+    if(photoURL){
+      bgEl.innerHTML = `<img src="${photoURL}" alt=""/>`;
+    } else {
+      const d = document.createElement('div');
+      d.className = 'card-bg-emoji';
+      d.textContent = moodEmoji;
+      bgEl.appendChild(d);
+    }
 
-    // circle avatar
+    // עיגול
     const innerEl = document.getElementById('circleAvatarInner');
     if(photoURL){ innerEl.innerHTML = `<img src="${photoURL}" alt=""/>`; }
     else { innerEl.textContent = moodEmoji; }
-    document.getElementById('circleName').textContent = name;
 
-    // halos
-    [[130,0],[110,0.35],[92,0.7]].forEach(([sz,del],i)=>{
+    // הילות
+    [[160,0,2.8],[130,0.4,3.2],[105,0.8,3.6]].forEach(([sz,del,dur],i)=>{
       const h = document.getElementById(`halo${i+1}`);
-      h.style.width = h.style.height = sz+'px';
-      h.style.background = 'radial-gradient(circle,rgba(74,222,128,0.22) 0%,transparent 70%)';
-      h.style.animationDelay = del+'s';
+      h.style.cssText = `width:${sz}px;height:${sz}px;top:50%;left:50%;background:radial-gradient(circle,rgba(74,222,128,0.3) 0%,transparent 70%);animation:haloBreath ${dur}s ease-in-out ${del}s infinite;`;
     });
 
-    // status
+    // שם
+    document.getElementById('userName').textContent = name;
+
+    // אמוג'י
     const emojiEl = document.getElementById('mainEmojiEl');
     emojiEl.textContent = moodEmoji;
-    emojiEl.className = `status-emoji-main ${emojiAnim(moodEmoji)}`;
-    document.getElementById('signEl').textContent = sign ? ` ${sign}` : '';
-    document.getElementById('timeEl').textContent = timeStr ? `🕐 ${timeStr}` : '';
+    emojiEl.className = emojiAnim(moodEmoji);
+    document.getElementById('signEl').textContent = sign || '';
 
-    // emoji rain
+    // שעה — ללא אייקון
+    document.getElementById('timeEl').textContent = timeStr || '';
+
+    // גשם אמוג'ים
     buildRain(moodEmoji);
 
-    // join link
-    const followUrl = `https://anibeseder.com/?follow=${uid}`;
-    document.getElementById('reactBtn').href = followUrl;
+    // לינק
+    document.getElementById('reactBtn').href = `https://anibeseder.com/?follow=${uid}`;
 
-    // show card
+    // הצג
     document.getElementById('loading').style.display = 'none';
     document.getElementById('card-wrap').style.display = 'flex';
 
@@ -383,6 +363,7 @@ async function load() {
     console.error(err);
     document.getElementById('loading').style.display = 'none';
     document.getElementById('not-found').style.display = 'flex';
+    document.getElementById('not-found').innerHTML += `<p style="font-size:11px;color:rgba(255,100,100,0.7);max-width:300px;word-break:break-all">${err.message}</p>`;
   }
 }
 
