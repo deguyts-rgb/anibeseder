@@ -141,17 +141,16 @@ body{
 /* REACT BUTTON inside card */
 .react-btn{
   margin:12px 16px 0;width:calc(100% - 32px);
-  background:rgba(255,255,255,0.13);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,0.28);
-  border-radius:14px;padding:11px 16px;
-  color:#fff;font-size:14px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
-  font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,0.35);
+  background:linear-gradient(135deg,#1a9e50,#0d7a3a);
+  border:none;border-radius:18px;
+  padding:16px 24px;font-size:17px;font-weight:900;
+  color:#fff;cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(26,158,80,0.4);
+  display:flex;align-items:center;justify-content:center;gap:10px;
   text-decoration:none;
-  transition:background 0.15s;
+  transition:transform 0.15s;
 }
-.react-btn:active{background:rgba(255,255,255,0.22)}
+.react-btn:active{transform:scale(0.97)}
 
 /* JOIN BUTTON below card */
 .join-btn{
@@ -220,17 +219,11 @@ body{
   <!-- react button -->
 
   <a class="react-btn" id="reactBtn" href="https://anibeseder.com" target="_blank">
-    תגיבו ❤️
+    תגיבו ❤️ 🙄🫢
   </a>
 </div>
 
   </div>
-
-  <!-- join button -->
-
-  <a class="join-btn" id="joinBtn" href="https://anibeseder.com">
-    ➕ הוסיפו אותי כחבר באפליקציה
-  </a>
 
   <div class="app-tag">anibeseder.com</div>
 </div>
@@ -380,7 +373,6 @@ async function load() {
 
     // join link
     const followUrl = `https://anibeseder.com/?follow=${uid}`;
-    document.getElementById('joinBtn').href  = followUrl;
     document.getElementById('reactBtn').href = followUrl;
 
     // show card
