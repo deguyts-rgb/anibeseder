@@ -65,20 +65,14 @@ position:absolute;inset:0;z-index:1;
 background:radial-gradient(ellipse at 50% 30%,rgba(0,0,0,0.0) 0%,rgba(0,0,0,0.72) 100%);
 }
 
-/* EMOJI RAIN */
-.rain-layer{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:2;pointer-events:none}
-.rain-drop{
-position:absolute;
-top:-30px;
-user-select:none;pointer-events:none;
-opacity:0;
-animation:rainFall linear infinite;
-}
+/* EMOJI RAIN — keyframes בלבד, duration וdelay מוגדרים inline */
+.rain-layer{position:absolute;inset:0;overflow:hidden;z-index:2;pointer-events:none}
+.rain-drop{position:absolute;top:-30px;user-select:none;pointer-events:none;opacity:0}
 @keyframes rainFall{
-0%  {opacity:0;transform:translateY(0) translateX(0) rotate(0deg) scale(0.5)}
-8%  {opacity:0.9}
-85% {opacity:0.5}
-100%{opacity:0;transform:translateY(var(–ey)) translateX(var(–ex)) rotate(var(–er)) scale(1.1)}
+0%  {opacity:0;  transform:translateY(0px)          translateX(0px)         rotate(0deg)   scale(0.5)}
+8%  {opacity:0.85}
+82% {opacity:0.4}
+100%{opacity:0;  transform:translateY(var(–ey))     translateX(var(–ex))   rotate(var(–er)) scale(1.1)}
 }
 
 /* GREEN CIRCLE — top center, half outside */
@@ -92,7 +86,7 @@ display:flex;flex-direction:column;align-items:center;
 .halo{position:absolute;border-radius:50%;pointer-events:none;top:50%;left:50%;}
 @keyframes haloBreath{
 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.4}
-50%{transform:translate(-50%,-50%) scale(1.2);opacity:0.8}
+50%{transform:translate(-50%,-50%) scale(1.22);opacity:0.85}
 }
 .green-circle{
 width:100px;height:100px;border-radius:50%;
@@ -117,6 +111,8 @@ display:flex;flex-direction:column;
 align-items:center;justify-content:flex-end;
 padding:0 16px 16px;
 }
+
+/* שם מתחת לעיגול */
 .user-name{
 position:absolute;
 top:60px;left:0;right:0;
@@ -127,13 +123,35 @@ text-shadow:0 2px 16px rgba(0,0,0,0.95);
 padding:0 12px;
 white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+
+/* טקסט הדיווח — 40% מהגובה, עם הילה ירוקה */
+.status-block{
+position:absolute;
+top:40%;left:0;right:0;
+transform:translateY(-50%);
+display:flex;flex-direction:column;align-items:center;gap:6px;
+padding:0 16px;
+}
+.status-ok-text{
+font-size:28px;font-weight:900;
+color:#fff;
+text-shadow:0 0 24px rgba(74,222,128,0.7), 0 2px 16px rgba(0,0,0,0.9);
+display:flex;align-items:center;gap:8px;
+animation:textGlow 2.8s ease-in-out infinite;
+}
+@keyframes textGlow{
+0%,100%{text-shadow:0 0 18px rgba(74,222,128,0.5),0 2px 14px rgba(0,0,0,0.9)}
+50%{text-shadow:0 0 36px rgba(74,222,128,0.95),0 0 60px rgba(74,222,128,0.4),0 2px 14px rgba(0,0,0,0.9)}
+}
+.status-sign{font-size:18px;color:rgba(255,255,255,0.8);font-weight:700}
+
+/* שעה */
 .status-time{
 font-size:16px;font-weight:700;
-color:rgba(255,255,255,0.78);
+color:rgba(255,255,255,0.75);
 text-align:center;
 margin-bottom:12px;
 text-shadow:0 1px 8px rgba(0,0,0,0.9);
-letter-spacing:0.5px;
 }
 
 /* emoji animations */
@@ -150,15 +168,16 @@ letter-spacing:0.5px;
 @keyframes eShake {0%,100%{transform:translateX(0)}25%{transform:translateX(-5px) rotate(-7deg)}75%{transform:translateX(5px) rotate(7deg)}}
 @keyframes eBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}70%{transform:translateY(-3px)}}
 
-/* REACT BUTTON — moving gradient */
+/* REACT BUTTON — קטן יותר, פונט גדול יותר */
 .react-btn{
-width:100%;
+width:80%;
 border:none;border-radius:18px;
-padding:13px 24px 10px;
+padding:14px 20px;
 color:#fff;cursor:pointer;font-family:inherit;
 box-shadow:0 8px 32px rgba(26,158,80,0.55);
-display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+display:flex;align-items:center;justify-content:center;gap:8px;
 text-decoration:none;
+font-size:20px;font-weight:900;
 transition:transform 0.15s;
 background:linear-gradient(135deg,#16a34a,#4ade80,#15803d,#22c55e);
 background-size:300% 300%;
@@ -170,18 +189,6 @@ animation:gradMove 3s ease infinite;
 100%{background-position:0% 50%}
 }
 .react-btn:active{transform:scale(0.97)}
-.btn-status-line{
-font-size:22px;font-weight:900;
-text-shadow:0 2px 8px rgba(0,0,0,0.35);
-display:flex;align-items:center;gap:6px;
-line-height:1.3;
-direction:rtl;
-}
-.btn-react-line{
-font-size:13px;font-weight:700;
-color:rgba(255,255,255,0.88);
-letter-spacing:0.3px;
-}
 
 .app-tag{font-size:11px;color:rgba(255,255,255,0.22);text-align:center;margin-top:2px}
 
@@ -202,7 +209,6 @@ letter-spacing:0.3px;
   <div class="card" id="mainCard">
 
 ```
-<!-- עיגול ירוק — חצי מעל הכרטיס -->
 <div class="circle-wrap" id="circleWrap">
   <div class="halo" id="halo1"></div>
   <div class="halo" id="halo2"></div>
@@ -212,7 +218,6 @@ letter-spacing:0.3px;
   </div>
 </div>
 
-<!-- תוכן מקוצץ בגבולות הכרטיס -->
 <div class="card-inner">
   <div class="card-bg-avatar" id="cardBgAvatar"></div>
   <div class="card-vignette"></div>
@@ -220,14 +225,20 @@ letter-spacing:0.3px;
 
   <div class="card-content">
     <div class="user-name" id="userName"></div>
-    <div class="status-time" id="timeEl"></div>
-    <a class="react-btn" id="reactBtn" href="https://anibeseder.com">
-      <div class="btn-status-line">
+
+    <!-- טקסט דיווח ב-40% גובה -->
+    <div class="status-block">
+      <div class="status-ok-text">
         <span>אני בסדר</span>
         <span id="mainEmojiEl"></span>
-        <span id="signEl"></span>
       </div>
-      <div class="btn-react-line">תגיבו ❤️ 🙄🫢</div>
+      <div class="status-sign" id="signEl"></div>
+    </div>
+
+    <div class="status-time" id="timeEl"></div>
+
+    <a class="react-btn" id="reactBtn" href="https://anibeseder.com">
+      תגיבו ❤️
     </a>
   </div>
 </div>
@@ -271,17 +282,19 @@ const emojiAnim = (e) => {
 function buildRain(emoji) {
   const layer = document.getElementById('rainLayer');
   layer.innerHTML = '';
-  for(let i = 0; i < 35; i++){
+  for(let i = 0; i < 32; i++){
     const span = document.createElement('span');
     span.className = 'rain-drop';
     span.textContent = emoji;
     span.style.left = `${2 + Math.random()*94}%`;
     span.style.setProperty('--ex', `${(Math.random()-0.5)*80}px`);
-    span.style.setProperty('--ey', `${400 + Math.random()*300}px`);
-    span.style.setProperty('--er', `${(Math.random()-.5)*480}deg`);
-    span.style.animationDuration = `${1.8 + Math.random()*3}s`;
-    span.style.animationDelay    = `${Math.random()*5}s`;
+    span.style.setProperty('--ey', `${350 + Math.random()*320}px`);
+    span.style.setProperty('--er', `${(Math.random()-0.5)*480}deg`);
+    const dur = 1.8 + Math.random()*3;
+    const delay = Math.random()*5;
     span.style.fontSize = `${10 + Math.random()*22}px`;
+    // animation מלא inline — כולל duration וdelay
+    span.style.animation = `rainFall ${dur}s linear ${delay}s infinite`;
     layer.appendChild(span);
   }
 }
@@ -344,13 +357,16 @@ async function load() {
     // שם
     document.getElementById('userName').textContent = name;
 
-    // אמוג'י
+    // אמוג'י ראשי
     const emojiEl = document.getElementById('mainEmojiEl');
     emojiEl.textContent = moodEmoji;
     emojiEl.className = emojiAnim(moodEmoji);
-    document.getElementById('signEl').textContent = (sign && sign !== '?' && sign !== '...') ? ` ${sign}` : '';
 
-    // שעה — ללא אייקון
+    // sign
+    const cleanSign = (sign && sign !== '?' && sign !== '...') ? sign : '';
+    document.getElementById('signEl').textContent = cleanSign;
+
+    // שעה
     document.getElementById('timeEl').textContent = timeStr || '';
 
     // לינק
@@ -360,8 +376,8 @@ async function load() {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('card-wrap').style.display = 'flex';
 
-    // גשם אמוג'ים — אחרי שהכרטיס מוצג ויש לו גובה
-    requestAnimationFrame(()=> requestAnimationFrame(()=> buildRain(moodEmoji)));
+    // גשם — אחרי render
+    requestAnimationFrame(() => requestAnimationFrame(() => buildRain(moodEmoji)));
 
   } catch(err){
     console.error(err);
