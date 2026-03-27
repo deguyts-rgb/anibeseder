@@ -67,12 +67,18 @@ background:radial-gradient(ellipse at 50% 30%,rgba(0,0,0,0.0) 0%,rgba(0,0,0,0.72
 
 /* EMOJI RAIN */
 .rain-layer{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:2;pointer-events:none}
-.rain-drop{position:absolute;top:-20px;user-select:none;pointer-events:none;opacity:0;animation:rainDrop 3s cubic-bezier(.3,0,.7,1) infinite}
-@keyframes rainDrop{
-0%  {opacity:0;transform:translateY(0) translateX(var(–sx)) scale(0.4) rotate(0deg)}
-12% {opacity:.9}
-82% {opacity:.5}
-100%{opacity:0;transform:translateY(var(–ey)) translateX(var(–ex)) scale(1.05) rotate(var(–er))}
+.rain-drop{
+position:absolute;
+top:-30px;
+user-select:none;pointer-events:none;
+opacity:0;
+animation:rainFall var(–dur) linear var(–delay) infinite;
+}
+@keyframes rainFall{
+0%  {opacity:0;transform:translateY(0) translateX(0) rotate(0deg) scale(0.5)}
+8%  {opacity:0.9}
+85% {opacity:0.5}
+100%{opacity:0;transform:translateY(var(–ey)) translateX(var(–ex)) rotate(var(–er)) scale(1.1)}
 }
 
 /* GREEN CIRCLE — top center, half outside */
@@ -265,20 +271,21 @@ const emojiAnim = (e) => {
 function buildRain(emoji) {
   const layer = document.getElementById('rainLayer');
   layer.innerHTML = '';
-  const cardH = document.getElementById('mainCard').offsetHeight || 500;
-  for(let i = 0; i < 30; i++){
-    const side = i % 2 === 0;
+  // קרא גובה אחרי שהכרטיס מוצג
+  const cardEl = document.getElementById('mainCard');
+  const H = cardEl.offsetHeight || 480;
+  for(let i = 0; i < 35; i++){
     const span = document.createElement('span');
     span.className = 'rain-drop';
     span.textContent = emoji;
-    span.style.left = side ? `${3+Math.random()*46}%` : `${51+Math.random()*46}%`;
-    span.style.setProperty('--sx', side ? `-${20+Math.random()*60}px` : `${20+Math.random()*60}px`);
-    span.style.setProperty('--ex', side ? `-${40+Math.random()*90}px` : `${40+Math.random()*90}px`);
-    span.style.setProperty('--ey', `${cardH * 0.7 + Math.random() * cardH * 0.3}px`);
-    span.style.setProperty('--er', `${(Math.random()-.5)*540}deg`);
-    span.style.animationDuration = `${2.5+Math.random()*2.5}s`;
-    span.style.animationDelay    = `${Math.random()*4}s`;
-    span.style.fontSize = `${13+Math.random()*16}px`;
+    span.style.left = `${2 + Math.random()*94}%`;
+    const ex = (Math.random()-0.5)*80;
+    span.style.setProperty('--ex', `${ex}px`);
+    span.style.setProperty('--ey', `${H * 0.85 + Math.random() * H * 0.3}px`);
+    span.style.setProperty('--er', `${(Math.random()-.5)*480}deg`);
+    span.style.setProperty('--dur', `${1.8 + Math.random()*3}s`);
+    span.style.setProperty('--delay', `${Math.random()*5}s`);
+    span.style.fontSize = `${10 + Math.random()*22}px`;
     layer.appendChild(span);
   }
 }
@@ -350,15 +357,15 @@ async function load() {
     // שעה — ללא אייקון
     document.getElementById('timeEl').textContent = timeStr || '';
 
-    // גשם אמוג'ים
-    buildRain(moodEmoji);
-
     // לינק
     document.getElementById('reactBtn').href = `https://anibeseder.com/?follow=${uid}`;
 
     // הצג
     document.getElementById('loading').style.display = 'none';
     document.getElementById('card-wrap').style.display = 'flex';
+
+    // גשם אמוג'ים — אחרי שהכרטיס מוצג ויש לו גובה
+    requestAnimationFrame(()=> requestAnimationFrame(()=> buildRain(moodEmoji)));
 
   } catch(err){
     console.error(err);
