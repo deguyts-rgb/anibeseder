@@ -1,14 +1,21 @@
+workflows:
+  ios-pwa:
+    name: iOS PWA Build
+    max_build_duration: 60
+    environment:
+      xcode: latest
+      node: 18
+      vars:
+        BUNDLE_ID: "com.anibeseder.app"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
+        APP_STORE_CONNECT_ISSUER_ID: 1265afc2-cdf5-454f-8b20-0a72db990c70
+    scripts:
+      - name: Install Capacitor
+        script: |
+          npm install -g @capacitor/cli
+          npm init -y
+          npm install @capacitor/core @capacitor/ios
       - name: Init iOS project
         script: |
           mkdir -p www
-          echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
-          npx cap init "Ani Beseder" com.anibeseder.app --web-dir www
-          npx cap add ios
-          # Set minimum deployment target to iOS 13
-          sed -i '' "s/platform :ios, '12.0'/platform :ios, '13.0'/" ios/App/Podfile || \
-          sed -i "s/platform :ios, '12.0'/platform :ios, '13.0'/" ios/App/Podfile || true
-          sed -i '' "s/platform :ios, '13'/platform :ios, '13.0'/" ios/App/Podfile || true
-          # Force update
-          cd ios/App && pod install --repo-update
-          cd ../..
-          npx cap sync ios
+          echo​​​​​​​​​​​​​​​​
