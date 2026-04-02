@@ -5,9 +5,6 @@ workflows:
     environment:
       xcode: latest
       node: 18
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.anibeseder.app
       vars:
         BUNDLE_ID: "com.anibeseder.app"
         APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
@@ -35,7 +32,9 @@ workflows:
       - name: Set up signing
         script: |
           keychain initialize
-          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_STORE \
+            --create
           keychain add-certificates
           xcode-project use-profiles
       - name: Build IPA
