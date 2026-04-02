@@ -32,16 +32,12 @@ workflows:
       - name: Set up signing
         script: |
           keychain initialize
+          app-store-connect create-certificate --type IOS_DISTRIBUTION
           app-store-connect fetch-signing-files $BUNDLE_ID \
             --type IOS_APP_STORE \
             --create
           keychain add-certificates
           xcode-project use-profiles
-          # Disable code signing for Pods targets
-          sed -i '' 's/CODE_SIGN_REQUIRED = YES/CODE_SIGN_REQUIRED = NO/g' ios/App/Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || \
-          sed -i 's/CODE_SIGN_REQUIRED = YES/CODE_SIGN_REQUIRED = NO/g' ios/App/Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-          # Add CODE_SIGNING_ALLOWED=NO for pods
-          defaults write ios/App/Pods/Pods.xcodeproj/project.pbxproj CODE_SIGNING_ALLOWED NO 2>/dev/null || true
       - name: Build IPA
         script: |
           mkdir -p build
@@ -65,8 +61,6 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            "PODS_TARGET_SRCROOT_SIGN=NO" \
-            "CODE_SIGNING_ALLOWED[sdk=iphoneos*]=YES" \
             archive
           xcodebuild \
             -exportArchive \
