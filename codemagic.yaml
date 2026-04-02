@@ -19,7 +19,16 @@ workflows:
         script: |
           mkdir -p www
           echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
-          npx cap init "Ani Beseder" com.anibeseder.app --web-dir www
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "com.anibeseder.app",
+            "appName": "Ani Beseder",
+            "webDir": "www",
+            "ios": {
+              "minVersion": "13.0"
+            }
+          }
+          EOF
           npx cap add ios
           python3 -c "
           import re
@@ -28,11 +37,9 @@ workflows:
           content = re.sub(r\"platform :ios, '[^']*'\", \"platform :ios, '13.0'\", content)
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
-          print('Podfile updated successfully')
+          print('Podfile:', open('ios/App/Podfile').read()[:200])
           "
           cd ios/App && pod install --repo-update
-          cd ../..
-          npx cap sync ios
       - name: Set up signing
         script: |
           keychain initialize
