@@ -40,7 +40,18 @@ workflows:
             --create \
             --private-key @file:~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           keychain add-certificates
-          xcode-project use-profiles
+          # Fix Xcode project to use automatic signing
+          python3 - << 'PYEOF'
+          import re, glob, os
+          pbxproj = glob.glob('ios/App/*.xcodeproj/project.pbxproj')[0]
+          with open(pbxproj, 'r') as f:
+              content = f.read()
+          content = re.sub(r'CODE_SIGN_STYLE = Manual;', 'CODE_SIGN_STYLE = Automatic;', content)
+          content = re.sub(r'PROVISIONING_PROFILE_SPECIFIER = "";', f'PROVISIONING_PROFILE_SPECIFIER = "";', content)
+          with open(pbxproj, 'w') as f:
+              f.write(content)
+          print('Project updated for automatic signing')
+          PYEOF
       - name: Build IPA
         script: |
           cd ios/App
@@ -51,12 +62,33 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8 \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
+          cat > ../../build/export_options.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>teamID</key>
+            <string>N58RZ47Z46</string>
+          </dict>
+          </plist>
+          EOF
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist
+            -exportOptionsPlist ../../build/export_options.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8 \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID
     artifacts:
       - build/ipa/*.ipa
     publishing:
