@@ -36,7 +36,19 @@ workflows:
             --type IOS_APP_STORE \
             --create
           keychain add-certificates
-          xcode-project use-profiles
+          # Get profile UUID
+          PROFILE_PATH=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision 2>/dev/null | head -1)
+          echo "Profile path: $PROFILE_PATH"
+          if [ -n "$PROFILE_PATH" ]; then
+            PROFILE_UUID=$(python3 -c "
+          import plistlib, subprocess, re
+          data = subprocess.check_output(['security', 'cms', '-D', '-i', '$PROFILE_PATH'])
+          plist = plistlib.loads(data)
+          print(plist['UUID'])
+          ")
+            echo "Profile UUID: $PROFILE_UUID"
+            echo "PROFILE_UUID=$PROFILE_UUID" >> $CM_ENV
+          fi
       - name: Build IPA
         script: |
           mkdir -p build
@@ -60,6 +72,10 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="iPhone Distribution" \
+            PROVISIONING_PROFILE=$PROFILE_UUID \
+            PROVISIONING_PROFILE_SPECIFIER=$PROFILE_UUID \
             archive
           xcodebuild \
             -exportArchive \
