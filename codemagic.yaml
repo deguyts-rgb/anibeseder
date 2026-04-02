@@ -32,8 +32,14 @@ workflows:
       - name: Set up signing
         script: |
           keychain initialize
-          app-store-connect fetch-signing-files com.anibeseder.app --type IOS_APP_STORE --create
+          mkdir -p ~/.private_keys
+          echo "$APP_STORE_CONNECT_PRIVATE_KEY" > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_STORE \
+            --create \
+            --private-key @file:~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           keychain add-certificates
+          xcode-project use-profiles
       - name: Build IPA
         script: |
           cd ios/App
@@ -44,18 +50,12 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath $(app-store-connect get-api-key-path) \
-            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist \
-            -allowProvisioningUpdates
+            -exportOptionsPlist /Users/builder/export_options.plist
     artifacts:
       - build/ipa/*.ipa
     publishing:
