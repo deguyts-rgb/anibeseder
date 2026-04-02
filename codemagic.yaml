@@ -9,6 +9,7 @@ workflows:
         BUNDLE_ID: "com.anibeseder.app"
         APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
         APP_STORE_CONNECT_ISSUER_ID: 1265afc2-cdf5-454f-8b20-0a72db990c70
+        APPLE_TEAM_ID: N58RZ47Z46
     scripts:
       - name: Install Capacitor 6
         script: |
@@ -37,8 +38,19 @@ workflows:
       - name: Build IPA
         script: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath ../../build/App.xcarchive archive
-          xcodebuild -exportArchive -archivePath ../../build/App.xcarchive -exportPath ../../build/ipa -exportOptionsPlist /Users/builder/export_options.plist
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath ../../build/App.xcarchive \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Manual \
+            archive
+          xcodebuild \
+            -exportArchive \
+            -archivePath ../../build/App.xcarchive \
+            -exportPath ../../build/ipa \
+            -exportOptionsPlist /Users/builder/export_options.plist
     artifacts:
       - build/ipa/*.ipa
     publishing:
