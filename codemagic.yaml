@@ -37,7 +37,30 @@ workflows:
             --type IOS_APP_STORE \
             --create
           keychain add-certificates
-          xcode-project use-profiles
+          # Get profile UUID and save to env
+          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          PROFILE_PATH=$(ls "$PROFILES_DIR"/*.mobileprovision 2>/dev/null | head -1)
+          echo "Found profile: $PROFILE_PATH"
+          UUID=$(python3 -c "
+          import subprocess, plistlib
+          out = subprocess.check_output(['security', 'cms', '-D', '-i', '$PROFILE_PATH'])
+          p = plistlib.loads(out)
+          print(p['UUID'])
+          ")
+          echo "UUID: $UUID"
+          echo "PROFILE_UUID=$UUID" >> $CM_ENV
+          # Patch pbxproj directly
+          PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
+          python3 - << PYEOF
+          import re
+          with open('$PBXPROJ') as f:
+              c = f.read()
+          c = re.sub(r'CODE_SIGN_STYLE = Automatic;', 'CODE_SIGN_STYLE = Manual;', c)
+          c = re.sub(r'PROVISIONING_PROFILE_SPECIFIER = "";', 'PROVISIONING_PROFILE_SPECIFIER = "$UUID";', c)
+          with open('$PBXPROJ', 'w') as f:
+              f.write(c)
+          print('pbxproj patched')
+          PYEOF
       - name: Build IPA
         script: |
           mkdir -p build
@@ -50,6 +73,11 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.anibeseder.app</key>
+              <string>$PROFILE_UUID</string>
+            </dict>
           </dict>
           </plist>
           EOF
@@ -61,6 +89,9 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="iPhone Distribution" \
+            PROVISIONING_PROFILE=$PROFILE_UUID \
             archive
           xcodebuild \
             -exportArchive \
