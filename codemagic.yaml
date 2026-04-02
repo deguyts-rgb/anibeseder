@@ -28,10 +28,11 @@ workflows:
           }
           EOF
           npx cap add ios
-          # Add post_install to disable Pods signing
-          cat >> ios/App/Podfile << 'PODEOF'
-
-          post_install do |installer|
+          # Patch existing post_install to disable Pods signing
+          python3 - << 'PYEOF'
+          with open('ios/App/Podfile', 'r') as f:
+              content = f.read()
+          inject = """
             installer.pods_project.targets.each do |target|
               target.build_configurations.each do |config|
                 config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
@@ -39,8 +40,15 @@ workflows:
                 config.build_settings['CODE_SIGN_IDENTITY'] = ''
               end
             end
-          end
-          PODEOF
+          """
+          content = content.replace(
+              'post_install do |installer|',
+              'post_install do |installer|' + inject
+          )
+          with open('ios/App/Podfile', 'w') as f:
+              f.write(content)
+          print('Podfile patched')
+          PYEOF
           cd ios/App && pod install --repo-update
       - name: Set up signing
         script: |
