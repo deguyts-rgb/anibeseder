@@ -1,0 +1,46 @@
+workflows:
+  ios-pwa:
+    name: iOS PWA Build
+    max_build_duration: 60
+    environment:
+      xcode: latest
+      node: 18
+      vars:
+        BUNDLE_ID: "com.anibeseder.app"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
+        APP_STORE_CONNECT_ISSUER_ID: 1265afc2-cdf5-454f-8b20-0a72db990c70
+    scripts:
+      - name: Install Capacitor
+        script: |
+          npm install -g @capacitor/cli
+          npm init -y
+          npm install @capacitor/core @capacitor/ios
+      - name: Init iOS project
+        script: |
+          mkdir -p www
+          echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
+          npx cap init "אני בסדר" com.anibeseder.app --web-dir www
+          npx cap add ios
+      - name: Set App Name
+        script: |
+          sed -i '' 's/App/אני בסדר/g' ios/App/App/Info.plist || true
+      - name: Build IPA
+        script: |
+          xcode-project use-profiles
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath build/App.xcarchive \
+            archive
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist /Users/builder/export_options.plist
+    artifacts:
+      - build/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
