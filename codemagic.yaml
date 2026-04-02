@@ -18,4 +18,29 @@ workflows:
       - name: Init iOS project
         script: |
           mkdir -p www
-          echo​​​​​​​​​​​​​​​​
+          echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
+          npx cap init "Ani Beseder" com.anibeseder.app --web-dir www
+          npx cap add ios
+          sed -i "s/platform :ios, '12.0'/platform :ios, '13.0'/" ios/App/Podfile || true
+          cd ios/App && pod install --repo-update
+          cd ../..
+          npx cap sync ios
+      - name: Set up signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files com.anibeseder.app --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Build IPA
+        script: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath ../../build/App.xcarchive archive
+          xcodebuild -exportArchive -archivePath ../../build/App.xcarchive -exportPath ../../build/ipa -exportOptionsPlist /Users/builder/export_options.plist
+    artifacts:
+      - build/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
