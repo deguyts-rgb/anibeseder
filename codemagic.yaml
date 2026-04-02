@@ -33,27 +33,38 @@ workflows:
         script: |
           keychain initialize
           mkdir -p ~/.private_keys
-          printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+          # Write p8 with proper newlines
+          python3 -c "
+          import os
+          key = os.environ['APP_STORE_CONNECT_PRIVATE_KEY']
+          key = key.replace('\\\\n', '\n')
+          kid = os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER']
+          path = os.path.expanduser(f'~/.private_keys/AuthKey_{kid}.p8')
+          with open(path, 'w') as f:
+              f.write(key)
+          print('Key written, length:', len(key))
+          "
           chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           app-store-connect fetch-signing-files $BUNDLE_ID \
             --type IOS_APP_STORE \
             --create \
             --private-key @file:~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           keychain add-certificates
-          # Fix Xcode project to use automatic signing
-          python3 - << 'PYEOF'
-          import re, glob, os
-          pbxproj = glob.glob('ios/App/*.xcodeproj/project.pbxproj')[0]
-          with open(pbxproj, 'r') as f:
-              content = f.read()
-          content = re.sub(r'CODE_SIGN_STYLE = Manual;', 'CODE_SIGN_STYLE = Automatic;', content)
-          content = re.sub(r'PROVISIONING_PROFILE_SPECIFIER = "";', f'PROVISIONING_PROFILE_SPECIFIER = "";', content)
-          with open(pbxproj, 'w') as f:
-              f.write(content)
-          print('Project updated for automatic signing')
-          PYEOF
       - name: Build IPA
         script: |
+          mkdir -p build
+          cat > build/export_options.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>teamID</key>
+            <string>N58RZ47Z46</string>
+          </dict>
+          </plist>
+          EOF
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
@@ -68,18 +79,6 @@ workflows:
             -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
-          cat > ../../build/export_options.plist << 'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store-connect</string>
-            <key>teamID</key>
-            <string>N58RZ47Z46</string>
-          </dict>
-          </plist>
-          EOF
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
