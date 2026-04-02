@@ -28,7 +28,6 @@ workflows:
           }
           EOF
           npx cap add ios
-          # Patch existing post_install to disable Pods signing
           python3 - << 'PYEOF'
           with open('ios/App/Podfile', 'r') as f:
               content = f.read()
@@ -41,10 +40,7 @@ workflows:
               end
             end
           """
-          content = content.replace(
-              'post_install do |installer|',
-              'post_install do |installer|' + inject
-          )
+          content = content.replace('post_install do |installer|', 'post_install do |installer|' + inject)
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
           print('Podfile patched')
@@ -54,11 +50,18 @@ workflows:
         script: |
           keychain initialize
           app-store-connect create-certificate --type IOS_DISTRIBUTION
-          app-store-connect fetch-signing-files $BUNDLE_ID \
-            --type IOS_APP_STORE \
-            --create
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
           keychain add-certificates
+          # DIAGNOSTICS
+          echo "=== Profiles on disk ==="
+          ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/" 2>/dev/null || echo "No profiles dir"
+          echo "=== Certificates in keychain ==="
+          security find-identity -v -p codesigning
+          echo "=== Running use-profiles ==="
+          xcode-project use-profiles --project ios/App/App.xcodeproj --profile-type IOS_APP_STORE || \
           xcode-project use-profiles
+          echo "=== pbxproj CODE_SIGN entries ==="
+          grep -i "CODE_SIGN\|PROVISIONING" ios/App/App.xcodeproj/project.pbxproj | head -20
       - name: Build IPA
         script: |
           mkdir -p build
