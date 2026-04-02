@@ -10,11 +10,11 @@ workflows:
         APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
         APP_STORE_CONNECT_ISSUER_ID: 1265afc2-cdf5-454f-8b20-0a72db990c70
     scripts:
-      - name: Install Capacitor
+      - name: Install Capacitor 6
         script: |
-          npm install -g @capacitor/cli
+          npm install -g @capacitor/cli@6
           npm init -y
-          npm install @capacitor/core @capacitor/ios
+          npm install @capacitor/core@6 @capacitor/ios@6
       - name: Init iOS project
         script: |
           mkdir -p www
@@ -23,22 +23,10 @@ workflows:
           {
             "appId": "com.anibeseder.app",
             "appName": "Ani Beseder",
-            "webDir": "www",
-            "ios": {
-              "minVersion": "13.0"
-            }
+            "webDir": "www"
           }
           EOF
           npx cap add ios
-          python3 -c "
-          import re
-          with open('ios/App/Podfile', 'r') as f:
-              content = f.read()
-          content = re.sub(r\"platform :ios, '[^']*'\", \"platform :ios, '13.0'\", content)
-          with open('ios/App/Podfile', 'w') as f:
-              f.write(content)
-          print('Podfile:', open('ios/App/Podfile').read()[:200])
-          "
           cd ios/App && pod install --repo-update
       - name: Set up signing
         script: |
