@@ -5,6 +5,9 @@ workflows:
     environment:
       xcode: latest
       node: 18
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.anibeseder.app
       vars:
         BUNDLE_ID: "com.anibeseder.app"
         APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
@@ -19,28 +22,14 @@ workflows:
         script: |
           mkdir -p www
           echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
-          npx cap init "אני בסדר" com.anibeseder.app --web-dir www
+          npx cap init "Ani Beseder" com.anibeseder.app --web-dir www
           npx cap add ios
-      - name: Set App Name
-        script: |
-          sed -i '' 's/App/אני בסדר/g' ios/App/App/Info.plist || true
+          npx cap sync ios
       - name: Build IPA
         script: |
           xcode-project use-profiles
-          xcodebuild -workspace ios/App/App.xcworkspace \
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
-            -archivePath build/App.xcarchive \
-            archive
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist
-    artifacts:
-      - build/ipa/*.ipa
-    publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: true
+            -archivePath ../../build​​​​​​​​​​​​​​​​
