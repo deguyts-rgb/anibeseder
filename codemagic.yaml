@@ -8,10 +8,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.anibeseder.app
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: "com.anibeseder.app"
         APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
@@ -79,4 +75,3 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
-
