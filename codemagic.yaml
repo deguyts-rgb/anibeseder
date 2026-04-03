@@ -45,16 +45,22 @@ workflows:
           content = content.replace('post_install do |installer|', 'post_install do |installer|' + inject)
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
+          print('Podfile patched')
           PYEOF
           cd ios/App && pod install --repo-update
-      - name: Set up signing
+      - name: Write API Key
         script: |
-          echo "KEY length: ${#APP_STORE_CONNECT_PRIVATE_KEY}"
-          keychain initialize
-          app-store-connect create-certificate --type IOS_DISTRIBUTION
-          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
-          keychain add-certificates
-          xcode-project use-profiles
+          mkdir -p ~/.private_keys
+          python3 -c "
+          import os
+          key = os.environ['APP_STORE_CONNECT_PRIVATE_KEY']
+          kid = os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER']
+          path = os.path.expanduser(f'~/.private_keys/AuthKey_{kid}.p8')
+          with open(path, 'w') as f:
+              f.write(key)
+          print('Key written, length:', len(key))
+          "
+          chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
       - name: Build IPA
         script: |
           mkdir -p build
@@ -70,6 +76,7 @@ workflows:
           </dict>
           </plist>
           EOF
+          KEY=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
@@ -78,12 +85,21 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
-            -exportOptionsPlist ../../build/export_options.plist
+            -exportOptionsPlist ../../build/export_options.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID
     artifacts:
       - build/ipa/*.ipa
     publishing:
