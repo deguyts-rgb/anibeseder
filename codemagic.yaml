@@ -91,21 +91,7 @@ workflows:
             -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
-                    xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath ../../build/App.xcarchive \
-            -destination "generic/platform=iOS" \
-            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            CODE_SIGN_STYLE=Automatic \
-            CODE_SIGN_IDENTITY="iPhone Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="match AppStore com.anibeseder.app" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath $KEY \
-            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
-            archive
+
 
     artifacts:
       - build/ipa/*.ipa
