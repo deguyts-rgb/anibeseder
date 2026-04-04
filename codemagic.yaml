@@ -63,16 +63,19 @@ workflows:
           keychain add-certificates
           xcode-project use-profiles
 
-      - name: Build archive
+            - name: Build archive
         script: |
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
+            -sdk iphoneos \
             -archivePath ../../build/App.xcarchive \
-            -destination "generic/platform=iOS" \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
             archive | xcpretty
+
 
       - name: Export IPA
         script: |
