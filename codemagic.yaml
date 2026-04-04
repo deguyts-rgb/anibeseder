@@ -9,14 +9,15 @@ workflows:
         - default
       vars:
         BUNDLE_ID: "com.anibeseder.app"
-        APPLE_TEAM_ID: "N58RZ47Z46"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: WW26QA54J4
+        APP_STORE_CONNECT_ISSUER_ID: 1265afc2-cdf5-454f-8b20-0a72db990c70
+        APPLE_TEAM_ID: N58RZ47Z46
     scripts:
-      - name: Install Capacitor
+      - name: Install Capacitor 6
         script: |
           npm install -g @capacitor/cli@6
           npm init -y
           npm install @capacitor/core@6 @capacitor/ios@6
-
       - name: Init iOS project
         script: |
           mkdir -p www
@@ -46,7 +47,6 @@ workflows:
               f.write(content)
           PYEOF
           cd ios/App && pod install --repo-update
-
       - name: Set App Icon
         script: |
           curl -o icon.png https://anibeseder.com/icon-512.png
@@ -79,52 +79,30 @@ workflows:
             "info":{"version":1,"author":"xcode"}
           }
           EOF
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      - name: Set up keychain
-        script: keychain initialize
-
-      - name: Fetch signing files from Apple
-        script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-
-      - name: Add certificates to keychain
-        script: keychain add-certificates
-
-      - name: Apply signing to Xcode project
-        script: xcode-project use-profiles
-
-      - name: Set encryption compliance
+      - name: Bump build number
         script: |
           cd ios/App
-          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" App/Info.plist || \
-          /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" App/Info.plist
-
-      - name: Build and export IPA
+          agvtool new-version -all 2
+      - name: Write API Key
         script: |
-          mkdir -p build/ipa
+          mkdir -p ~/.private_keys
+          python3 -c "
+          import os
+          body = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip()
+          body = body.replace('-----BEGIN PRIVATE KEY-----','').replace('-----END PRIVATE KEY-----','').replace('\n','').replace(' ','').strip()
+          lines = [body[i:i+64] for i in range(0, len(body), 64)]
+          pem = '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(lines) + '\n-----END PRIVATE KEY-----\n'
+          kid = os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER']
+          path = os.path.expanduser(f'~/.private_keys/AuthKey_{kid}.p8')
+          with open(path, 'w') as f:
+              f.write(pem)
+          print('PEM written OK:')
+          print(pem)
+          "
+          chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+      - name: Build IPA
+        script: |
+          mkdir -p build
           cat > build/export_options.plist << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -134,14 +112,10 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>com.anibeseder.app</key>
-              <string>Ani Beseder ios_app_store 1775315683</string>
-            </dict>
           </dict>
           </plist>
           EOF
+          KEY=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
@@ -150,16 +124,24 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
+            -exportOptionsPlist ../../build/export_options.plist \
             -exportPath ../../build/ipa \
-            -exportOptionsPlist ../../build/export_options.plist
-
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID
     artifacts:
       - build/ipa/*.ipa
-
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
