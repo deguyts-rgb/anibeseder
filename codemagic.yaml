@@ -52,15 +52,33 @@ workflows:
         script: |
           mkdir -p ~/.private_keys
           python3 -c "
-          import os
+          import os, re
           key = os.environ['APP_STORE_CONNECT_PRIVATE_KEY']
+          key = re.sub(r'-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n', key)
+          key = re.sub(r'-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----\n', key)
+          lines = key.split('\n')
+          result = []
+          for line in lines:
+              if line.startswith('-----') or len(line) <= 64:
+                  result.append(line)
+              else:
+                  result.extend([line[i:i+64] for i in range(0, len(line), 64)])
+          key = '\n'.join(result)
           kid = os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER']
           path = os.path.expanduser(f'~/.private_keys/AuthKey_{kid}.p8')
           with open(path, 'w') as f:
               f.write(key)
           print('Key written, length:', len(key))
+          print(key[:80])
           "
           chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+      - name: Set up signing
+        script: |
+          keychain initialize
+          app-store-connect create-certificate --type IOS_DISTRIBUTION
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
       - name: Build IPA
         script: |
           mkdir -p build
@@ -76,7 +94,6 @@ workflows:
           </dict>
           </plist>
           EOF
-          KEY=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
@@ -85,14 +102,12 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath $KEY \
-            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
-
-
+          xcodebuild \
+            -exportArchive \
+            -archivePath ../../build/App.xcarchive \
+            -exportPath ../../build/ipa \
+            -exportOptionsPlist ../../build/export_options.plist
     artifacts:
       - build/ipa/*.ipa
     publishing:
