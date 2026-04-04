@@ -62,7 +62,8 @@ workflows:
       - name: Apply signing to Xcode project
         script: xcode-project use-profiles
 
-      - name: Build and export IPA
+
+       - name: Build and export IPA
         script: |
           mkdir -p build/ipa
           cat > build/export_options.plist << 'EOF'
@@ -74,6 +75,11 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.anibeseder.app</key>
+              <string>Ani Beseder ios_app_store 1775315683</string>
+            </dict>
           </dict>
           </plist>
           EOF
@@ -91,6 +97,7 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
             -exportOptionsPlist ../../build/export_options.plist
+
 
     artifacts:
       - build/ipa/*.ipa
