@@ -3,7 +3,7 @@ workflows:
     name: iOS PWA Build
     max_build_duration: 60
     environment:
-      xcode: latest
+      xcode: 16.2
       node: 18
       groups:
         - default
