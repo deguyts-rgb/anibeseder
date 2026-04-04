@@ -62,8 +62,7 @@ workflows:
       - name: Apply signing to Xcode project
         script: xcode-project use-profiles
 
-
-       - name: Build and export IPA
+      - name: Build and export IPA
         script: |
           mkdir -p build/ipa
           cat > build/export_options.plist << 'EOF'
@@ -97,7 +96,6 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
             -exportOptionsPlist ../../build/export_options.plist
-
 
     artifacts:
       - build/ipa/*.ipa
