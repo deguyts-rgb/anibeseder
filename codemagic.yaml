@@ -82,7 +82,7 @@ workflows:
       - name: Bump build number
         script: |
           cd ios/App
-          agvtool new-version -all 3
+          agvtool new-version -all 4
       - name: Write API Key
         script: |
           mkdir -p ~/.private_keys
@@ -131,14 +131,19 @@ workflows:
             -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
           xcodebuild \
-            -exportArchive \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
             -archivePath ../../build/App.xcarchive \
-            -exportOptionsPlist ../../build/export_options.plist \
-            -exportPath ../../build/ipa \
+            -destination "generic/platform=iOS" \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             -allowProvisioningUpdates \
             -authenticationKeyPath $KEY \
             -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
+            archive
     artifacts:
       - build/ipa/*.ipa
     publishing:
