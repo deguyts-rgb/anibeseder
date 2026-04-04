@@ -45,50 +45,27 @@ workflows:
           content = content.replace('post_install do |installer|', 'post_install do |installer|' + inject)
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
-          print('Podfile patched')
           PYEOF
           cd ios/App && pod install --repo-update
       - name: Write API Key
         script: |
           mkdir -p ~/.private_keys
           python3 -c "
-          import os, re
-          key = os.environ['APP_STORE_CONNECT_PRIVATE_KEY']
-          key = re.sub(r'-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n', key)
-          key = re.sub(r'-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----\n', key)
-          lines = key.split('\n')
-          result = []
-          for line in lines:
-              if line.startswith('-----') or len(line) <= 64:
-                  result.append(line)
-              else:
-                  result.extend([line[i:i+64] for i in range(0, len(line), 64)])
-          key = '\n'.join(result)
+          import os
+          body = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip()
+          # Remove any existing PEM headers if present
+          body = body.replace('-----BEGIN PRIVATE KEY-----','').replace('-----END PRIVATE KEY-----','').replace('\n','').replace(' ','').strip()
+          # Split into 64-char lines
+          lines = [body[i:i+64] for i in range(0, len(body), 64)]
+          pem = '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(lines) + '\n-----END PRIVATE KEY-----\n'
           kid = os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER']
           path = os.path.expanduser(f'~/.private_keys/AuthKey_{kid}.p8')
           with open(path, 'w') as f:
-              f.write(key)
-          print('Key written, length:', len(key))
-          print(key[:80])
+              f.write(pem)
+          print('PEM written OK:')
+          print(pem)
           "
           chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
-
-      - name: Set up signing
-        script: |
-          keychain initialize
-          KEY_FILE=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
-          app-store-connect create-certificate \
-            --type IOS_DISTRIBUTION \
-            --private-key @file:$KEY_FILE
-          app-store-connect fetch-signing-files $BUNDLE_ID \
-            --type IOS_APP_STORE \
-            --create \
-            --private-key @file:$KEY_FILE
-          keychain add-certificates
-          xcode-project use-profiles
-
-     
-        
       - name: Build IPA
         script: |
           mkdir -p build
@@ -104,6 +81,7 @@ workflows:
           </dict>
           </plist>
           EOF
+          KEY=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           cd ios/App
           xcodebuild \
             -workspace App.xcworkspace \
@@ -112,12 +90,21 @@ workflows:
             -archivePath ../../build/App.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID \
             archive
           xcodebuild \
             -exportArchive \
             -archivePath ../../build/App.xcarchive \
             -exportPath ../../build/ipa \
-            -exportOptionsPlist ../../build/export_options.plist
+            -exportOptionsPlist ../../build/export_options.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath $KEY \
+            -authenticationKeyID $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_ISSUER_ID
     artifacts:
       - build/ipa/*.ipa
     publishing:
