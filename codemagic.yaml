@@ -2,11 +2,11 @@ workflows:
   ios-pwa:
     name: iOS PWA Build
     max_build_duration: 60
+    integrations:
+      app_store_connect: App Store Connect
     environment:
       xcode: latest
       node: 18
-      integrations:
-        app_store_connect: App Store Connect
       vars:
         BUNDLE_ID: "com.anibeseder.app"
         APPLE_TEAM_ID: N58RZ47Z46
@@ -32,7 +32,6 @@ workflows:
 
           npx cap add ios
 
-          # תיקון Podfile לעקוף חתימה ב-pods
           python3 - << 'PYEOF'
           with open('ios/App/Podfile', 'r') as f:
               content = f.read()
@@ -52,9 +51,8 @@ workflows:
 
           cd ios/App && pod install --repo-update
 
-      - name: Set up code signing (Codemagic automatic)
+      - name: Set up code signing
         script: |
-          # Codemagic מטפל בכל האישורים אוטומטית
           keychain initialize
 
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
