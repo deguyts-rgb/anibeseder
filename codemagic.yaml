@@ -72,13 +72,23 @@ workflows:
           print(key[:80])
           "
           chmod 600 ~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+
       - name: Set up signing
         script: |
           keychain initialize
-          app-store-connect create-certificate --type IOS_DISTRIBUTION
-          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+          KEY_FILE=~/.private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+          app-store-connect create-certificate \
+            --type IOS_DISTRIBUTION \
+            --private-key @file:$KEY_FILE
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_STORE \
+            --create \
+            --private-key @file:$KEY_FILE
           keychain add-certificates
           xcode-project use-profiles
+
+     
+        
       - name: Build IPA
         script: |
           mkdir -p build
