@@ -85,8 +85,6 @@ workflows:
           cd ios/App
           agvtool new-version -all 2
 
-
-
       - name: Set up keychain
         script: keychain initialize
 
@@ -108,10 +106,6 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" App/Info.plist || \
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" App/Info.plist
 
-
-
-
-
       - name: Build and export IPA
         script: |
           mkdir -p build/ipa
@@ -124,13 +118,8 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
-          <key>provisioningProfiles</key>
-          <dict>
-            <key>com.anibeseder.app</key>
-            <string>Ani Beseder ios_app_store 1775315683</string>
-          </dict>
-
-
+            <key>signingStyle</key>
+            <string>manual</string>
           </dict>
           </plist>
           EOF
