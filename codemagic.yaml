@@ -125,7 +125,7 @@ workflows:
             <key>teamID</key>
             <string>N58RZ47Z46</string>
             <key>signingStyle</key>
-  <string>manual</string>
+            <string>manual</string>
 
           </dict>
           </plist>
