@@ -109,7 +109,10 @@ workflows:
       - name: Build and export IPA
         script: |
           mkdir -p build/ipa
-          cat > build/export_options.plist << 'EOF'
+          PROFILE_PATH=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision 2>/dev/null | head -1)
+          security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist)
+          cat > build/export_options.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -118,8 +121,11 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
-            <key>signingStyle</key>
-            <string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.anibeseder.app</key>
+              <string>$PROFILE_NAME</string>
+            </dict>
           </dict>
           </plist>
           EOF
