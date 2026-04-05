@@ -80,7 +80,10 @@ workflows:
           }
           EOF
 
-
+      - name: Bump build number
+        script: |
+          cd ios/App
+          agvtool new-version -all 2
 
 
 
@@ -106,10 +109,7 @@ workflows:
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" App/Info.plist
 
 
-      - name: Bump build number
-        script: |
-          cd ios/App
-          agvtool new-version -all 2
+
 
 
       - name: Build and export IPA
@@ -124,8 +124,12 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
-            <key>signingStyle</key>
-            <string>manual</string>
+          <key>provisioningProfiles</key>
+          <dict>
+            <key>com.anibeseder.app</key>
+            <string>Ani Beseder ios_app_store 1775315683</string>
+          </dict>
+
 
           </dict>
           </plist>
