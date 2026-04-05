@@ -106,44 +106,16 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" App/Info.plist || \
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" App/Info.plist
 
+
+
+
+
       - name: Build and export IPA
         script: |
-          mkdir -p build/ipa
-          PROFILE_PATH=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision 2>/dev/null | head -1)
-          security cms -D -i "$PROFILE_PATH" -o /tmp/profile.plist
+          xcode-project build-ipa \
+            --workspace ios/App/App.xcworkspace \
+            --scheme App
 
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist)
-          cat > build/export_options.plist << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store-connect</string>
-            <key>teamID</key>
-            <string>N58RZ47Z46</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>com.anibeseder.app</key>
-              <string>$PROFILE_NAME</string>
-            </dict>
-          </dict>
-          </plist>
-          EOF
-          cd ios/App
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath ../../build/App.xcarchive \
-            -destination "generic/platform=iOS" \
-            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            archive
-          xcodebuild \
-            -exportArchive \
-            -archivePath ../../build/App.xcarchive \
-            -exportPath ../../build/ipa \
-            -exportOptionsPlist ../../build/export_options.plist
 
     artifacts:
       - build/ipa/*.ipa
