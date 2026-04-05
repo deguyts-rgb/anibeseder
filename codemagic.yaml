@@ -54,6 +54,10 @@ workflows:
           for size in 20 29 40 58 60 76 80 87 120 152 167 180 1024; do
             sips -z $size $size icon.png --out "$ICON_DIR/icon-${size}.png"
           done
+          sips -s format jpeg "$ICON_DIR/icon-1024.png" --out "$ICON_DIR/icon-1024.png"
+
+
+          
           cat > "$ICON_DIR/Contents.json" << 'EOF'
           {
             "images": [
