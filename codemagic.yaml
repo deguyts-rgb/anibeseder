@@ -2,14 +2,14 @@ workflows:
   ios-pwa:
     name: iOS PWA Build
     max_build_duration: 60
-    integrations:
-      app_store_connect: App Store Connect
     environment:
-      xcode: latest
+      xcode: 16.2
       node: 18
+      groups:
+        - default
       vars:
         BUNDLE_ID: "com.anibeseder.app"
-        APPLE_TEAM_ID: N58RZ47Z46
+        APPLE_TEAM_ID: "N58RZ47Z46"
     scripts:
       - name: Install Capacitor
         script: |
@@ -21,17 +21,14 @@ workflows:
         script: |
           mkdir -p www
           echo '<html><head><meta http-equiv="refresh" content="0;url=https://anibeseder.com"></head></html>' > www/index.html
-
           cat > capacitor.config.json << 'EOF'
           {
             "appId": "com.anibeseder.app",
-            "appName": "אני בסדר",
+            "appName": "Ani Beseder",
             "webDir": "www"
           }
           EOF
-
           npx cap add ios
-
           python3 - << 'PYEOF'
           with open('ios/App/Podfile', 'r') as f:
               content = f.read()
@@ -48,45 +45,76 @@ workflows:
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
           PYEOF
-
           cd ios/App && pod install --repo-update
 
-      - name: Set up code signing
+      - name: Set App Icon
         script: |
-          keychain initialize
+          curl -o icon.png https://anibeseder.com/icon-512.png
+          ICON_DIR="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          for size in 20 29 40 58 60 76 80 87 120 152 167 180 1024; do
+            sips -z $size $size icon.png --out "$ICON_DIR/icon-${size}.png"
+          done
+          cat > "$ICON_DIR/Contents.json" << 'EOF'
+          {
+            "images": [
+              {"size":"20x20","idiom":"iphone","filename":"icon-40.png","scale":"2x"},
+              {"size":"20x20","idiom":"iphone","filename":"icon-60.png","scale":"3x"},
+              {"size":"29x29","idiom":"iphone","filename":"icon-58.png","scale":"2x"},
+              {"size":"29x29","idiom":"iphone","filename":"icon-87.png","scale":"3x"},
+              {"size":"40x40","idiom":"iphone","filename":"icon-80.png","scale":"2x"},
+              {"size":"40x40","idiom":"iphone","filename":"icon-120.png","scale":"3x"},
+              {"size":"60x60","idiom":"iphone","filename":"icon-120.png","scale":"2x"},
+              {"size":"60x60","idiom":"iphone","filename":"icon-180.png","scale":"3x"},
+              {"size":"20x20","idiom":"ipad","filename":"icon-20.png","scale":"1x"},
+              {"size":"20x20","idiom":"ipad","filename":"icon-40.png","scale":"2x"},
+              {"size":"29x29","idiom":"ipad","filename":"icon-29.png","scale":"1x"},
+              {"size":"29x29","idiom":"ipad","filename":"icon-58.png","scale":"2x"},
+              {"size":"40x40","idiom":"ipad","filename":"icon-40.png","scale":"1x"},
+              {"size":"40x40","idiom":"ipad","filename":"icon-80.png","scale":"2x"},
+              {"size":"76x76","idiom":"ipad","filename":"icon-76.png","scale":"1x"},
+              {"size":"76x76","idiom":"ipad","filename":"icon-152.png","scale":"2x"},
+              {"size":"83.5x83.5","idiom":"ipad","filename":"icon-167.png","scale":"2x"},
+              {"size":"1024x1024","idiom":"ios-marketing","filename":"icon-1024.png","scale":"1x"}
+            ],
+            "info":{"version":1,"author":"xcode"}
+          }
+          EOF
 
+
+
+
+
+      - name: Set up keychain
+        script: keychain initialize
+
+      - name: Fetch signing files from Apple
+        script: |
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
-            --team-id "$APPLE_TEAM_ID" \
             --create
 
-          keychain add-certificates
+      - name: Add certificates to keychain
+        script: keychain add-certificates
 
-          xcode-project use-profiles \
-            --workspace ios/App/App.xcworkspace \
-            --scheme App
+      - name: Apply signing to Xcode project
+        script: xcode-project use-profiles
 
-
-      - name: Build archive
+      - name: Set encryption compliance
         script: |
           cd ios/App
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination "generic/platform=iOS" \
-            -archivePath ../../build/App.xcarchive \
-            SKIP_INSTALL=NO \
-            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-            archive | xcpretty
+          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" App/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" App/Info.plist
 
 
+      - name: Bump build number
+        script: |
+          cd ios/App
+          agvtool new-version -all 2
 
-      - name: Export IPA
+
+      - name: Build and export IPA
         script: |
           mkdir -p build/ipa
-
           cat > build/export_options.plist << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -96,21 +124,35 @@ workflows:
             <string>app-store-connect</string>
             <key>teamID</key>
             <string>N58RZ47Z46</string>
-            <key>signingStyle</key>
-            <string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.anibeseder.app</key>
+              <string>Ani Beseder ios_app_store 1775315683</string>
+            </dict>
           </dict>
           </plist>
           EOF
-
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportOptionsPlist build/export_options.plist \
-            -exportPath build/ipa | xcpretty
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath ../../build/App.xcarchive \
+            -destination "generic/platform=iOS" \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            archive
+          xcodebuild \
+            -exportArchive \
+            -archivePath ../../build/App.xcarchive \
+            -exportPath ../../build/ipa \
+            -exportOptionsPlist ../../build/export_options.plist
 
     artifacts:
       - build/ipa/*.ipa
 
     publishing:
       app_store_connect:
-        auth: integration
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
